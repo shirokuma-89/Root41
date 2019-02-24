@@ -1,0 +1,12 @@
+ジャイロセンサのオフセット値をここに入力
+
+宮里　最終更新日時 2019/02/10
+#define Gyro_X 86
+#define Gyro_Y -66
+#define Gyro_Z 72
+#define Accel_X -4802
+#define Accel_Y -2004
+#define Accel_Z 1457
+
+久留
+//入力しといて
