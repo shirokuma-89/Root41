@@ -284,7 +284,7 @@ void loop() {
       ball.timer = millis();
       while (millis() - ball.timer <= 10) {
         Serial.println(ball.exist);
-        if (line.deg == 1000 && line.wait == 1000) {
+        if (!line.flug) {
           if (ball.exist) {
             motor.drive(motor.deg, motor.power);
           } else {
@@ -298,7 +298,7 @@ void loop() {
       ball.timer = millis();
       while (millis() - ball.timer <= 10) {
         Serial.println(ball.exist);
-        if (line.deg == 1000 && line.wait == 1000) {
+        if (!line.flug) {
           if (ball.exist) {
             motor.drive(motor.deg, motor.power);
           } else {
@@ -322,7 +322,13 @@ void loop() {
 
     timer = millis();  //タイマー
 
-    motor.deg = ball.deg;
+    //ここから記述
+
+    if (line.flug) {
+      motor.deg = line.deg;
+    } else {
+      motor.deg = ball.deg;
+    }
 
     //キックオフゴール
     if (millis() - kickoff.moveTime <= 430) {
@@ -337,68 +343,45 @@ void loop() {
       motor.power = 90;
     }
 
-
-    if (line.deg == 1000 && line.wait == 1000) {
-      line.flug = false;
-      line.mae = 0;
-      line.lock = false;
-      motor.correct = true;
-      line.tell = 0;
-      line.offset = 0;
-    } else {
-      line.flug = true;
-      if (line.deg != 1000) {
-        motor.deg = line.deg;
-      } else {
-        motor.deg = line.wait;
-      }
-      if (line.beginning) {
-        line.offset = gyro.read();
-        line.beginning = false;
-      }
-    }
-
     //モーター駆動
     if (ball.exist || line.flug) {
       if (line.flug) {
         motor.timer = millis();
         motor.drive(motor.deg, 100);
-        {
-          for (int i = 0; i <= 15; i++) {
-            if (line.lock) {
-              RGBLED.setPixelColor(i, 255, 255, 0);
-            } else {
-              RGBLED.setPixelColor(i, 0, 0, 255);
-            }
+        for (int i = 0; i <= 15; i++) {
+          if (line.lock) {
+            RGBLED.setPixelColor(i, 255, 255, 0);
+          } else {
+            RGBLED.setPixelColor(i, 0, 0, 255);
           }
-          if (line.hold == 0) {
-            RGBLED.setPixelColor(0, 255, 0, 0);
-            RGBLED.setPixelColor(1, 255, 0, 0);
-            RGBLED.setPixelColor(2, 255, 0, 0);
-            RGBLED.setPixelColor(15, 255, 0, 0);
-            RGBLED.setPixelColor(14, 255, 0, 0);
-          }
-          if (line.hold == 1) {
-            RGBLED.setPixelColor(10, 255, 0, 0);
-            RGBLED.setPixelColor(11, 255, 0, 0);
-            RGBLED.setPixelColor(12, 255, 0, 0);
-            RGBLED.setPixelColor(13, 255, 0, 0);
-            RGBLED.setPixelColor(14, 255, 0, 0);
-          }
-          if (line.hold == 2) {
-            RGBLED.setPixelColor(2, 255, 0, 0);
-            RGBLED.setPixelColor(3, 255, 0, 0);
-            RGBLED.setPixelColor(4, 255, 0, 0);
-            RGBLED.setPixelColor(5, 255, 0, 0);
-            RGBLED.setPixelColor(6, 255, 0, 0);
-          }
-          if (line.hold == 3) {
-            RGBLED.setPixelColor(6, 255, 0, 0);
-            RGBLED.setPixelColor(7, 255, 0, 0);
-            RGBLED.setPixelColor(8, 255, 0, 0);
-            RGBLED.setPixelColor(9, 255, 0, 0);
-            RGBLED.setPixelColor(10, 255, 0, 0);
-          }
+        }
+        if (line.hold == 0) {
+          RGBLED.setPixelColor(0, 255, 0, 0);
+          RGBLED.setPixelColor(1, 255, 0, 0);
+          RGBLED.setPixelColor(2, 255, 0, 0);
+          RGBLED.setPixelColor(15, 255, 0, 0);
+          RGBLED.setPixelColor(14, 255, 0, 0);
+        }
+        if (line.hold == 1) {
+          RGBLED.setPixelColor(10, 255, 0, 0);
+          RGBLED.setPixelColor(11, 255, 0, 0);
+          RGBLED.setPixelColor(12, 255, 0, 0);
+          RGBLED.setPixelColor(13, 255, 0, 0);
+          RGBLED.setPixelColor(14, 255, 0, 0);
+        }
+        if (line.hold == 2) {
+          RGBLED.setPixelColor(2, 255, 0, 0);
+          RGBLED.setPixelColor(3, 255, 0, 0);
+          RGBLED.setPixelColor(4, 255, 0, 0);
+          RGBLED.setPixelColor(5, 255, 0, 0);
+          RGBLED.setPixelColor(6, 255, 0, 0);
+        }
+        if (line.hold == 3) {
+          RGBLED.setPixelColor(6, 255, 0, 0);
+          RGBLED.setPixelColor(7, 255, 0, 0);
+          RGBLED.setPixelColor(8, 255, 0, 0);
+          RGBLED.setPixelColor(9, 255, 0, 0);
+          RGBLED.setPixelColor(10, 255, 0, 0);
         }
         for (int i = 0; i <= 3; i++) {
           line.old_val[i] = false;
@@ -406,11 +389,6 @@ void loop() {
         line.stop = true;
       } else {
         motor.correct = true;
-        // if (line.stop) {
-        //   line.stop = false;
-        //   motor.drive(NULL, NULL, true);
-        //   delay(500);
-        // }
         line.in = 5;
         RGBLED.setPixelColor(ball.top, 255, 0, 0);
         RGBLED.setPixelColor((ball.top + 15) % 16, 255, 0, 0);
@@ -419,7 +397,7 @@ void loop() {
         motor.timer = millis();
         line.offset = 0;
         while (millis() - motor.timer <= ball.move && ball.exist) {
-          if (line.deg == 1000 && line.wait == 1000) {
+          if (!line.flug) {
             motor.drive(motor.deg, motor.power);
           } else {
             break;
