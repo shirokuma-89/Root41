@@ -1,3 +1,6 @@
+//テンプレートだよ
+//これをベースに開発しよう
+
 //ライブラリのインクルード
 #include <Adafruit_NeoPixel.h>
 #include <FaBoLCDmini_AQM0802A.h>
