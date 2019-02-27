@@ -1,4 +1,4 @@
-//2019.02.27作成 template.ino
+// 2019.02.27作成 template.ino
 //チームでプログラム開発するときに、構造が同じほうが
 //プログラムが見やすくなるから、このテンプレートをベースに
 //開発しよう。コーディングはできるだけ、
@@ -62,10 +62,9 @@ FaBoLCDmini_AQM0802A lcd;
 Rotary rotary = Rotary(ROTARY1, ROTARY2);
 Root41_Lib Root41;
 
-//クラス定義＆インスタンス作成
 class _ball {
- public:
-  void read(int* b);
+public:
+  void read(int *b);
 
   bool Reset = true;
   bool exist = true;
@@ -83,11 +82,11 @@ class _ball {
   unsigned long timer = 0;
   unsigned long reset = 0;
 
- private:
+private:
 } ball;
 
 class _line {
- public:
+public:
   _line(void);
   void read(void);
   void showLED(void);
@@ -130,13 +129,13 @@ class _line {
   unsigned long yokoTimer;
   unsigned long maeTimer;
 
- private:
+private:
 } line;
 
 class _motor {
- public:
+public:
   _motor(void);
-  void directDrive(int* p);
+  void directDrive(int *p);
   void drive(int _deg, int _power, bool stop = false, bool correctDeg = false);
 
   bool on = true;
@@ -156,12 +155,12 @@ class _motor {
   unsigned long timer = 0;
   unsigned long reset = 0;
 
- private:
+private:
   int _val[3];
 } motor;
 
 class _gyro {
- public:
+public:
   int read(void);
   int dmpGetGyro(void);
   void setting(void);
@@ -171,12 +170,12 @@ class _gyro {
   int dmpGyro = 0;
   int offset;
 
- private:
+private:
   // none
 } gyro;
 
 class _LCD {
- public:
+public:
   void init(void);
 
   byte out = 0;
@@ -191,12 +190,12 @@ class _LCD {
 
   unsigned long timer = 0;
 
- private:
+private:
   // none
 } LCD;
 
 class _device {
- public:
+public:
   void initialize(void);
   void monitor(void);
   void rainbowLED(void);
@@ -204,7 +203,7 @@ class _device {
   bool boot = false;
   bool monitorSend = false;
 
-  int process = HIGH;  // UIを抑制
+  int process = HIGH; // UIを抑制
   int mode = 0;
   int RGB_bright = 60;
   int rotary = 0;
@@ -212,12 +211,12 @@ class _device {
 
   unsigned long timer;
 
- private:
+private:
   // none
 } device;
 
 class _kickoff {
- public:
+public:
   int deg = 0;
   int go = 0;
 
@@ -225,6 +224,6 @@ class _kickoff {
   long moveTime;
   bool ledShow = false;
 
- private:
+private:
   // none
 } kickoff;
