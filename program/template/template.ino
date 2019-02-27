@@ -63,15 +63,13 @@ Root41_Lib Root41;
 
 class _ball {
  public:
-  // void read(int* b);
-  bool reset = true;
+  void read(int* b);
   bool exist = true;
 
-  int move = 15;
-  int old_top;
   int val[16];
   int top;
   int deg;
+  int old_top;
   int top_backup;
 
   float x;
@@ -140,6 +138,7 @@ class _motor {
   bool on = true;
   bool correct = true;
 
+  int move = 15;
   int val[3];
   int motor[5];
   int deg = 1000;
