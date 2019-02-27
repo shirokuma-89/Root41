@@ -75,57 +75,36 @@ class _ball {
   float x;
   float y;
 
-  unsigned long timer = 0;
   unsigned long resetTimer = 0;
+  unsigned long resettingTimer = 0;
 
  private:
+  // none
+
 } ball;
 
 class _line {
  public:
-  // _line(void);
-  // void read(void);
-  // void showLED(void);
+  _line(void);
+  void read(void);
 
   bool flug = false;
-  bool lock = false;
-  bool old_val[4];
   bool near = false;
-  bool on = true;
-  bool start = false;
-  bool stop = false;
   bool touch = false;
   bool val[4];
-  bool log_val[4];
-  bool tell = false;
-  bool yokoTell = false;
-  bool beginning = true;
 
-  const bool show = true;
-
-  int pin[4] = {24, 25, 26, 27};
-  int wait = 1000;
   int deg = 1000;
-  int stopDeg;
+  int outMove = 1000;
   int mode = 0;
-  int mae = 0;
-  int yoko = 0;
   int offset = 0;
-  int in = 5;
-  int maeNuri = 0;
-  int yokoNuri = 0;
-  int hold;
-  int count;
-  int sakki;
+  int first = 5;
+  int second = 5;
 
-  unsigned long timer;
-  unsigned long sub_timer;
-  unsigned long timer2;
-  unsigned long nearTimer;
-  unsigned long yokoTimer;
-  unsigned long maeTimer;
+  unsigned long inTimer;
+  unsigned long outTimer;
 
  private:
+  // none
 } line;
 
 class _motor {
