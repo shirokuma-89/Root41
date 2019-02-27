@@ -44,7 +44,6 @@
 #define LINE2 25
 #define LINE3 26
 #define LINE4 27
-#define LINE_STOP 70
 
 #define SW_TOGGLE 28
 #define SW_RIGHT 29
@@ -64,8 +63,8 @@ Root41_Lib Root41;
 
 class _ball {
  public:
-  void read(int* b);
-  bool Reset = true;
+  // void read(int* b);
+  bool reset = true;
   bool exist = true;
 
   int move = 15;
@@ -79,16 +78,16 @@ class _ball {
   float y;
 
   unsigned long timer = 0;
-  unsigned long reset = 0;
+  unsigned long resetTimer = 0;
 
  private:
 } ball;
 
 class _line {
  public:
-  _line(void);
-  void read(void);
-  void showLED(void);
+  // _line(void);
+  // void read(void);
+  // void showLED(void);
 
   bool flug = false;
   bool lock = false;
@@ -133,9 +132,10 @@ class _line {
 
 class _motor {
  public:
-  _motor(void);
-  void directDrive(int* p);
-  void drive(int _deg, int _power, bool stop = false, bool correctDeg = false);
+  // _motor(void);
+  // void directDrive(int* p);
+  // void drive(int _deg, int _power, bool stop = false, bool correctDeg =
+  // false);
 
   bool on = true;
   bool correct = true;
@@ -160,10 +160,10 @@ class _motor {
 
 class _gyro {
  public:
-  int read(void);
-  int dmpGetGyro(void);
-  void setting(void);
-  void show(void);
+  // int read(void);
+  // int dmpGetGyro(void);
+  // void setting(void);
+  // void show(void);
 
   int deg;
   int dmpGyro = 0;
@@ -175,7 +175,7 @@ class _gyro {
 
 class _LCD {
  public:
-  void init(void);
+  // void init(void);
 
   byte out = 0;
   byte character1[8];
@@ -195,9 +195,9 @@ class _LCD {
 
 class _device {
  public:
-  void initialize(void);
-  void monitor(void);
-  void rainbowLED(void);
+  // void initialize(void);
+  // void monitor(void);
+  // void rainbowLED(void);
 
   bool boot = false;
   bool monitorSend = false;
@@ -226,3 +226,7 @@ class _kickoff {
  private:
   // none
 } kickoff;
+
+void setup(void) {}
+
+void loop(void) {}
