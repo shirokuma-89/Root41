@@ -63,9 +63,8 @@ Rotary rotary = Rotary(ROTARY1, ROTARY2);
 Root41_Lib Root41;
 
 class _ball {
-public:
-  void read(int *b);
-
+ public:
+  void read(int* b);
   bool Reset = true;
   bool exist = true;
 
@@ -82,11 +81,11 @@ public:
   unsigned long timer = 0;
   unsigned long reset = 0;
 
-private:
+ private:
 } ball;
 
 class _line {
-public:
+ public:
   _line(void);
   void read(void);
   void showLED(void);
@@ -129,13 +128,13 @@ public:
   unsigned long yokoTimer;
   unsigned long maeTimer;
 
-private:
+ private:
 } line;
 
 class _motor {
-public:
+ public:
   _motor(void);
-  void directDrive(int *p);
+  void directDrive(int* p);
   void drive(int _deg, int _power, bool stop = false, bool correctDeg = false);
 
   bool on = true;
@@ -155,12 +154,12 @@ public:
   unsigned long timer = 0;
   unsigned long reset = 0;
 
-private:
+ private:
   int _val[3];
 } motor;
 
 class _gyro {
-public:
+ public:
   int read(void);
   int dmpGetGyro(void);
   void setting(void);
@@ -170,12 +169,12 @@ public:
   int dmpGyro = 0;
   int offset;
 
-private:
+ private:
   // none
 } gyro;
 
 class _LCD {
-public:
+ public:
   void init(void);
 
   byte out = 0;
@@ -190,12 +189,12 @@ public:
 
   unsigned long timer = 0;
 
-private:
+ private:
   // none
 } LCD;
 
 class _device {
-public:
+ public:
   void initialize(void);
   void monitor(void);
   void rainbowLED(void);
@@ -203,7 +202,7 @@ public:
   bool boot = false;
   bool monitorSend = false;
 
-  int process = HIGH; // UIを抑制
+  int process = HIGH;  // UIを抑制
   int mode = 0;
   int RGB_bright = 60;
   int rotary = 0;
@@ -211,12 +210,12 @@ public:
 
   unsigned long timer;
 
-private:
+ private:
   // none
 } device;
 
 class _kickoff {
-public:
+ public:
   int deg = 0;
   int go = 0;
 
@@ -224,6 +223,6 @@ public:
   long moveTime;
   bool ledShow = false;
 
-private:
+ private:
   // none
 } kickoff;
