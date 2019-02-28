@@ -182,3 +182,18 @@ int differentialDeg = 0;
 
 int offset;
 初期設定時の角度のずれを補正するための変数
+
+[class _LCD(LCD)]
+LCDに関する変数・関数のクラス
+
+void init(void);
+LCDを初期化する関数
+
+byte character1[8];
+自作文字を格納する変数（character2 ~ 8についても同様）
+
+int output = 0;
+LCD出力切り替えを行う変数
+
+unsigned long timer = 0;
+LCD出力間隔を計測するタイマー変数

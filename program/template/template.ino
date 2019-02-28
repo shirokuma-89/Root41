@@ -145,9 +145,8 @@ class _gyro {
 
 class _LCD {
  public:
-  // void init(void);
+  void init(void);
 
-  byte out = 0;
   byte character1[8];
   byte character2[8];
   byte character3[8];
@@ -156,6 +155,8 @@ class _LCD {
   byte character6[8];
   byte character7[8];
   byte character8[8];
+
+  int output = 0;
 
   unsigned long timer = 0;
 
