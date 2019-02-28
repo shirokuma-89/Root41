@@ -1,5 +1,3 @@
-// motor.ino
-
 _motor::_motor(void) {
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
@@ -25,7 +23,7 @@ _motor::_motor(void) {
 void _motor::drive(int _deg,
                    int _power,
                    bool stop = false,
-                   bool correctionDeg = false) {
+                   bool correctDeg = false) {
   if (stop) {  //完全停止
     val[0] = 0;
     val[1] = 0;
@@ -42,35 +40,59 @@ void _motor::drive(int _deg,
     gyro.deg = gyro.read();
 
     //姿勢制御
-    static float Kp;
-    static float Ki;
-    static float Kd;
+    static float Kp;  // PD制御の場合 Kp = 0.85
+    static float Ki;  //             Ki = 0
+    static float Kd;  //             Kd = 0.15
 
-    Kp = 0.76;
-    Ki = 0.00039;
-    Kd = 0.167;
+    if (line.flug) {
+      Kp = 0.63;      // PD制御の場合 Kp = 0.85
+      Ki = 0.00037;  //             Ki = 0
+      Kd = 0.175;     //             Kd = 0.15
+    } else {
+    Kp = 0.76;     // PD制御の場合 Kp = 0.85
+    Ki = 0.00039;  //             Ki = 0
+    Kd = 0.167;    //             Kd = 0.15
+    }
 
     front = gyro.deg;
     front -= line.offset;
     front = front + 360;
     front = front >= 360 ? front - 360 : front;
 
-    integral += front;
-    front *= Kp * -1;                       //比例制御
-    front += gyro.differentialRead() * Kd;  //微分制御
-    front -= integral * Ki;                 //積分制御
+    front = front > 180 ? front - 360 : front;
+    /*三角関数制御有効の場合*/ {
+      // if (front >= 0) {
+      //   // front = round(180 - 180 * cos(radians(front * 0.5)));
+      // } else {
+      //   front = abs(front);
+      //   // front = round(180 - 180 * cos(radians(front * 0.5)));
+      //   front *= -1;
+      // }
+    }
+    deg_integral += front;
+    // deg_integral = constrain(deg_integral, -350, 350);
+    front *= Kp * -1;                 //比例制御
+    front += gyro.dmpGetGyro() * Kd;  //微分制御
+    front -= deg_integral * Ki;       //積分制御
 
-    if (integralTimer + 5000 <= millis()) {
-      integralTimer = millis();
-      integral = 0;
+    if (correctTimer + 5000 <= millis()) {
+      correctTimer = millis();
+      deg_integral = 0;
     }
 
-    correctionVal = round(front);
-    correctionVal = constrain(correctionVal, -45, 45);
-
-    if (!correction) {
-      correctionVal = 0;
+    // motor
+    for (int i = 0; i <= 2; i++) {
+      _val[i] = round(front);
+      _val[i] = constrain(_val[i], -45, 45);
+      // if (gyro.deg <= 5 || gyro.deg >= 355) {
+      //   _val[i] = 0;
+      // }
+      if (!correct) {
+        _val[i] = 0;
+      }
     }
+
+    // front = constrain(front, -40, 40);
 
     float s;
     if (_deg == 0) {
@@ -141,17 +163,20 @@ void _motor::drive(int _deg,
       val[0] = int(sin(radians(_deg - 300)) * 100.0);
       val[1] = int(sin(radians(_deg - 60)) * 100.0);
       val[2] = int(sin(radians(_deg - 180)) * 100.0);
-      if (abs(val[0]) < abs(val[1])) {
-        if (abs(val[1]) < abs(val[2])) {
-          s = 100.0 / (float)abs(val[2]);
+      valAbs[0] = abs(val[0]);
+      valAbs[1] = abs(val[1]);
+      valAbs[2] = abs(val[2]);
+      if (valAbs[0] < valAbs[1]) {
+        if (valAbs[1] < valAbs[2]) {
+          s = 100.0 / (float)valAbs[2];
         } else {
-          s = 100.0 / (float)abs(val[1]);
+          s = 100.0 / (float)valAbs[1];
         }
       } else {
-        if (abs(val[0]) < abs(val[2])) {
-          s = 100.0 / (float)abs(val[2]);
+        if (valAbs[0] < valAbs[2]) {
+          s = 100.0 / (float)valAbs[2];
         } else {
-          s = 100.0 / (float)abs(val[0]);
+          s = 100.0 / (float)valAbs[0];
         }
       }
       val[0] = round((float)val[0] * s);
@@ -160,38 +185,42 @@ void _motor::drive(int _deg,
     }
 
     for (int i = 0; i <= 2; i++) {
-      val[i] += correctionVal;
+      val[i] += _val[i];
     }
 
-    if (abs(val[0]) < abs(val[1])) {
-      if (abs(val[1]) < abs(val[2])) {
-        s = 100.0 / (float)abs(val[2]);
+    valAbs[0] = abs(val[0]);
+    valAbs[1] = abs(val[1]);
+    valAbs[2] = abs(val[2]);
+    if (valAbs[0] < valAbs[1]) {
+      if (valAbs[1] < valAbs[2]) {
+        s = 100.0 / (float)valAbs[2];
       } else {
-        s = 100.0 / (float)abs(val[1]);
+        s = 100.0 / (float)valAbs[1];
       }
     } else {
-      if (abs(val[0]) < abs(val[2])) {
-        s = 100.0 / (float)abs(val[2]);
+      if (valAbs[0] < valAbs[2]) {
+        s = 100.0 / (float)valAbs[2];
       } else {
-        s = 100.0 / (float)abs(val[0]);
+        s = 100.0 / (float)valAbs[0];
       }
     }
     val[0] = round((float)val[0] * s);
     val[1] = round((float)val[1] * s);
     val[2] = round((float)val[2] * s);
 
+    // if (!line.flug) {
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
       val[i] = constrain(val[i], -98, 98);
     }
-
-    if (correctionDeg) {
-      for (int i = 0; i <= 2; i++) {
-        val[i] = correctionDeg;
-      }
+    // }
+    if (!correctDeg) {
+      directDrive(val);
+      // Root41.mabc(val[2], val[1], val[0]);
+    } else {
+      // Root41.mabc(_val[2], _val[1], _val[0]);
+      directDrive(_val);
     }
-
-    directDrive(val);
   }
 }
 

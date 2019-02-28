@@ -1,5 +1,4 @@
-//LCD.ino
-
+//初期化
 void _LCD::init(void) {
   lcd.begin();
   lcd.command(0x38);

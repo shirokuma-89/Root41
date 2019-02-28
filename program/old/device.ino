@@ -1,5 +1,4 @@
-//device.ino
-
+// IOピンの初期化
 void _device::initialize(void) {
   pinMode(BALL0, INPUT);
   pinMode(BALL1, INPUT);
@@ -33,28 +32,56 @@ void _device::initialize(void) {
   digitalWrite(BALL_RESET, HIGH);
 }
 
+//タイマー割り込み
+ISR(timer5Event) {
+  pauseTimer5();   //割り込みを無効化
+  enableMillis();  // millis()関数を有効化
+
+  if (device.mode == 0 || device.mode == 1) {  //待機中
+    device.rotaryResult = rotary.process();
+    if (device.rotaryResult == DIR_CW) {
+      device.rotary++;
+    } else if (device.rotaryResult == DIR_CCW) {
+      device.rotary--;
+    }
+
+  } else if (device.mode == 2) {  //動作中
+    //ライン処理をここに記述
+    //ライン動作中はline.flugをtrueにしておくこと
+  }
+
+  startTimer5(30);  //タイマー割り込みを有効化
+}
+
 void _device::monitor(void) {
-  if ((digitalRead(SW_LEFT) && digitalRead(SW_RIGHT))) {
+  if ((digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) || device.monitorSend) {
     startTimer5(100);
     lcd.print("Root41 monitor");
-
-    LED.timer = millis();
-    RGBLED.setBrightness(LED.bright + 30);
-
-    digitalWrite(BALL_RESET, HIGH);
-    
+    uint16_t i, j;
+    unsigned long led_timer = millis();
+    RGBLED.setBrightness(RGB_bright + 30);
     while (true) {
-      for (LED.j = 0; LED.j < 256; LED.j++) {
+      for (j = 0; j < 256; j++) {
         RGBLED.begin();
-        for (LED.i = 0; LED.i < RGBLED.numPixels(); LED.i++) {
-          RGBLED.setPixelColor(LED.i, Wheel((LED.i + LED.j) & 255));
+        for (i = 0; i < RGBLED.numPixels(); i++) {
+          RGBLED.setPixelColor(i, Wheel((i + j) & 255));
         }
         RGBLED.show();
-
-        LED.timer = millis();
-        while (millis() - LED.timer <= 20) {
+        // RGBLED.begin();
+        // RGBLED.setBrightness(100);
+        // for (int i = 0; i <= 15; i++) {
+        //   RGBLED.setPixelColor(i, 170 * 0.7, 0, 255 * 0.7);
+        // }
+        // RGBLED.show();
+        led_timer = millis();
+        while (millis() - led_timer <= 20) {
           gyro.deg = gyro.read();
 
+          if (!ball.Reset) {
+            digitalWrite(BALL_RESET, HIGH);
+          } else {
+            digitalWrite(BALL_RESET, LOW);
+          }
           ball.val[0] = analogRead(BALL0);
           ball.val[1] = analogRead(BALL1);
           ball.val[2] = analogRead(BALL2);
@@ -127,9 +154,9 @@ void _device::monitor(void) {
                         motor.val[1] -= 100;
                         motor.val[2] -= 100;
                         if (Serial.read() == 1) {
-                          digitalWrite(BALL_RESET, LOW);
+                          ball.Reset = true;
                         } else {
-                          digitalWrite(BALL_RESET, HIGH);
+                          ball.Reset = false;
                         }
 
                         motor.directDrive(motor.val);
@@ -147,6 +174,17 @@ void _device::monitor(void) {
   }
 }
 
+void _device::rainbowLED(void) {
+  uint16_t i, j;
+
+  for (j = 0; j < 256; j++) {
+    for (i = 0; i < RGBLED.numPixels(); i++) {
+      RGBLED.setPixelColor(i, Wheel((i + j) & 255));
+    }
+    RGBLED.show();
+  }
+}
+
 uint32_t Wheel(byte WheelPos) {
   WheelPos = 255 - WheelPos;
   if (WheelPos < 85) {
@@ -158,4 +196,10 @@ uint32_t Wheel(byte WheelPos) {
   }
   WheelPos -= 170;
   return RGBLED.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+}
+
+void stoping() {
+  // Root41.mabc(0, 0, 0);
+  motor.drive(NULL, NULL, true);
+  delay(400);
 }

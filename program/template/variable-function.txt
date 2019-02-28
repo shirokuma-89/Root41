@@ -1,0 +1,241 @@
+<ライブラリ>
+Adafruit_NeoPixel.h
+フルカラーLED（NeoPixel）を制御するためのライブラリ
+
+FaBoLCDmini_AQM0802A.h
+LCDを制御するためのライブラリ
+
+MPU6050_6Axis_MotionApps20.h
+ジャイロセンサ（MPU-6050）からデータを取得するためのライブラリ
+
+Rotary.h
+ロータリーエンコーダを扱うためのライブラリ
+
+Timer5.h
+Timer5（ArduinoMEGAのみ）を扱うためのライブラリ
+
+Wire.h
+I2C通信を行うためのライブラリ
+
+
+<マクロ - define>
+Gyro_X
+ジャイロのX軸のオフセット値
+
+Gyro_Y
+ジャイロのY軸のオフセット値
+
+Gyro_Z
+ジャイロのZ軸のオフセット値
+
+Accel_X
+加速度センサのX軸のオフセット値
+
+Accel_Y
+加速度センサのY軸のオフセット値
+
+Accel_Z
+仮想度センサのZ軸のオフセット値
+
+その他、各種ピン番号の為省略
+
+
+<クラス - 変数・関数>
+
+[class _ball(ball)]
+ボール追従に関する変数や関数のクラス
+
+void read(int* b){}
+ボールセンサをすべて読み込む。値はアドレスを渡した配列に格納される。
+
+bool exist = true;
+ボールを検出しているかどうかを格納する変数
+
+int val[16];
+ボールセンサの値を格納する配列
+
+int top;
+一番反応の強いボールセンサの番号を格納する変数
+
+int deg;
+ボールの方向を格納する変数
+
+int old_top;
+ボールセンサの前回の一番反応の強いボールセンサの番号を格納する変数
+
+int top_backup;
+一番反応の強いボールセンサの番号の生データ（処理されていない）を格納する変数
+
+float x;
+ベクトルで計算するときなどのボールのX座標を格納する変数
+
+float y;
+ベクトルで計算するときなどのボールのY座標を格納する変数
+
+unsigned long resetTimer = 0;
+ボールセンサをリセットする間隔を計測するタイマー変数
+
+unsigned long resettingTimer = 0;
+ボールセンサのリセット動作時間を計測するタイマー変数
+
+[class _line(line)]
+ライン処理に関する変数や関数のクラス
+
+_line(void){}
+変数の初期化を行う関数
+
+void read(void){}
+ラインセンサの値を取得する関数
+
+bool flug = false;
+ライン動作中かどうかを格納する変数
+
+bool near = false;
+ラインの近くにいるかどうかを格納する変数
+
+bool touch = false;
+ライン上にいるかどうかを格納する変数
+
+bool val[4];
+ラインセンサの値（生データ）を格納する配列
+
+int deg = 1000;
+ライン上にいるときの回避動作の角度を指定する変数
+
+int outMove = 1000;
+ラインから出た状態での一定時間動作内の回避動作の角度を指定する変数
+
+int mode = 0;
+ラインを踏んでからライン回避動作が終了するまでの状態遷移を格納する変数
+
+int offset = 0;
+ラインを踏んだ際のジャイロセンサの値を格納する変数
+
+int first = 5;
+原則（例外処理可）1番目に反応したセンサ番号を格納する変数
+
+int second = 5;
+原則（例外処理可）2番目に反応したセンサ番号を格納する変数
+
+unsigned long inTimer;
+ラインに最初にふれた時のタイマーを格納する変数
+
+unsigned long outTimer;
+ラインの反応が無くなった時のタイマーを格納する変数
+
+[class _motor(motor)]
+モーター駆動に関するクラス
+
+_motor(void){}
+初期化を行う関数
+
+void directDrive(int* p){}
+配列に格納されている値をそのままモーターに出力する関数
+
+void drive(int _deg, int _power, bool stop = false, bool correctionDeg = false){}
+角度とパワーから、姿勢制御を行いながらモーターを制御する関数
+
+bool correction = true;
+姿勢制御を行うかを示す変数
+
+int val[3];
+モーターの駆動値を格納する配列
+
+int correctionVal;
+姿勢制御のモータ駆動値を格納する変数
+
+int deg;
+進む角度を指定する変数
+
+int power;
+モーターパワーを指定する変数
+
+int move = 15;
+モーター無条件（ライン除く）連続動作時間をループ毎に指定する変数
+
+int integral = 0;
+姿勢制御の積分動作を行う変数
+
+float front;
+姿勢制御値（理論値）を格納する変数
+
+unsigned long integralTimer = 0;
+姿勢制御の積分動作を制限するためのタイマー変数
+
+[class _gyro(gyro)]
+ジャイロセンサに関する変数・関数のクラス
+
+int read(void){}
+角度を読み込む関数
+
+int differentialRead(void){}
+角度の微分値（角速度）を取得する関数
+
+void setting(void){}
+ジャイロセンサの初期設定を行う関数
+
+int deg;
+角度を格納する変数
+
+int differentialDeg = 0;
+角度の微分値（角速度）を格納する変数
+
+int offset;
+初期設定時の角度のずれを補正するための変数
+
+[class _LCD(LCD)]
+LCDに関する変数・関数のクラス
+
+void init(void){}
+LCDを初期化する関数
+
+byte character1[8];
+自作文字を格納する変数（character2 ~ 8についても同様）
+
+int output = 0;
+LCD出力切り替えを行う変数
+
+unsigned long timer = 0;
+LCD出力間隔を計測するタイマー変数
+
+[class _device(device)]
+デバイス全般に関する変数・関数または汎用変数・関数のクラス
+
+void initialize(void){}
+デバイスをすべて初期化する関数
+
+void monitor(void){}
+センサーモニタを行う関数
+
+bool boot = true;
+起動直後かを示す変数
+
+int process = HIGH;
+処理速度を向上するかを示す変数
+
+int mode = 0;
+動作切り替えを行う変数
+
+int rotary = 0;
+ローターリーエンコーダの数値を格納する変数
+
+int rotaryResult = 0;
+ローターリーエンコーダからの生データを一時格納する変数
+
+[class _LED(LED)]
+フルカラーLEDに関するクラス
+
+void gyroShow(void){}
+角度を表示する関数
+
+void lineShow(void){}
+反応しているラインセンサを表示する関数
+
+int bright = 60;
+LEDの明るさを指定する変数
+
+int i, j;
+レインボーイルミネーション時に使用する変数
+
+unsigned long timer;
+点灯時間などを計測するタイマー変数
