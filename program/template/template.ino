@@ -179,8 +179,6 @@ class _device {
   int rotary = 0;
   int rotaryResult = 0;
 
-  unsigned long timer;
-
  private:
   // none
 } device;

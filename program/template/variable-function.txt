@@ -165,13 +165,13 @@ unsigned long integralTimer = 0;
 [class _gyro(gyro)]
 ジャイロセンサに関する変数・関数のクラス
 
-int read(void);
+int read(void){}
 角度を読み込む関数
 
-int differentialRead(void);
+int differentialRead(void){}
 角度の微分値（角速度）を取得する関数
 
-void setting(void);
+void setting(void){}
 ジャイロセンサの初期設定を行う関数
 
 int deg;
@@ -186,7 +186,7 @@ int offset;
 [class _LCD(LCD)]
 LCDに関する変数・関数のクラス
 
-void init(void);
+void init(void){}
 LCDを初期化する関数
 
 byte character1[8];
@@ -197,3 +197,27 @@ LCD出力切り替えを行う変数
 
 unsigned long timer = 0;
 LCD出力間隔を計測するタイマー変数
+
+[class _device(device)]
+デバイス全般に関する変数・関数または汎用変数・関数のクラス
+
+void initialize(void){}
+デバイスをすべて初期化する関数
+
+void monitor(void){}
+センサーモニタを行う関数
+
+bool boot = false;
+起動直後かを示す変数
+
+int process = HIGH;
+処理速度を向上するかを示す変数
+
+int mode = 0;
+動作切り替えを行う変数
+
+int rotary = 0;
+ローターリーエンコーダの数値を格納する変数
+
+int rotaryResult = 0;
+ローターリーエンコーダからの生データを一時格納する変数
