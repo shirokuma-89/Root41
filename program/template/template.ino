@@ -202,9 +202,7 @@ class _kickoff {
   int deg = 0;
   int go = 0;
 
-  long ledTimer;
   long moveTime;
-  bool ledShow = false;
 
  private:
   // none
