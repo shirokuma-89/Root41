@@ -207,7 +207,7 @@ void initialize(void){}
 void monitor(void){}
 センサーモニタを行う関数
 
-bool boot = false;
+bool boot = true;
 起動直後かを示す変数
 
 int process = HIGH;
@@ -221,3 +221,21 @@ int rotary = 0;
 
 int rotaryResult = 0;
 ローターリーエンコーダからの生データを一時格納する変数
+
+[class _LED(LED)]
+フルカラーLEDに関するクラス
+
+void gyroShow(void){}
+角度を表示する関数
+
+void lineShow(void){}
+反応しているラインセンサを表示する関数
+
+int bright = 60;
+LEDの明るさを指定する変数
+
+int i, j;
+レインボーイルミネーション時に使用する変数
+
+unsigned long timer;
+点灯時間などを計測するタイマー変数

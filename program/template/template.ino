@@ -172,7 +172,7 @@ class _device {
   void initialize(void);
   void monitor(void);
 
-  bool boot = false;
+  bool boot = true;
 
   int process = HIGH;
   int mode = 0;
@@ -185,6 +185,9 @@ class _device {
 
 class _LED {
  public:
+  void gyroShow(void);
+  void lineShow(void);
+
   int bright = 60;
   int i, j;
 

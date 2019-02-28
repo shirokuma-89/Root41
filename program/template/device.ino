@@ -1,4 +1,5 @@
-// IOピンの初期化
+//device.ino
+
 void _device::initialize(void) {
   pinMode(BALL0, INPUT);
   pinMode(BALL1, INPUT);
