@@ -52,7 +52,7 @@ bool exist = true;
 ボールを検出しているかどうかを格納する変数
 
 int val[16];
-ボールセンサの値を格納する変数
+ボールセンサの値を格納する配列
 
 int top;
 一番反応の強いボールセンサの番号を格納する変数
@@ -97,7 +97,7 @@ bool touch = false;
 ライン上にいるかどうかを格納する変数
 
 bool val[4];
-ラインセンサの値（生データ）を格納する変数
+ラインセンサの値（生データ）を格納する配列
 
 int deg = 1000;
 ライン上にいるときの回避動作の角度を指定する変数
@@ -132,5 +132,32 @@ _motor(void){}
 void directDrive(int* p){}
 配列に格納されている値をそのままモーターに出力する関数
 
-void drive(int _deg, int _power, bool stop = false, bool correctDeg = false){}
+void drive(int _deg, int _power, bool stop = false, bool correctionDeg = false){}
 角度とパワーから、姿勢制御を行いながらモーターを制御する関数
+
+bool correction = true;
+姿勢制御を行うかを示す変数
+
+int val[3];
+モーターの駆動値を格納する配列
+
+int correctionVal;
+姿勢制御のモータ駆動値を格納する変数
+
+int deg;
+進む角度を指定する変数
+
+int power;
+モーターパワーを指定する変数
+
+int move = 15;
+モーター無条件（ライン除く）連続動作時間をループ毎に指定する変数
+
+int integral = 0;
+姿勢制御の積分動作を行う変数
+
+float front;
+姿勢制御値（理論値）を格納する変数
+
+unsigned long integralTimer = 0;
+姿勢制御の積分動作を制限するためのタイマー変数

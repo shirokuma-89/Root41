@@ -108,39 +108,32 @@ class _line {
 
 class _motor {
  public:
-  // _motor(void);
-  // void directDrive(int* p);
-  // void drive(int _deg, int _power, bool stop = false, bool correctDeg =
-  // false);
+  _motor(void);
+  void directDrive(int* p);
+  void drive(int _deg, int _power, bool stop = false, bool correctionDeg = false);
 
-  bool on = true;
-  bool correct = true;
+  bool correction = true;
 
-  int move = 15;
   int val[3];
-  int motor[5];
-  int deg = 1000;
+  int correctionVal;
+  int deg;
   int power;
-  int old_gyro;
-  int valAbs[3];
-  int deg_integral = 0;
+  int move = 15;
+  int integral = 0;
 
   float front;
 
-  unsigned long correctTimer = 0;
-  unsigned long timer = 0;
-  unsigned long reset = 0;
+  unsigned long integralTimer = 0;
 
  private:
-  int _val[3];
+  // none
 } motor;
 
 class _gyro {
  public:
-  // int read(void);
-  // int dmpGetGyro(void);
-  // void setting(void);
-  // void show(void);
+  int read(void);
+  int dmpGetGyro(void);
+  void setting(void);
 
   int deg;
   int dmpGyro = 0;
