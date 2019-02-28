@@ -1,4 +1,4 @@
-//LCD.ino
+// LCD.ino
 
 void _LCD::init(void) {
   lcd.begin();
