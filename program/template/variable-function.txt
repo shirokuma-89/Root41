@@ -239,3 +239,15 @@ int i, j;
 
 unsigned long timer;
 点灯時間などを計測するタイマー変数
+
+[class _kickoff(kickoff)]
+キックオフに関するクラス
+
+int deg = 0;
+キックオフ時に進みだす方向を示す変数
+
+int go = 0;
+キックオフゴールを行うかと方向を示す変数
+
+long moveTime;
+キックオフゴールで動く時間を計測するタイマー変数
