@@ -210,6 +210,9 @@ void monitor(void){}
 bool boot = true;
 起動直後かを示す変数
 
+bool monitorBegin = false;
+センサーモニターを開始するかを示す変数
+
 int process = HIGH;
 処理速度を向上するかを示す変数
 

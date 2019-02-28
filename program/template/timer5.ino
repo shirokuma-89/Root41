@@ -17,5 +17,5 @@ ISR(timer5Event) {
     //ライン動作中はline.flugをtrueにしておくこと
   }
 
-  startTimer5(30);  //タイマー割り込みを有効化
+  startTimer5(50);  //タイマー割り込みを有効化
 }

@@ -173,6 +173,7 @@ class _device {
   void monitor(void);
 
   bool boot = true;
+  bool monitorBegin = false;
 
   int process = HIGH;
   int mode = 0;
@@ -208,6 +209,48 @@ class _kickoff {
   // none
 } kickoff;
 
-void setup(void) {}
+void setup(void) {
+  device.initialize();
+  device.mode = 0;
+
+  Serial.begin(115200);
+
+  Wire.begin();
+  TWBR = 12;  // I2C通信を高速化
+
+  LCD.init();
+  lcd.print("Root41 starting");
+  LCD.output = 0;
+
+  //起動イルミネーション
+  for (int i = 0; i <= 15; i++) {
+    RGBLED.begin();
+    RGBLED.setBrightness(LED.bright);
+
+    for (int j = 0; j <= 15; j++) {
+      RGBLED.setPixelColor(j, 0, 0, 0);
+    }
+    for (int k = 0; k <= i; k++) {
+      RGBLED.setPixelColor(k, 255, 255, 255);
+    }
+
+    RGBLED.show();
+    if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
+      device.monitorBegin = true;
+    }
+    delay(10);
+  }
+
+  //ジャイロセンサをセットアップ
+  gyro.setting();
+  delay(100);
+  gyro.offset += gyro.read();  //エラー値を保存
+
+  lcd.clear();
+
+  device.monitor();
+
+  startTimer5(50);
+}
 
 void loop(void) {}
