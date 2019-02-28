@@ -80,7 +80,6 @@ class _ball {
 
  private:
   // none
-
 } ball;
 
 class _line {

@@ -43,6 +43,8 @@ Accel_Z
 <クラス - 変数・関数>
 
 [class _ball(ball)]
+ボール追従に関する変数や関数のクラス
+
 void read(int* b){}
 ボールセンサをすべて読み込む。値はアドレスを渡した配列に格納される。
 
@@ -77,6 +79,8 @@ unsigned long resettingTimer = 0;
 ボールセンサのリセット動作時間を計測するタイマー変数
 
 [class _line(line)]
+ライン処理に関する変数や関数のクラス
+
 _line(void){}
 変数の初期化を行う関数
 
@@ -118,3 +122,15 @@ unsigned long inTimer;
 
 unsigned long outTimer;
 ラインの反応が無くなった時のタイマーを格納する変数
+
+[class _motor(motor)]
+モーター駆動に関するクラス
+
+_motor(void){}
+初期化を行う関数
+
+void directDrive(int* p){}
+配列に格納されている値をそのままモーターに出力する関数
+
+void drive(int _deg, int _power, bool stop = false, bool correctDeg = false){}
+角度とパワーから、姿勢制御を行いながらモーターを制御する関数
