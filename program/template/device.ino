@@ -41,6 +41,7 @@ void _device::monitor(void) {
     RGBLED.setBrightness(LED.bright + 30);
 
     digitalWrite(BALL_RESET, HIGH);
+    
     while (true) {
       for (LED.j = 0; LED.j < 256; LED.j++) {
         RGBLED.begin();
