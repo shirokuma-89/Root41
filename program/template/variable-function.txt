@@ -161,3 +161,24 @@ float front;
 
 unsigned long integralTimer = 0;
 姿勢制御の積分動作を制限するためのタイマー変数
+
+[class _gyro(gyro)]
+ジャイロセンサに関する変数・関数のクラス
+
+int read(void);
+角度を読み込む関数
+
+int differentialRead(void);
+角度の微分値（角速度）を取得する関数
+
+void setting(void);
+ジャイロセンサの初期設定を行う関数
+
+int deg;
+角度を格納する変数
+
+int differentialDeg = 0;
+角度の微分値（角速度）を格納する変数
+
+int offset;
+初期設定時の角度のずれを補正するための変数

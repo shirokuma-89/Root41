@@ -132,11 +132,11 @@ class _motor {
 class _gyro {
  public:
   int read(void);
-  int dmpGetGyro(void);
+  int differentialRead(void);
   void setting(void);
 
   int deg;
-  int dmpGyro = 0;
+  int differentialDeg = 0;
   int offset;
 
  private:

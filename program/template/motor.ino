@@ -56,9 +56,9 @@ void _motor::drive(int _deg,
     front = front >= 360 ? front - 360 : front;
 
     integral += front;
-    front *= Kp * -1;                 //比例制御
-    front += gyro.dmpGetGyro() * Kd;  //微分制御
-    front -= integral * Ki;           //積分制御
+    front *= Kp * -1;                       //比例制御
+    front += gyro.differentialRead() * Kd;  //微分制御
+    front -= integral * Ki;                 //積分制御
 
     if (integralTimer + 5000 <= millis()) {
       integralTimer = millis();

@@ -79,7 +79,7 @@ int _gyro::read(void) {
 }
 
 //角速度取得
-int _gyro::dmpGetGyro(void) {
+int _gyro::differentialRead(void) {
   if (!dmpReady)
     return;
 
