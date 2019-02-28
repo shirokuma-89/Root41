@@ -110,7 +110,10 @@ class _motor {
  public:
   _motor(void);
   void directDrive(int* p);
-  void drive(int _deg, int _power, bool stop = false, bool correctionDeg = false);
+  void drive(int _deg,
+             int _power,
+             bool stop = false,
+             bool correctionDeg = false);
 
   bool correction = true;
 
@@ -166,16 +169,13 @@ class _LCD {
 
 class _device {
  public:
-  // void initialize(void);
-  // void monitor(void);
-  // void rainbowLED(void);
+  void initialize(void);
+  void monitor(void);
 
   bool boot = false;
-  bool monitorSend = false;
 
-  int process = HIGH;  // UIを抑制
+  int process = HIGH;
   int mode = 0;
-  int RGB_bright = 60;
   int rotary = 0;
   int rotaryResult = 0;
 
@@ -184,6 +184,17 @@ class _device {
  private:
   // none
 } device;
+
+class _LED {
+ public:
+  int bright = 60;
+  int i, j;
+
+  unsigned long timer;
+
+ private:
+  // none
+} LED;
 
 class _kickoff {
  public:
