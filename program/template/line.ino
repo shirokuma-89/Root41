@@ -14,6 +14,7 @@ void _line::read(void) {
   val[2] = !digitalRead(LINE3);
   val[3] = !digitalRead(LINE4);
 
+  //どれか一つでも反応しているならば
   if (val[0] | val[1] | val[2] | val[3]) {
     touch = true;
   }

@@ -60,6 +60,7 @@ void _motor::drive(int _deg,
     front += gyro.differentialRead() * Kd;  //微分制御
     front -= integral * Ki;                 //積分制御
 
+    //積分動作を制限
     if (integralTimer + 5000 <= millis()) {
       integralTimer = millis();
       integral = 0;
@@ -73,6 +74,7 @@ void _motor::drive(int _deg,
     }
 
     float s;
+    //モーター値（理論値）を代入
     if (_deg == 0) {
       val[0] = 97;
       val[1] = -100;
@@ -163,6 +165,7 @@ void _motor::drive(int _deg,
       val[i] += correctionVal;
     }
 
+    //正規化
     if (abs(val[0]) < abs(val[1])) {
       if (abs(val[1]) < abs(val[2])) {
         s = 100.0 / (float)abs(val[2]);
@@ -191,6 +194,7 @@ void _motor::drive(int _deg,
       }
     }
 
+    //駆動
     directDrive(val);
   }
 }
