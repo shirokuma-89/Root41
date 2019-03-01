@@ -260,7 +260,5 @@ void loop(void) {
     device.mode = 2;
   } else {
     device.mode = 1;
-
-    RGBLED.begin();
   }
 }
