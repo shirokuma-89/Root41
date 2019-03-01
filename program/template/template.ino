@@ -253,5 +253,8 @@ void setup(void) {
   startTimer5(50);
 }
 
-
-void loop(void) {}
+void loop(void) {
+  if (digitalRead(SW_TOGGLE)) {
+  } else {
+  }
+}
