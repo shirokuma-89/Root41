@@ -257,6 +257,8 @@ void loop(void) {
   gyro.deg = gyro.read();
 
   if (digitalRead(SW_TOGGLE)) {
+    device.mode = 2;
   } else {
+    device.mode = 1;
   }
 }
