@@ -254,6 +254,8 @@ void setup(void) {
 }
 
 void loop(void) {
+  gyro.deg = gyro.read();
+
   if (digitalRead(SW_TOGGLE)) {
   } else {
   }
