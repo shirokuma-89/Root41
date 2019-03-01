@@ -243,7 +243,7 @@ void setup(void) {
 
   //ジャイロセンサをセットアップ
   gyro.setting();
-  delay(100);
+  delay(50);
   gyro.offset += gyro.read();  //エラー値を保存
 
   lcd.clear();
@@ -256,9 +256,69 @@ void setup(void) {
 void loop(void) {
   gyro.deg = gyro.read();
 
-  if (digitalRead(SW_TOGGLE)) {
+  RGBLED.begin();
+  RGBLED.setBrightness(LED.bright);
+
+  if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
+
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, 0, 135, 255);
+    }
   } else {
     device.mode = 1;
+
+    if (!digitalRead(SW_TOGGLE)) {
+      device.boot = false;
+    }
+
+    for (int i = 0; i <= 15; i++) {
+      if (!device.boot) {
+        RGBLED.setPixelColor(i, 255, 135, 0);
+      } else {
+        RGBLED.setPixelColor(i, 0, 0, 0);
+      }
+    }
+    LED.gyroShow();
+
+    // LCD表示
+    if (millis() - LCD.timer >= 100) {
+      lcd.clear();
+
+      if (!device.boot) {
+        lcd.print("Root41 waiting");
+      } else {
+        lcd.print("Root41 Boot ERR!");
+      }
+
+      lcd.setCursor(0, 1);  //改行
+
+      lcd.print(gyro.deg);
+      lcd.print(" deg");
+
+      LCD.output = 1;
+      LCD.timer = millis();
+    }
+
+    //ジャイロセンサリセット
+    if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
+      for (int i = 0; i <= 15; i++) {
+        RGBLED.setPixelColor(i, 255, 0, 0);
+      }
+      RGBLED.show();
+
+      lcd.clear();
+      lcd.print("gyro sensor");
+      lcd.setCursor(0, 1);  //改行
+      lcd.print("initializing...");
+
+      gyro.setting();
+      delay(50);
+      gyro.offset += gyro.read();
+    }
   }
+
+  RGBLED.show();
 }
