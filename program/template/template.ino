@@ -268,6 +268,7 @@ void loop(void) {
   } else {
     device.mode = 1;
 
+    //起動エラーを検知
     if (!digitalRead(SW_TOGGLE)) {
       device.boot = false;
     }
