@@ -229,6 +229,7 @@ int rotaryResult = 0;
 ローターリーエンコーダからの生データを一時格納する変数
 
 int errorCode = 0;
+どのようなエラーが起きたのかを示す変数
 
 [class _LED(LED)]
 フルカラーLEDに関するクラス
