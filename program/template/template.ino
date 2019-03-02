@@ -87,7 +87,7 @@ class _line {
   _line(void);
   void read(void);
 
-  bool flug = false;
+  bool flag = false;
   bool near = false;
   bool touch = false;
   bool val[4];
@@ -270,7 +270,7 @@ void loop(void) {
       RGBLED.setPixelColor(i, 0, 135, 255);
     }
 
-    if (!line.flug) {
+    if (!line.flag) {
       motor.deg = ball.deg;
     } else {
       if (line.deg != 1000) {

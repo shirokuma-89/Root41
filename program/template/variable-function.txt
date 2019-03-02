@@ -87,7 +87,7 @@ _line(void){}
 void read(void){}
 ラインセンサの値を取得する関数
 
-bool flug = false;
+bool flag = false;
 ライン動作中かどうかを格納する変数
 
 bool near = false;

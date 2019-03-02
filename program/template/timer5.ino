@@ -14,7 +14,7 @@ ISR(timer5Event) {
 
   } else if (device.mode == 2) {  //動作中
     //ライン処理をここに記述
-    //ライン動作中はline.flugをtrueにしておくこと
+    //ライン動作中はline.flagをtrueにしておくこと
   }
 
   startTimer5(50);  //タイマー割り込みを有効化
