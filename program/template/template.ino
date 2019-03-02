@@ -174,11 +174,13 @@ class _device {
 
   bool boot = true;
   bool monitorBegin = false;
+  bool error = false;
 
   int process = HIGH;
   int mode = 0;
   int rotary = 0;
   int rotaryResult = 0;
+  int errorCode = 0;
 
  private:
   // none
@@ -254,6 +256,8 @@ void setup(void) {
 }
 
 void loop(void) {
+  device.error = false;
+
   gyro.deg = gyro.read();
 
   RGBLED.begin();
@@ -264,6 +268,70 @@ void loop(void) {
 
     for (int i = 0; i <= 15; i++) {
       RGBLED.setPixelColor(i, 0, 135, 255);
+    }
+
+    if (!line.flug) {
+      motor.deg = ball.deg;
+    } else {
+      if (line.deg != 1000) {
+        motor.deg = line.deg;
+      } else if (line.outMove != 1000) {
+        motor.deg = line.outMove;
+      } else {
+        device.error = true;
+        device.errorCode = 1;
+      }
+    }
+
+    // LCD表示
+    if (!device.error) {
+      if (device.process == HIGH) {
+        if (LCD.output != 2) {
+          lcd.clear();
+
+          lcd.print("Root41 running");
+
+          lcd.setCursor(0, 1);  //改行
+
+          lcd.print("No problem");
+
+          LCD.output = 2;
+        }
+      } else {
+        if (millis() - LCD.timer >= 100) {
+          lcd.clear();
+
+          lcd.print("Root41 running");
+
+          lcd.setCursor(0, 1);  //改行
+
+          lcd.print(gyro.deg);
+          lcd.print(" deg");
+
+          LCD.output = 2;
+          LCD.timer = millis();
+        }
+      }
+    }
+
+    if (device.error) {
+      for (int i = 0; i <= 15; i++) {
+        RGBLED.setPixelColor(i, 255, 0, 0);
+      }
+
+      if (millis() - LCD.timer >= 100) {
+        lcd.clear();
+
+        lcd.print("Root41 running");
+
+        lcd.setCursor(0, 1);  //改行
+
+        lcd.print("errorCode = ");
+        lcd.print(device.errorCode);
+
+        LCD.output = 3;
+        LCD.timer = millis();
+      }
     }
   } else {
     device.mode = 1;

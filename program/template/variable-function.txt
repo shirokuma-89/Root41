@@ -213,6 +213,9 @@ bool boot = true;
 bool monitorBegin = false;
 センサーモニターを開始するかを示す変数
 
+bool error = false;
+エラーが起きないか監視する変数
+
 int process = HIGH;
 処理速度を向上するかを示す変数
 
@@ -224,6 +227,8 @@ int rotary = 0;
 
 int rotaryResult = 0;
 ローターリーエンコーダからの生データを一時格納する変数
+
+int errorCode = 0;
 
 [class _LED(LED)]
 フルカラーLEDに関するクラス

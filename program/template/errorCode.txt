@@ -1,0 +1,6 @@
+エラーコード
+
+000 正常
+
+001 line.flugが異常にtrueになっている
+    line.deg,line.outMoveが指定されていない
