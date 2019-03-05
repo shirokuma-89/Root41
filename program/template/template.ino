@@ -272,6 +272,8 @@ void loop(void) {
 
     motor.power = 100;
 
+    ball.deg = 1000;
+
     for (int i = 0; i <= 15; i++) {
       RGBLED.setPixelColor(i, 0, 135, 255);
     }
@@ -310,6 +312,7 @@ void loop(void) {
         }
       }
     } else {
+      motor.drive(NULL, NULL, NULL);
       if (line.near) {
         for (int i = 0; i <= 15; i++) {
           RGBLED.setPixelColor(i, 135, 0, 255);
@@ -364,7 +367,7 @@ void loop(void) {
 
         lcd.setCursor(0, 1);  //改行
 
-        lcd.print("errorCode = ");
+        lcd.print("ErrorCode = ");
         lcd.print(device.errorCode);
 
         LCD.output = 3;
@@ -373,6 +376,8 @@ void loop(void) {
     }
   } else {
     device.mode = 1;
+
+    motor.drive(NULL, NULL, true);
 
     //起動エラーを検知
     if (!digitalRead(SW_TOGGLE)) {
