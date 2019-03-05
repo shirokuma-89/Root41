@@ -64,6 +64,7 @@ Root41_Lib Root41;
 class _ball {
  public:
   void read(int* b);
+
   bool exist = true;
 
   int val[16];
@@ -71,6 +72,8 @@ class _ball {
   int deg;
   int old_top;
   int top_backup;
+
+  const int move = 20;
 
   float x;
   float y;
@@ -126,6 +129,7 @@ class _motor {
 
   float front;
 
+  unsigned long moveTimer;
   unsigned long integralTimer = 0;
 
  private:
@@ -266,12 +270,18 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
+    motor.power = 100;
+
     for (int i = 0; i <= 15; i++) {
       RGBLED.setPixelColor(i, 0, 135, 255);
     }
 
     if (!line.flag) {
-      motor.deg = ball.deg;
+      if (ball.exist) {
+        motor.deg = ball.deg;
+      } else {
+        motor.deg = 1000;
+      }
     } else {
       if (line.deg != 1000) {
         motor.deg = line.deg;
@@ -280,6 +290,34 @@ void loop(void) {
       } else {
         device.error = true;
         device.errorCode = 1;
+      }
+    }
+
+    if (motor.deg != 1000) {
+      if (line.flag) {
+        LED.lineShow();
+        motor.drive(motor.deg, 100);
+      } else {
+        motor.correction = true;
+
+        motor.moveTimer = millis();
+        while (millis() - motor.moveTimer <= ball.move) {
+          if (!line.flag) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            break;
+          }
+        }
+      }
+    } else {
+      if (line.near) {
+        for (int i = 0; i <= 15; i++) {
+          RGBLED.setPixelColor(i, 135, 0, 255);
+        }
+      } else {
+        for (int i = 0; i <= 15; i++) {
+          RGBLED.setPixelColor(i, 0, 255, 0);
+        }
       }
     }
 
