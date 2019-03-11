@@ -270,6 +270,38 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
+    //ボールセンサリセット処理
+    if (millis() - ball.resetTimer >= 1000) {
+      digitalWrite(BALL_RESET, LOW);
+      ball.resettingTimer = millis();
+      while (millis() - ball.resettingTimer <= 7) {
+        if (!line.flag) {
+          if (ball.exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
+        } else {
+          break;
+        }
+      }
+      digitalWrite(BALL_RESET, HIGH);
+      ball.resettingTimer = millis();
+      while (millis() - ball.resettingTimer <= 7) {
+        if (!line.flag) {
+          if (ball.exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
+        } else {
+          break;
+        }
+      }
+      ball.resetTimer = millis();
+      motor.move -= 10;
+    }
+
     motor.power = 100;
 
     ball.deg = 1000;
@@ -303,7 +335,7 @@ void loop(void) {
         motor.correction = true;
 
         motor.moveTimer = millis();
-        while (millis() - motor.moveTimer <= ball.move) {
+        while (millis() - motor.moveTimer <= motor.move) {
           if (!line.flag) {
             motor.drive(motor.deg, motor.power);
           } else {
@@ -312,7 +344,8 @@ void loop(void) {
         }
       }
     } else {
-      motor.drive(NULL, NULL, NULL);
+      motor.drive(NULL, NULL, false, true);
+
       if (line.near) {
         for (int i = 0; i <= 15; i++) {
           RGBLED.setPixelColor(i, 135, 0, 255);
