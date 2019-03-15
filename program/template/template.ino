@@ -64,6 +64,7 @@ Root41_Lib Root41;
 class _ball {
  public:
   void read(int* b);
+
   bool exist = true;
 
   int val[16];
@@ -71,6 +72,8 @@ class _ball {
   int deg;
   int old_top;
   int top_backup;
+
+  const int move = 20;
 
   float x;
   float y;
@@ -87,7 +90,7 @@ class _line {
   _line(void);
   void read(void);
 
-  bool flug = false;
+  bool flag = false;
   bool near = false;
   bool touch = false;
   bool val[4];
@@ -126,6 +129,7 @@ class _motor {
 
   float front;
 
+  unsigned long moveTimer;
   unsigned long integralTimer = 0;
 
  private:
@@ -174,11 +178,13 @@ class _device {
 
   bool boot = true;
   bool monitorBegin = false;
+  bool error = false;
 
   int process = HIGH;
   int mode = 0;
   int rotary = 0;
   int rotaryResult = 0;
+  int errorCode = 0;
 
  private:
   // none
@@ -243,7 +249,7 @@ void setup(void) {
 
   //ジャイロセンサをセットアップ
   gyro.setting();
-  delay(100);
+  delay(50);
   gyro.offset += gyro.read();  //エラー値を保存
 
   lcd.clear();
@@ -254,9 +260,210 @@ void setup(void) {
 }
 
 void loop(void) {
+  device.error = false;
+
   gyro.deg = gyro.read();
 
-  if (digitalRead(SW_TOGGLE)) {
+  RGBLED.begin();
+  RGBLED.setBrightness(LED.bright);
+
+  if (digitalRead(SW_TOGGLE) && !device.boot) {
+    device.mode = 2;
+
+    //ボールセンサリセット処理
+    if (millis() - ball.resetTimer >= 1000) {
+      digitalWrite(BALL_RESET, LOW);
+      ball.resettingTimer = millis();
+      while (millis() - ball.resettingTimer <= 7) {
+        if (!line.flag) {
+          if (ball.exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
+        } else {
+          break;
+        }
+      }
+      digitalWrite(BALL_RESET, HIGH);
+      ball.resettingTimer = millis();
+      while (millis() - ball.resettingTimer <= 7) {
+        if (!line.flag) {
+          if (ball.exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
+        } else {
+          break;
+        }
+      }
+      ball.resetTimer = millis();
+      motor.move -= 10;
+    }
+
+    motor.power = 100;
+
+    ball.deg = 1000;
+
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, 0, 135, 255);
+    }
+
+    if (!line.flag) {
+      if (ball.exist) {
+        motor.deg = ball.deg;
+      } else {
+        motor.deg = 1000;
+      }
+    } else {
+      if (line.deg != 1000) {
+        motor.deg = line.deg;
+      } else if (line.outMove != 1000) {
+        motor.deg = line.outMove;
+      } else {
+        device.error = true;
+        device.errorCode = 1;
+      }
+    }
+
+    if (motor.deg != 1000) {
+      if (line.flag) {
+        LED.lineShow();
+        motor.drive(motor.deg, 100);
+      } else {
+        motor.correction = true;
+
+        motor.moveTimer = millis();
+        while (millis() - motor.moveTimer <= motor.move) {
+          if (!line.flag) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            break;
+          }
+        }
+      }
+    } else {
+      motor.drive(NULL, NULL, false, true);
+
+      if (line.near) {
+        for (int i = 0; i <= 15; i++) {
+          RGBLED.setPixelColor(i, 135, 0, 255);
+        }
+      } else {
+        for (int i = 0; i <= 15; i++) {
+          RGBLED.setPixelColor(i, 0, 255, 0);
+        }
+      }
+    }
+
+    // LCD表示
+    if (!device.error) {
+      if (device.process == HIGH) {
+        if (LCD.output != 2) {
+          lcd.clear();
+
+          lcd.print("Root41 running");
+
+          lcd.setCursor(0, 1);  //改行
+
+          lcd.print("No problem");
+
+          LCD.output = 2;
+        }
+      } else {
+        if (millis() - LCD.timer >= 100) {
+          lcd.clear();
+
+          lcd.print("Root41 running");
+
+          lcd.setCursor(0, 1);  //改行
+
+          lcd.print(gyro.deg);
+          lcd.print(" deg");
+
+          LCD.output = 2;
+          LCD.timer = millis();
+        }
+      }
+    }
+
+    if (device.error) {
+      for (int i = 0; i <= 15; i++) {
+        RGBLED.setPixelColor(i, 255, 0, 0);
+      }
+
+      if (millis() - LCD.timer >= 100) {
+        lcd.clear();
+
+        lcd.print("Root41 running");
+
+        lcd.setCursor(0, 1);  //改行
+
+        lcd.print("ErrorCode = ");
+        lcd.print(device.errorCode);
+
+        LCD.output = 3;
+        LCD.timer = millis();
+      }
+    }
   } else {
+    device.mode = 1;
+
+    motor.drive(NULL, NULL, true);
+
+    //起動エラーを検知
+    if (!digitalRead(SW_TOGGLE)) {
+      device.boot = false;
+    }
+
+    for (int i = 0; i <= 15; i++) {
+      if (!device.boot) {
+        RGBLED.setPixelColor(i, 255, 135, 0);
+      } else {
+        RGBLED.setPixelColor(i, 0, 0, 0);
+      }
+    }
+    LED.gyroShow();
+
+    // LCD表示
+    if (millis() - LCD.timer >= 100) {
+      lcd.clear();
+
+      if (!device.boot) {
+        lcd.print("Root41 waiting");
+      } else {
+        lcd.print("Root41 Boot ERR!");
+      }
+
+      lcd.setCursor(0, 1);  //改行
+
+      lcd.print(gyro.deg);
+      lcd.print(" deg");
+
+      LCD.output = 1;
+      LCD.timer = millis();
+    }
+
+    //ジャイロセンサリセット
+    if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
+      for (int i = 0; i <= 15; i++) {
+        RGBLED.setPixelColor(i, 255, 0, 0);
+      }
+      RGBLED.show();
+
+      lcd.clear();
+      lcd.print("gyro sensor");
+      lcd.setCursor(0, 1);  //改行
+      lcd.print("initializing...");
+
+      gyro.setting();
+      delay(50);
+      gyro.offset += gyro.read();
+    }
   }
+
+  RGBLED.show();
 }

@@ -87,7 +87,7 @@ _line(void){}
 void read(void){}
 ラインセンサの値を取得する関数
 
-bool flug = false;
+bool flag = false;
 ライン動作中かどうかを格納する変数
 
 bool near = false;
@@ -159,6 +159,9 @@ int integral = 0;
 float front;
 姿勢制御値（理論値）を格納する変数
 
+unsigned long moveTimer;
+モーター最小連続動作時間を計測するタイマー変数
+
 unsigned long integralTimer = 0;
 姿勢制御の積分動作を制限するためのタイマー変数
 
@@ -213,6 +216,9 @@ bool boot = true;
 bool monitorBegin = false;
 センサーモニターを開始するかを示す変数
 
+bool error = false;
+エラーが起きないか監視する変数
+
 int process = HIGH;
 処理速度を向上するかを示す変数
 
@@ -224,6 +230,9 @@ int rotary = 0;
 
 int rotaryResult = 0;
 ローターリーエンコーダからの生データを一時格納する変数
+
+int errorCode = 0;
+どのようなエラーが起きたのかを示す変数
 
 [class _LED(LED)]
 フルカラーLEDに関するクラス

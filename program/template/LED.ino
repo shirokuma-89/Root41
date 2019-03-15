@@ -18,11 +18,11 @@ void _LED::gyroShow(void) {
     }
   }
 
-  RGBLED.setPixelColor(light, 0, 50, 255);
-  RGBLED.setPixelColor((light + 1) % 16, 0, 50, 255);
-  RGBLED.setPixelColor((light + 15) % 16, 0, 50, 255);
-  RGBLED.setPixelColor((light + 2) % 16, 0, 50, 255);
-  RGBLED.setPixelColor((light + 14) % 16, 0, 50, 255);
+  RGBLED.setPixelColor(light, 255, 0, 0);
+  RGBLED.setPixelColor((light + 1) % 16, 255, 0, 0);
+  RGBLED.setPixelColor((light + 15) % 16, 255, 0, 0);
+  RGBLED.setPixelColor((light + 2) % 16, 255, 0, 0);
+  RGBLED.setPixelColor((light + 14) % 16, 255, 0, 0);
 }
 
 void _LED::lineShow(void) {
