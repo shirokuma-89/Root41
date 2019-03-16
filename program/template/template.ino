@@ -64,6 +64,7 @@ Root41_Lib Root41;
 class _ball {
  public:
   void read(int* b);
+  void reset(void);
 
   bool exist = true;
 
@@ -99,14 +100,13 @@ class _line {
   int outMove = 1000;
   int mode = 0;
   int offset = 0;
+
+ private:
   int first = 5;
   int second = 5;
 
   unsigned long inTimer;
   unsigned long outTimer;
-
- private:
-  // none
 } line;
 
 class _motor {
@@ -121,19 +121,21 @@ class _motor {
   bool correction = true;
 
   int val[3];
-  int correctionVal;
+
   int deg;
   int power;
   int move = 15;
+
+  unsigned long moveTimer;
+
+ private:
+  int correctionVal;
   int integral = 0;
 
   float front;
 
-  unsigned long moveTimer;
   unsigned long integralTimer = 0;
 
- private:
-  // none
 } motor;
 
 class _gyro {
@@ -154,6 +156,11 @@ class _LCD {
  public:
   void init(void);
 
+  int output = 0;
+
+  unsigned long timer = 0;
+
+ private:
   byte character1[8];
   byte character2[8];
   byte character3[8];
@@ -163,12 +170,6 @@ class _LCD {
   byte character7[8];
   byte character8[8];
 
-  int output = 0;
-
-  unsigned long timer = 0;
-
- private:
-  // none
 } LCD;
 
 class _device {
