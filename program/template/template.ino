@@ -194,6 +194,7 @@ class _LED {
  public:
   void gyroShow(void);
   void lineShow(void);
+  void changeAll(int red, int green, int blue);
 
   int bright = 60;
   int i, j;
@@ -233,9 +234,8 @@ void setup(void) {
     RGBLED.begin();
     RGBLED.setBrightness(LED.bright);
 
-    for (int j = 0; j <= 15; j++) {
-      RGBLED.setPixelColor(j, 0, 0, 0);
-    }
+    LED.changeAll(0, 0, 0);
+
     for (int k = 0; k <= i; k++) {
       RGBLED.setPixelColor(k, 255, 255, 255);
     }
@@ -270,16 +270,13 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    //ボールセンサリセット処理
     ball.reset();
 
     motor.power = 100;
 
     ball.deg = 1000;
 
-    for (int i = 0; i <= 15; i++) {
-      RGBLED.setPixelColor(i, 0, 135, 255);
-    }
+    LED.changeAll(0, 135, 255);
 
     if (!line.flag) {
       if (ball.exist) {
@@ -318,13 +315,9 @@ void loop(void) {
       motor.drive(NULL, NULL, false, true);
 
       if (line.near) {
-        for (int i = 0; i <= 15; i++) {
-          RGBLED.setPixelColor(i, 135, 0, 255);
-        }
+        LED.changeAll(135, 0, 255);
       } else {
-        for (int i = 0; i <= 15; i++) {
-          RGBLED.setPixelColor(i, 0, 255, 0);
-        }
+        LED.changeAll(0, 255, 0);
       }
     }
 
@@ -360,9 +353,7 @@ void loop(void) {
     }
 
     if (device.error) {
-      for (int i = 0; i <= 15; i++) {
-        RGBLED.setPixelColor(i, 255, 0, 0);
-      }
+      LED.changeAll(255, 0, 0);
 
       if (millis() - LCD.timer >= 100) {
         lcd.clear();
@@ -388,13 +379,12 @@ void loop(void) {
       device.boot = false;
     }
 
-    for (int i = 0; i <= 15; i++) {
-      if (!device.boot) {
-        RGBLED.setPixelColor(i, 255, 135, 0);
-      } else {
-        RGBLED.setPixelColor(i, 0, 0, 0);
-      }
+    if (!device.boot) {
+      LED.changeAll(255, 135, 0);
+    } else {
+      LED.changeAll(0, 0, 0);
     }
+
     LED.gyroShow();
 
     // LCD表示
@@ -420,9 +410,9 @@ void loop(void) {
     if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
       RGBLED.begin();
       RGBLED.setBrightness(LED.bright);
-      for (int i = 0; i <= 15; i++) {
-        RGBLED.setPixelColor(i, 255, 0, 0);
-      }
+
+      LED.changeAll(255, 0, 0);
+
       RGBLED.show();
 
       lcd.clear();

@@ -246,6 +246,9 @@ void gyroShow(void){}
 void lineShow(void){}
 反応しているラインセンサを表示する関数
 
+void changeAll(int red, int green, int blue){}
+LEDの色を一括変更する関数
+
 int bright = 60;
 LEDの明るさを指定する変数
 
