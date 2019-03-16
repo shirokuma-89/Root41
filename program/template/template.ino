@@ -79,11 +79,10 @@ class _ball {
   float x;
   float y;
 
+ private:
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
 
- private:
-  // none
 } ball;
 
 class _line {
@@ -272,36 +271,7 @@ void loop(void) {
     device.mode = 2;
 
     //ボールセンサリセット処理
-    if (millis() - ball.resetTimer >= 1000) {
-      digitalWrite(BALL_RESET, LOW);
-      ball.resettingTimer = millis();
-      while (millis() - ball.resettingTimer <= 7) {
-        if (!line.flag) {
-          if (ball.exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
-        } else {
-          break;
-        }
-      }
-      digitalWrite(BALL_RESET, HIGH);
-      ball.resettingTimer = millis();
-      while (millis() - ball.resettingTimer <= 7) {
-        if (!line.flag) {
-          if (ball.exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
-        } else {
-          break;
-        }
-      }
-      ball.resetTimer = millis();
-      motor.move -= 10;
-    }
+    ball.reset();
 
     motor.power = 100;
 

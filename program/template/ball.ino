@@ -18,3 +18,38 @@ void _ball::read(int* b) {
   *(b + 14) = analogRead(BALL14);
   *(b + 15) = analogRead(BALL15);
 }
+
+void _ball::reset(void) {
+  if (millis() - resetTimer >= 1000) {
+    digitalWrite(BALL_RESET, LOW);
+    resettingTimer = millis();
+    while (millis() - resettingTimer <= 7) {
+      if (!line.flag) {
+        if (ball.exist) {
+          motor.drive(motor.deg, motor.power);
+        } else {
+          motor.drive(NULL, NULL, false, true);
+        }
+      } else {
+        break;
+      }
+    }
+    digitalWrite(BALL_RESET, HIGH);
+    resettingTimer = millis();
+    while (millis() - resettingTimer <= 7) {
+      if (!line.flag) {
+        if (ball.exist) {
+          motor.drive(motor.deg, motor.power);
+        } else {
+          motor.drive(NULL, NULL, false, true);
+        }
+      } else {
+        break;
+      }
+    }
+    resetTimer = millis();
+    motor.move -= 10;
+  } else {
+    return;
+  }
+}
