@@ -259,6 +259,8 @@ void setup(void) {
   startTimer5(50);
 }
 
+//\('ω')/
+
 void loop(void) {
   device.error = false;
 
@@ -307,8 +309,10 @@ void loop(void) {
     ball.deg = 1000;
 
     for (int i = 0; i <= 15; i++) {
-      RGBLED.setPixelColor(i, 0, 135, 255);
+      RGBLED.setPixelColor(i, 0, 135, 255);  //コンフリクトさせるテスト
     }
+
+    //('ω')
 
     if (!line.flag) {
       if (ball.exist) {
