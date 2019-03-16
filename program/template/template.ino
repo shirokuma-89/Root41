@@ -275,6 +275,7 @@ void loop(void) {
 
     motor.power = 100;
 
+    //ボール処理
     ball.deg = 1000;
     ball.calc();
 
