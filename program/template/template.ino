@@ -65,6 +65,7 @@ class _ball {
  public:
   void read(int* b);
   void reset(void);
+  void calc(void);
 
   bool exist = true;
 
@@ -275,6 +276,7 @@ void loop(void) {
     motor.power = 100;
 
     ball.deg = 1000;
+    ball.calc();
 
     LED.changeAll(0, 135, 255);
 

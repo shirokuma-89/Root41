@@ -19,6 +19,8 @@ void _ball::read(int* b) {
   *(b + 15) = analogRead(BALL15);
 }
 
+void _ball::calc(void) {}
+
 void _ball::reset(void) {
   if (millis() - resetTimer >= 1000) {
     digitalWrite(BALL_RESET, LOW);

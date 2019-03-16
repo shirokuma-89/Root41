@@ -51,6 +51,9 @@ void read(int* b){}
 void reset(void){}
 ボールセンサをリセットする関数
 
+void calc(void){}
+センサー値から角度を計算する関数
+
 bool exist = true;
 ボールを検出しているかどうかを格納する変数
 
