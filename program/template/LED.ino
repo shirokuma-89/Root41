@@ -58,3 +58,9 @@ void _LED::lineShow(void) {
     RGBLED.setPixelColor(10, 255, 0, 0);
   }
 }
+
+void _LED::changeAll(int red, int green, int blue) {
+  for (int i = 0; i <= 15; i++) {
+    RGBLED.setPixelColor(i, red, green, blue);
+  }
+}

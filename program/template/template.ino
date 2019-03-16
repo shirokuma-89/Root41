@@ -64,6 +64,8 @@ Root41_Lib Root41;
 class _ball {
  public:
   void read(int* b);
+  void reset(void);
+  void calc(void);
 
   bool exist = true;
 
@@ -78,11 +80,10 @@ class _ball {
   float x;
   float y;
 
+ private:
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
 
- private:
-  // none
 } ball;
 
 class _line {
@@ -99,14 +100,13 @@ class _line {
   int outMove = 1000;
   int mode = 0;
   int offset = 0;
+
+ private:
   int first = 5;
   int second = 5;
 
   unsigned long inTimer;
   unsigned long outTimer;
-
- private:
-  // none
 } line;
 
 class _motor {
@@ -121,19 +121,21 @@ class _motor {
   bool correction = true;
 
   int val[3];
-  int correctionVal;
+
   int deg;
   int power;
   int move = 15;
+
+  unsigned long moveTimer;
+
+ private:
+  int correctionVal;
   int integral = 0;
 
   float front;
 
-  unsigned long moveTimer;
   unsigned long integralTimer = 0;
 
- private:
-  // none
 } motor;
 
 class _gyro {
@@ -154,6 +156,11 @@ class _LCD {
  public:
   void init(void);
 
+  int output = 0;
+
+  unsigned long timer = 0;
+
+ private:
   byte character1[8];
   byte character2[8];
   byte character3[8];
@@ -163,12 +170,6 @@ class _LCD {
   byte character7[8];
   byte character8[8];
 
-  int output = 0;
-
-  unsigned long timer = 0;
-
- private:
-  // none
 } LCD;
 
 class _device {
@@ -194,6 +195,7 @@ class _LED {
  public:
   void gyroShow(void);
   void lineShow(void);
+  void changeAll(int red, int green, int blue);
 
   int bright = 60;
   int i, j;
@@ -233,9 +235,8 @@ void setup(void) {
     RGBLED.begin();
     RGBLED.setBrightness(LED.bright);
 
-    for (int j = 0; j <= 15; j++) {
-      RGBLED.setPixelColor(j, 0, 0, 0);
-    }
+    LED.changeAll(0, 0, 0);
+
     for (int k = 0; k <= i; k++) {
       RGBLED.setPixelColor(k, 255, 255, 255);
     }
@@ -259,8 +260,6 @@ void setup(void) {
   startTimer5(50);
 }
 
-//\('ω')/
-
 void loop(void) {
   device.error = false;
 
@@ -272,47 +271,15 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    //ボールセンサリセット処理
-    if (millis() - ball.resetTimer >= 1000) {
-      digitalWrite(BALL_RESET, LOW);
-      ball.resettingTimer = millis();
-      while (millis() - ball.resettingTimer <= 7) {
-        if (!line.flag) {
-          if (ball.exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
-        } else {
-          break;
-        }
-      }
-      digitalWrite(BALL_RESET, HIGH);
-      ball.resettingTimer = millis();
-      while (millis() - ball.resettingTimer <= 7) {
-        if (!line.flag) {
-          if (ball.exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
-        } else {
-          break;
-        }
-      }
-      ball.resetTimer = millis();
-      motor.move -= 10;
-    }
+    ball.reset();
 
     motor.power = 100;
 
+    //ボール処理
     ball.deg = 1000;
+    ball.calc();
 
-    for (int i = 0; i <= 15; i++) {
-      RGBLED.setPixelColor(i, 0, 135, 255);  //コンフリクトさせるテスト
-    }
-
-    //('ω')
+    LED.changeAll(0, 135, 255);
 
     if (!line.flag) {
       if (ball.exist) {
@@ -351,13 +318,9 @@ void loop(void) {
       motor.drive(NULL, NULL, false, true);
 
       if (line.near) {
-        for (int i = 0; i <= 15; i++) {
-          RGBLED.setPixelColor(i, 135, 0, 255);
-        }
+        LED.changeAll(135, 0, 255);
       } else {
-        for (int i = 0; i <= 15; i++) {
-          RGBLED.setPixelColor(i, 0, 255, 0);
-        }
+        LED.changeAll(0, 255, 0);
       }
     }
 
@@ -393,9 +356,7 @@ void loop(void) {
     }
 
     if (device.error) {
-      for (int i = 0; i <= 15; i++) {
-        RGBLED.setPixelColor(i, 255, 0, 0);
-      }
+      LED.changeAll(255, 0, 0);
 
       if (millis() - LCD.timer >= 100) {
         lcd.clear();
@@ -421,13 +382,12 @@ void loop(void) {
       device.boot = false;
     }
 
-    for (int i = 0; i <= 15; i++) {
-      if (!device.boot) {
-        RGBLED.setPixelColor(i, 255, 135, 0);
-      } else {
-        RGBLED.setPixelColor(i, 0, 0, 0);
-      }
+    if (!device.boot) {
+      LED.changeAll(255, 135, 0);
+    } else {
+      LED.changeAll(0, 0, 0);
     }
+
     LED.gyroShow();
 
     // LCD表示
@@ -453,9 +413,9 @@ void loop(void) {
     if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
       RGBLED.begin();
       RGBLED.setBrightness(LED.bright);
-      for (int i = 0; i <= 15; i++) {
-        RGBLED.setPixelColor(i, 255, 0, 0);
-      }
+
+      LED.changeAll(255, 0, 0);
+
       RGBLED.show();
 
       lcd.clear();

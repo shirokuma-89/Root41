@@ -46,7 +46,13 @@ Accel_Z
 ボール追従に関する変数や関数のクラス
 
 void read(int* b){}
-ボールセンサをすべて読み込む。値はアドレスを渡した配列に格納される。
+ボールセンサをすべて読み込む。値はアドレスを渡した配列に格納される
+
+void reset(void){}
+ボールセンサをリセットする関数
+
+void calc(void){}
+センサー値から角度を計算する関数
 
 bool exist = true;
 ボールを検出しているかどうかを格納する変数
@@ -242,6 +248,9 @@ void gyroShow(void){}
 
 void lineShow(void){}
 反応しているラインセンサを表示する関数
+
+void changeAll(int red, int green, int blue){}
+LEDの色を一括変更する関数
 
 int bright = 60;
 LEDの明るさを指定する変数
