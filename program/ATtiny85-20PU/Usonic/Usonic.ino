@@ -1,7 +1,8 @@
 // Usonic.ino
 
-#define TRIG 10
-#define ECHO 11
+#include <TinyWireS.h>
+
+#define PIN1 1
 
 class _usonic {
  public:
@@ -17,27 +18,25 @@ class _usonic {
 } usonic;
 
 void setup(void) {
-  Serial.begin(115200);
-
-  pinMode(TRIG, OUTPUT);
-  pinMode(ECHO, INPUT);
+  TinyWireS.begin(8);
+  TinyWireS.onRequest(requestEvent);
 }
 
 void loop(void) {
   usonic.distance = usonic.read();
-
-  Serial.println((String)usonic.distance + " cm");
 }
 
 byte _usonic::read(void) {
-  //超音波に5usのパルスを出力
-  digitalWrite(TRIG, LOW);
+  // 超音波に5usのパルスを出力
+  pinMode(PIN1, OUTPUT);  // ピンを出力モードにする
+  digitalWrite(PIN1, LOW);
   delayMicroseconds(2);
-  digitalWrite(TRIG, HIGH);
+  digitalWrite(PIN1, HIGH);
   delayMicroseconds(5);
-  digitalWrite(TRIG, LOW);
+  digitalWrite(PIN1, LOW);
 
-  timer = pulseIn(ECHO, HIGH);  // パルス幅を計測
+  pinMode(pin, INPUT);
+  timer = pulseIn(PIN, HIGH);  // パルス幅を計測
 
   if (timer < 18000) {
     //距離を計算
@@ -47,5 +46,9 @@ byte _usonic::read(void) {
     ans = 0;
   }
 
-  return (byte)ans;
+  return ans;
+}
+
+void requestEvent() {
+  TinyWireS.send(usonic.distance);
 }

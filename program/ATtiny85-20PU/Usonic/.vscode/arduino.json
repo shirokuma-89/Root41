@@ -1,0 +1,4 @@
+{
+    "board": "ATTinyCore-master:avr:attinyx5",
+    "configuration": "LTO=disable,TimerClockSource=default,chip=85,clock=8internal,eesave=aenable,bod=disable"
+}
