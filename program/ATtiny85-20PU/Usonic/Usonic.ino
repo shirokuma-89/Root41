@@ -35,8 +35,8 @@ byte _usonic::read(void) {
   delayMicroseconds(5);
   digitalWrite(PIN1, LOW);
 
-  pinMode(pin, INPUT);
-  timer = pulseIn(PIN, HIGH);  // パルス幅を計測
+  pinMode(PIN1, INPUT);
+  timer = pulseIn(PIN1, HIGH);  // パルス幅を計測
 
   if (timer < 18000) {
     //距離を計算
@@ -50,5 +50,5 @@ byte _usonic::read(void) {
 }
 
 void requestEvent() {
-  TinyWireS.send(usonic.distance);
+  TinyWireS.send((byte)usonic.distance);
 }

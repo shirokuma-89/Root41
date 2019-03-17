@@ -384,6 +384,9 @@ void loop(void) {
 
     LED.gyroShow();
 
+    usonic.distance = usonic.getDistance();
+    Serial.println(usonic.distance);
+
     // LCD表示
     if (millis() - LCD.timer >= 100) {
       lcd.clear();

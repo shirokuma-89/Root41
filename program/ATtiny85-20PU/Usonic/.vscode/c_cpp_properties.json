@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\atmega\\avr\\**",
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\attiny\\avr\\**",
                 "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\ATTinyCore-master\\avr\\**"
             ],
             "forcedInclude": [],
