@@ -154,6 +154,9 @@ class _usonic {
 
  private:
   byte data;
+
+  unsigned long timeOut;
+
 } usonic;
 
 class _LCD {
@@ -228,7 +231,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  TWBR = 12;  // I2C通信を高速化
+  TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
