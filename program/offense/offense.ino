@@ -146,6 +146,16 @@ class _gyro {
   // none
 } gyro;
 
+class _usonic {
+ public:
+  int getDistance(void);
+
+  int distance = 0;
+
+ private:
+  byte data;
+} usonic;
+
 class _LCD {
  public:
   void init(void);
