@@ -1,15 +1,19 @@
 {
-    "configurations": [ {
-        "name": "Win32",
-        "includePath": [
-            "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
-            "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\**",
-            "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
-        ],
-        "forcedInclude": [
-            "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\cores\\arduino\\Arduino.h"
-        ],
-        "intelliSenseMode": "msvc-x64"
-    } ],
-    "version": 4
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
+                "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\**",
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
+            ],
+            "forcedInclude": [
+                "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\cores\\arduino\\Arduino.h"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 3
 }
