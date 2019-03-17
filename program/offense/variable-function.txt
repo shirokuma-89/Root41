@@ -192,6 +192,21 @@ int differentialDeg = 0;
 int offset;
 初期設定時の角度のずれを補正するための変数
 
+[class _usonic(usonic)]
+超音波センサに関するクラス
+
+int getDistance(void){}
+超音波から距離を取得する関数
+
+int distance = 0;
+距離を格納する変数
+
+byte data;
+I2Cで受信したデータを一時的に格納する変数
+
+unsigned long timeOut;
+I2Cのタイムアウトを監視する変数
+
 [class _LCD(LCD)]
 LCDに関する変数・関数のクラス
 

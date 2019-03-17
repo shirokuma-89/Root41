@@ -146,6 +146,19 @@ class _gyro {
   // none
 } gyro;
 
+class _usonic {
+ public:
+  int getDistance(void);
+
+  int distance = 0;
+
+ private:
+  byte data;
+
+  unsigned long timeOut;
+
+} usonic;
+
 class _LCD {
  public:
   void init(void);
@@ -218,7 +231,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  TWBR = 12;  // I2C通信を高速化
+  // TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
@@ -383,6 +396,9 @@ void loop(void) {
     }
 
     LED.gyroShow();
+
+    usonic.distance = usonic.getDistance();
+    Serial.println(usonic.distance);
 
     // LCD表示
     if (millis() - LCD.timer >= 100) {
