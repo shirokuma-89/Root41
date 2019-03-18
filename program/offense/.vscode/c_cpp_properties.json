@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\my_apps\\arduino-1.8.6-VScode\\tools\\**",
+                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**"
+            ],
+            "forcedInclude": [
+                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+            ],
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 3,
+    "version": 4
+}
