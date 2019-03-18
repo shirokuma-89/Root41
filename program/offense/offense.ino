@@ -321,7 +321,7 @@ void loop(void) {
         motor.moveTimer = millis();
         while (millis() - motor.moveTimer <= motor.move) {
           if (!line.flag) {
-            motor.drive(0, motor.power);
+            motor.drive(motor.deg, motor.power);
           } else {
             break;
           }
@@ -421,7 +421,10 @@ void loop(void) {
 
       lcd.setCursor(9, 1);  //改行
 
-      lcd.print(usonic.distance);
+      // lcd.print(usonic.distance);
+      // lcd.print(" cm");
+
+      lcd.print(gyro.differentialRead());
       lcd.print(" cm");
 
       LCD.output = 1;
