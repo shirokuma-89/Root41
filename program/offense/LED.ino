@@ -59,6 +59,14 @@ void _LED::lineShow(void) {
   }
 }
 
+void _LED::ballShow(int deg) {
+  deg /= 22.5;
+  deg %= 16;
+  RGBLED.setPixelColor(deg, 255, 0, 0);
+  RGBLED.setPixelColor((deg + 15) % 16, 255, 0, 0);
+  RGBLED.setPixelColor((deg + 1) % 16, 255, 0, 0);
+}
+
 void _LED::changeAll(int red, int green, int blue) {
   for (int i = 0; i <= 15; i++) {
     RGBLED.setPixelColor(i, red, green, blue);

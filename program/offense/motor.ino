@@ -185,7 +185,7 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -98, 98);
+      val[i] = constrain(val[i], -100, 100);
     }
 
     if (correctionDeg) {

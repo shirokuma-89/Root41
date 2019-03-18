@@ -202,6 +202,7 @@ class _LED {
  public:
   void gyroShow(void);
   void lineShow(void);
+  void ballShow(int deg);
   void changeAll(int red, int green, int blue);
 
   int bright = 60;
@@ -282,44 +283,12 @@ void loop(void) {
 
     ball.reset();
 
-    //ボールセンサリセット処理
-    // if (millis() - ball.resetTimer >= 1000) {
-    //   digitalWrite(BALL_RESET, LOW);
-    //   ball.resettingTimer = millis();
-    //   while (millis() - ball.resettingTimer <= 10) {
-    //     Serial.println(ball.exist);
-    //     if (!line.flag) {
-    //       if (ball.exist) {
-    //         motor.drive(motor.deg, motor.power);
-    //       } else {
-    //         motor.drive(NULL, NULL, true, true);
-    //       }
-    //     } else {
-    //       break;
-    //     }
-    //   }
-    //   digitalWrite(BALL_RESET, HIGH);
-    //   ball.resettingTimer = millis();
-    //   while (millis() - ball.resettingTimer <= 10) {
-    //     Serial.println(ball.exist);
-    //     if (!line.flag) {
-    //       if (ball.exist) {
-    //         motor.drive(motor.deg, motor.power);
-    //       } else {
-    //         motor.drive(NULL, NULL, true, true);
-    //       }
-    //     } else {
-    //       break;
-    //     }
-    //   }
-    //   ball.resetTimer = millis();
-    //   motor.move -= 15;
-    // }
-
     motor.power = 100;
 
-    //ボール処理
-    // ball.calc();
+    // ボール処理
+    ball.read(ball.val);
+    ball.calc();
+    Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -345,12 +314,14 @@ void loop(void) {
         LED.lineShow();
         motor.drive(motor.deg, 100);
       } else {
+        LED.ballShow(motor.deg);
+
         motor.correction = true;
 
         motor.moveTimer = millis();
         while (millis() - motor.moveTimer <= motor.move) {
           if (!line.flag) {
-            motor.drive(motor.deg, motor.power);
+            motor.drive(0, motor.power);
           } else {
             break;
           }
