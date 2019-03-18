@@ -396,13 +396,12 @@ void loop(void) {
 
     LED.gyroShow();
 
-    // LCD表示
-    if (millis() - LCD.timer >= 300) {
-      lcd.clear();
 
-      usonic.distance = usonic.getDistance();
+    if (millis() - LCD.timer >= 300) {
 
       if (!device.boot) {
+      usonic.distance = usonic.getDistance();
+
         lcd.print("Root41 waiting");
       } else {
         lcd.print("Root41 Boot ERR!");
@@ -414,6 +413,11 @@ void loop(void) {
       lcd.print(" deg");
 
       lcd.setCursor(9, 1);  //改行
+      lcd.setCursor(9, 1);  //改行
+
+      lcd.print(usonic.distance);
+      lcd.print(" cm");
+
 
       lcd.print(usonic.distance);
       lcd.print(" cm");
