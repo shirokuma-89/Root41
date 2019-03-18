@@ -51,9 +51,9 @@ void _motor::drive(int _deg,
     Kd = 0.167;
 
     front = gyro.deg;
-    front -= line.offset;
-    front = front + 360;
-    front = front >= 360 ? front - 360 : front;
+    // front -= line.offset;
+    // front = front + 360;
+    // front = front >= 360 ? front - 360 : front;
 
     integral += front;
     front *= Kp * -1;                       //比例制御
@@ -190,7 +190,7 @@ void _motor::drive(int _deg,
 
     if (correctionDeg) {
       for (int i = 0; i <= 2; i++) {
-        val[i] = correctionDeg;
+        val[i] = correctionVal;
       }
     }
 
