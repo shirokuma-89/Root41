@@ -231,7 +231,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  // TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
+  TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
@@ -396,12 +396,11 @@ void loop(void) {
 
     LED.gyroShow();
 
-    usonic.distance = usonic.getDistance();
-    Serial.println(usonic.distance);
-
     // LCD表示
-    if (millis() - LCD.timer >= 100) {
+    if (millis() - LCD.timer >= 300) {
       lcd.clear();
+
+      usonic.distance = usonic.getDistance();
 
       if (!device.boot) {
         lcd.print("Root41 waiting");
@@ -413,6 +412,11 @@ void loop(void) {
 
       lcd.print(gyro.deg);
       lcd.print(" deg");
+
+      lcd.setCursor(9, 1);  //改行
+
+      lcd.print(usonic.distance);
+      lcd.print(" cm");
 
       LCD.output = 1;
       LCD.timer = millis();
