@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "C:\\my_apps\\arduino-1.8.6-VScode\\tools\\**",
-                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**"
+                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**",
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
             ],
             "forcedInclude": [
                 "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
