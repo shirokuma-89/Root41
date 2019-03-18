@@ -288,7 +288,7 @@ void loop(void) {
     // ボール処理
     ball.read(ball.val);
     ball.calc();
-    Serial.println(ball.top);
+    // Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -404,7 +404,7 @@ void loop(void) {
     LED.gyroShow();
 
     if (millis() - LCD.timer >= 300) {
-      usonic.distance = usonic.getDistance();
+      // usonic.distance = usonic.getDistance();
 
       lcd.clear();
 
@@ -425,7 +425,7 @@ void loop(void) {
       // lcd.print(" cm");
 
       lcd.print(gyro.differentialRead());
-      lcd.print(" cm");
+      lcd.print(" deg");
 
       LCD.output = 1;
       LCD.timer = millis();
