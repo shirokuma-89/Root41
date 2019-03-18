@@ -19,7 +19,25 @@ void _ball::read(int* b) {
   *(b + 15) = analogRead(BALL15);
 }
 
-void _ball::calc(void) {}
+void _ball::calc(void) {
+  deg = 1000;
+
+  top = 0;
+
+  for (int i = 0; i <= 15; i++) {
+    if (val[top] >= val[i]) {
+      top = i;
+    }
+  }
+
+  if (val[top] > 550) {
+    exist = false;
+  } else {
+    exist = true;
+  }
+
+  deg = round((float)top * 22.5);
+}
 
 void _ball::reset(void) {
   if (millis() - resetTimer >= 1000) {
@@ -27,7 +45,7 @@ void _ball::reset(void) {
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
       if (!line.flag) {
-        if (ball.exist) {
+        if (exist) {
           motor.drive(motor.deg, motor.power);
         } else {
           motor.drive(NULL, NULL, false, true);
@@ -40,7 +58,7 @@ void _ball::reset(void) {
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
       if (!line.flag) {
-        if (ball.exist) {
+        if (exist) {
           motor.drive(motor.deg, motor.power);
         } else {
           motor.drive(NULL, NULL, false, true);

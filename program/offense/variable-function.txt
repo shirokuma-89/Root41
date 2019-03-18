@@ -264,6 +264,9 @@ void gyroShow(void){}
 void lineShow(void){}
 反応しているラインセンサを表示する関数
 
+void ballShow(int deg){}
+ボールの角度を表示する関数
+
 void changeAll(int red, int green, int blue){}
 LEDの色を一括変更する関数
 

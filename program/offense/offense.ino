@@ -74,10 +74,10 @@ class _ball {
   float x;
   float y;
 
- private:
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
 
+ private:
 } ball;
 
 class _line {
@@ -202,6 +202,7 @@ class _LED {
  public:
   void gyroShow(void);
   void lineShow(void);
+  void ballShow(int deg);
   void changeAll(int red, int green, int blue);
 
   int bright = 60;
@@ -231,7 +232,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  // TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
+  TWBR = 12;  // ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
@@ -278,13 +279,16 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
+    motor.move = 20;
+
     ball.reset();
 
     motor.power = 100;
 
-    //ボール処理
-    ball.deg = 1000;
+    // ボール処理
+    ball.read(ball.val);
     ball.calc();
+    Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -310,6 +314,8 @@ void loop(void) {
         LED.lineShow();
         motor.drive(motor.deg, 100);
       } else {
+        LED.ballShow(motor.deg);
+
         motor.correction = true;
 
         motor.moveTimer = millis();
@@ -397,11 +403,9 @@ void loop(void) {
 
     LED.gyroShow();
 
-    usonic.distance = usonic.getDistance();
-    Serial.println(usonic.distance);
+    if (millis() - LCD.timer >= 300) {
+      usonic.distance = usonic.getDistance();
 
-    // LCD表示
-    if (millis() - LCD.timer >= 100) {
       lcd.clear();
 
       if (!device.boot) {
@@ -414,6 +418,14 @@ void loop(void) {
 
       lcd.print(gyro.deg);
       lcd.print(" deg");
+
+      lcd.setCursor(9, 1);  //改行
+
+      // lcd.print(usonic.distance);
+      // lcd.print(" cm");
+
+      lcd.print(gyro.differentialRead());
+      lcd.print(" cm");
 
       LCD.output = 1;
       LCD.timer = millis();
