@@ -74,10 +74,10 @@ class _ball {
   float x;
   float y;
 
- private:
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
 
+ private:
 } ball;
 
 class _line {
@@ -231,7 +231,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  TWBR = 12;  //ATtiny85との通信エラーが起きるならコメントアウトする
+  TWBR = 12;  // ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
@@ -278,12 +278,48 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
+    motor.move = 20;
+
     ball.reset();
+
+    //ボールセンサリセット処理
+    // if (millis() - ball.resetTimer >= 1000) {
+    //   digitalWrite(BALL_RESET, LOW);
+    //   ball.resettingTimer = millis();
+    //   while (millis() - ball.resettingTimer <= 10) {
+    //     Serial.println(ball.exist);
+    //     if (!line.flag) {
+    //       if (ball.exist) {
+    //         motor.drive(motor.deg, motor.power);
+    //       } else {
+    //         motor.drive(NULL, NULL, true, true);
+    //       }
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   digitalWrite(BALL_RESET, HIGH);
+    //   ball.resettingTimer = millis();
+    //   while (millis() - ball.resettingTimer <= 10) {
+    //     Serial.println(ball.exist);
+    //     if (!line.flag) {
+    //       if (ball.exist) {
+    //         motor.drive(motor.deg, motor.power);
+    //       } else {
+    //         motor.drive(NULL, NULL, true, true);
+    //       }
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   ball.resetTimer = millis();
+    //   motor.move -= 15;
+    // }
 
     motor.power = 100;
 
     //ボール処理
-    ball.calc();
+    // ball.calc();
 
     LED.changeAll(0, 135, 255);
 
@@ -396,12 +432,12 @@ void loop(void) {
 
     LED.gyroShow();
 
-
     if (millis() - LCD.timer >= 300) {
-
-      if (!device.boot) {
       usonic.distance = usonic.getDistance();
 
+      lcd.clear();
+
+      if (!device.boot) {
         lcd.print("Root41 waiting");
       } else {
         lcd.print("Root41 Boot ERR!");
@@ -413,11 +449,6 @@ void loop(void) {
       lcd.print(" deg");
 
       lcd.setCursor(9, 1);  //改行
-      lcd.setCursor(9, 1);  //改行
-
-      lcd.print(usonic.distance);
-      lcd.print(" cm");
-
 
       lcd.print(usonic.distance);
       lcd.print(" cm");

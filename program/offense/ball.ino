@@ -44,7 +44,7 @@ void _ball::reset(void) {
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
       if (!line.flag) {
-        if (ball.exist) {
+        if (exist) {
           motor.drive(motor.deg, motor.power);
         } else {
           motor.drive(NULL, NULL, false, true);
@@ -57,7 +57,7 @@ void _ball::reset(void) {
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
       if (!line.flag) {
-        if (ball.exist) {
+        if (exist) {
           motor.drive(motor.deg, motor.power);
         } else {
           motor.drive(NULL, NULL, false, true);
