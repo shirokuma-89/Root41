@@ -7,13 +7,27 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-//ジャイロセンサのオフセット値
+#define ROBOT 1  // 1:宮里　2:久留
+
+#if ROBOT == 1
+
 #define Gyro_X 87
 #define Gyro_Y -66
 #define Gyro_Z 70
 #define Accel_X -4775
 #define Accel_Y -2060
 #define Accel_Z 1456
+
+#else  //久留君のオフセット値を入力
+
+#define Gyro_X 87
+#define Gyro_Y -66
+#define Gyro_Z 70
+#define Accel_X -4775
+#define Accel_Y -2060
+#define Accel_Z 1456
+
+#endif
 
 //ピン番号定義
 #define BALL0 1
@@ -253,7 +267,7 @@ void setup(void) {
     if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
       device.monitorBegin = true;
     }
-    delay(10);
+    delay(5);
   }
 
   //ジャイロセンサをセットアップ
@@ -288,7 +302,7 @@ void loop(void) {
     // ボール処理
     ball.read(ball.val);
     ball.calc();
-    Serial.println(ball.top);
+    // Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -396,7 +410,11 @@ void loop(void) {
     }
 
     if (!device.boot) {
-      LED.changeAll(255, 135, 0);
+      if (ROBOT == 1) {
+        LED.changeAll(255, 135, 0);
+      } else {
+        LED.changeAll(100, 255, 255);
+      }
     } else {
       LED.changeAll(0, 0, 0);
     }
@@ -404,7 +422,7 @@ void loop(void) {
     LED.gyroShow();
 
     if (millis() - LCD.timer >= 300) {
-      usonic.distance = usonic.getDistance();
+      // usonic.distance = usonic.getDistance();
 
       lcd.clear();
 
@@ -424,8 +442,8 @@ void loop(void) {
       // lcd.print(usonic.distance);
       // lcd.print(" cm");
 
-      lcd.print(gyro.differentialRead());
-      lcd.print(" cm");
+      // lcd.print(gyro.differentialRead());
+      // lcd.print(" deg");
 
       LCD.output = 1;
       LCD.timer = millis();
