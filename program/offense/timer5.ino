@@ -32,9 +32,16 @@ ISR(timer5Event) {
       }
       if (line.deg == 180) {
         if (line.val[1]) {
-          line.deg = 135;
+          line.deg -= 45;
         } else if (line.val[2]) {
-          line.deg = 225;
+          line.deg += 45;
+        }
+      }
+      if (line.deg == 0) {
+        if (line.val[1]) {
+          line.deg += 45;
+        } else if (line.val[2]) {
+          line.deg -= 45;
         }
       }
       // line.deg = 0;
