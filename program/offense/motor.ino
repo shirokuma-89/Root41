@@ -25,7 +25,7 @@ _motor::_motor(void) {
 void _motor::drive(int _deg,
                    int _power,
                    bool stop = false,
-                   bool correctDeg = false) {
+                   bool correctionDeg = false) {
   if (stop) {  //完全停止
     val[0] = 0;
     val[1] = 0;
@@ -56,30 +56,22 @@ void _motor::drive(int _deg,
     front = front >= 360 ? front - 360 : front;
 
     front = front > 180 ? front - 360 : front;
-    /*三角関数制御有効の場合*/ {
-      // if (front >= 0) {
-      //   // front = round(180 - 180 * cos(radians(front * 0.5)));
-      // } else {
-      //   front = abs(front);
-      //   // front = round(180 - 180 * cos(radians(front * 0.5)));
-      //   front *= -1;
-      // }
-    }
-    deg_integral += front;
+    
+    integral += front;
     // deg_integral = constrain(deg_integral, -350, 350);
-    front *= Kp * -1;                 //比例制御
-    front += gyro.dmpGetGyro() * Kd;  //微分制御
-    front -= deg_integral * Ki;       //積分制御
+    front *= Kp * -1;                       //比例制御
+    front += gyro.differentialRead() * Kd;  //微分制御
+    front -= integral * Ki;                 //積分制御
 
-    if (correctTimer + 5000 <= millis()) {
-      correctTimer = millis();
-      deg_integral = 0;
+    if (integralTimer + 5000 <= millis()) {
+      integralTimer = millis();
+      integral = 0;
     }
 
     // motor
     correctionVal = round(front);
     correctionVal = constrain(correctionVal, -45, 45);
-    if (!correct) {
+    if (!correction) {
       correctionVal = 0;
     }
 
@@ -155,9 +147,6 @@ void _motor::drive(int _deg,
       val[1] = int(sin(radians(_deg - 60)) * 100.0);
       val[2] = int(sin(radians(_deg - 180)) * 100.0);
 
-      abs(val[0]) = abs(val[0]);
-      abs(val[1]) = abs(val[1]);
-      abs(val[2]) = abs(val[2]);
       if (abs(val[0]) < abs(val[1])) {
         if (abs(val[1]) < abs(val[2])) {
           s = 100.0 / (float)abs(val[2]);
@@ -180,9 +169,6 @@ void _motor::drive(int _deg,
       val[i] += correctionVal;
     }
 
-    abs(val[0]) = abs(val[0]);
-    abs(val[1]) = abs(val[1]);
-    abs(val[2]) = abs(val[2]);
     if (abs(val[0]) < abs(val[1])) {
       if (abs(val[1]) < abs(val[2])) {
         s = 100.0 / (float)abs(val[2]);
@@ -200,17 +186,17 @@ void _motor::drive(int _deg,
     val[1] = round((float)val[1] * s);
     val[2] = round((float)val[2] * s);
 
-    // if (!line.flug) {
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
       val[i] = constrain(val[i], -98, 98);
     }
-    // }
-    if (!correctDeg) {
-      directDrive(val);
-    } else {
-      directDrive(_val);
+
+    if (correctionDeg) {
+      for (int i = 0; i <= 2; i++) {
+        val[i] = correctionVal;
+      }
     }
+    directDrive(val);
   }
 }
 
