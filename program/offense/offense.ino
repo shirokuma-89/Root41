@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -267,7 +267,7 @@ void setup(void) {
     if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
       device.monitorBegin = true;
     }
-    delay(10);
+    delay(5);
   }
 
   //ジャイロセンサをセットアップ
@@ -410,7 +410,11 @@ void loop(void) {
     }
 
     if (!device.boot) {
-      LED.changeAll(255, 135, 0);
+      if (ROBOT == 1) {
+        LED.changeAll(255, 135, 0);
+      } else {
+        LED.changeAll(100, 255, 255);
+      }
     } else {
       LED.changeAll(0, 0, 0);
     }
@@ -438,8 +442,8 @@ void loop(void) {
       // lcd.print(usonic.distance);
       // lcd.print(" cm");
 
-      lcd.print(gyro.differentialRead());
-      lcd.print(" deg");
+      // lcd.print(gyro.differentialRead());
+      // lcd.print(" deg");
 
       LCD.output = 1;
       LCD.timer = millis();
