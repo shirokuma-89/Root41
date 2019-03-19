@@ -21,7 +21,23 @@ ISR(timer5Event) {
 
     if (line.touch) {
       line.flag = true;
-      line.deg = 0;
+      if (line.val[0]) {
+        line.deg = 180;
+      } else if (line.val[1]) {
+        line.deg = 90;
+      } else if (line.val[2]) {
+        line.deg = 270;
+      } else if (line.val[3]) {
+        line.dge = 0;
+      }
+      if (line.deg == 180) {
+        if (line.val[1]) {
+          line.deg = 135;
+        } else if (line.val[2]) {
+          line.deg = 225;
+        }
+      }
+      // line.deg = 0;
     } else {
       line.flag = false;
       line.deg = 1000;
