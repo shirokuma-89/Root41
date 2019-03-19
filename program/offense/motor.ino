@@ -46,9 +46,16 @@ void _motor::drive(int _deg,
     static float Ki;  //             Ki = 0
     static float Kd;  //             Kd = 0.15
 
-    Kp = 0.65;
-    Ki = 0.00034;
-    Kd = 0.181;
+    //各自調整
+    if (ROBOT == 1) {
+      Kp = 0.753;
+      Ki = 0.00037;
+      Kd = 0.175;
+    } else {
+      Kp = 0.753;
+      Ki = 0.00037;
+      Kd = 0.175;
+    }
 
     front = gyro.deg;
     front -= line.offset;
@@ -56,7 +63,7 @@ void _motor::drive(int _deg,
     front = front >= 360 ? front - 360 : front;
 
     front = front > 180 ? front - 360 : front;
-    
+
     integral += front;
     // deg_integral = constrain(deg_integral, -350, 350);
     front *= Kp * -1;                       //比例制御

@@ -7,13 +7,27 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-//ジャイロセンサのオフセット値
+#define ROBOT 1  // 1:宮里　2:久留
+
+#if ROBOT == 1
+
 #define Gyro_X 87
 #define Gyro_Y -66
 #define Gyro_Z 70
 #define Accel_X -4775
 #define Accel_Y -2060
 #define Accel_Z 1456
+
+#else  //久留君のオフセット値を入力
+
+#define Gyro_X 87
+#define Gyro_Y -66
+#define Gyro_Z 70
+#define Accel_X -4775
+#define Accel_Y -2060
+#define Accel_Z 1456
+
+#endif
 
 //ピン番号定義
 #define BALL0 1
