@@ -66,6 +66,10 @@ ISR(timer5Event) {
       line.deg = 1000;
       line.outTimer = millis();
     } else if (line.flag && line.outMove != 1000) {
+      if (millis() - line.outTimer >= 300) {
+        line.flag = false;
+        line.outMove = 1000;
+      }
     } else {
       line.flag = false;
       line.deg = 1000;
