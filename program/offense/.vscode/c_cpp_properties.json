@@ -3,6 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\ATTinyCore-master\\avr\\**",
                 "C:\\my_apps\\arduino-1.8.6-VScode\\tools\\**",
                 "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**",
                 "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
@@ -13,6 +14,5 @@
             "intelliSenseMode": "msvc-x64"
         }
     ],
-    "version": 3,
     "version": 4
 }

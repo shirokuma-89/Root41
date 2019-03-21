@@ -46,9 +46,9 @@ void _motor::drive(int _deg,
     static float Ki;
     static float Kd;
 
-    Kp = 0.755;
+    Kp = 0.762;
     Ki = 0.00040;
-    Kd = 0.167;
+    Kd = 0.165;
 
     front = gyro.deg;
     // front -= line.offset;

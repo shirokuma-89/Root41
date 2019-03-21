@@ -1,4 +1,4 @@
-// ball.ino
+// ino
 
 void _ball::read(int* b) {
   *b = analogRead(BALL0);
@@ -8,9 +8,9 @@ void _ball::read(int* b) {
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = analogRead(BALL7);
-  *(b + 8) = analogRead(BALL8);
-  *(b + 9) = analogRead(BALL9);
+  *(b + 7) = round((float)analogRead(BALL7) * 0.8);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.8);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.8);
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
@@ -34,6 +34,20 @@ void _ball::calc(void) {
     exist = false;
   } else {
     exist = true;
+  }
+
+  //回り込み
+  if (top > 3 && top < 13) {
+    if (val[top] < 243) {
+      if (deg > 180) {
+        top -= 4;
+      } else {
+        top += 4;
+      }
+      top += 16;
+      top %= 16;
+      top %= 16;
+    }
   }
 
   deg = round((float)top * 22.5);

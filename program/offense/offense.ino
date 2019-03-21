@@ -279,7 +279,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 20;
+    motor.move = 15;
 
     ball.reset();
 
