@@ -34,17 +34,23 @@ ISR(timer5Event) {
         }
       } else if (line.deg != 1000 && line.outMove == 1000) {
         //反応した後
-        if (line.offset <= 20 || line.offset >= 340) {
-          if (line.deg == 90) {
-            if (line.val[0]) {
+        if (line.deg == 90) {
+          if (line.val[0]) {
+            if (line.offset >= 330) {
               line.deg = 135;
-            } else if (line.val[3]) {
+            }
+          } else if (line.val[3]) {
+            if (line.offset <= 30) {
               line.deg = 45;
             }
-          } else if (line.deg == 270) {
-            if (line.val[0]) {
+          }
+        } else if (line.deg == 270) {
+          if (line.val[0]) {
+            if (line.offset <= 30) {
               line.deg = 225;
-            } else if (line.val[3]) {
+            }
+          } else if (line.val[3]) {
+            if (line.offset >= 330) {
               line.deg = 315;
             }
           }
@@ -53,13 +59,13 @@ ISR(timer5Event) {
         //継続中に反応
         line.deg = line.outMove;
         line.outMove = 1000;
-        if (line.deg == 0) {
+        if (line.deg <= 45 || line.deg >= 315) {
           if (line.val[1]) {
             line.deg = 45;
           } else if (line.val[2]) {
             line.deg = 315;
           }
-        } else if (line.deg == 180) {
+        } else if (line.deg >= 135 && line.deg <= 225) {
           if (line.val[1]) {
             line.deg = 135;
           } else if (line.val[2]) {
