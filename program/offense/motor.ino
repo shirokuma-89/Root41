@@ -42,40 +42,50 @@ void _motor::drive(int _deg,
     gyro.deg = gyro.read();
 
     //姿勢制御
-    static float Kp;
-    static float Ki;
-    static float Kd;
+    static float Kp;  // PD制御の場合 Kp = 0.85
+    static float Ki;  //             Ki = 0
+    static float Kd;  //             Kd = 0.15
 
-    Kp = 0.762;
-    Ki = 0.00040;
-    Kd = 0.165;
+    //各自調整
+    if (ROBOT == 1) {
+      Kp = 0.762;
+      Ki = 0.00040;
+      Kd = 0.165;
+    } else {
+      Kp = 0.753;
+      Ki = 0.00037;
+      Kd = 0.175;
+    }
 
     front = gyro.deg;
-    // front -= line.offset;
-    // front = front + 360;
-    // front = front >= 360 ? front - 360 : front;
+    front -= line.offset;
+    front = front + 360;
+    front = front >= 360 ? front - 360 : front;
+
+    front = front > 180 ? front - 360 : front;
 
     front = front > 180 ? front - 360 : front;
     integral += front;
+    // deg_integral = constrain(deg_integral, -350, 350);
     front *= Kp * -1;                       //比例制御
     front += gyro.differentialRead() * Kd;  //微分制御
     front -= integral * Ki;                 //積分制御
 
-    //積分動作を制限
     if (integralTimer + 5000 <= millis()) {
       integralTimer = millis();
       integral = 0;
     }
 
+    // motor
     correctionVal = round(front);
     correctionVal = constrain(correctionVal, -75, 75);
-
     if (!correction) {
       correctionVal = 0;
     }
 
+    // front = constrain(front, -40, 40);
+
     float s;
-    //モーター値（理論値）を代入
     if (_deg == 0) {
       val[0] = 97;
       val[1] = -100;
@@ -144,6 +154,7 @@ void _motor::drive(int _deg,
       val[0] = int(sin(radians(_deg - 300)) * 100.0);
       val[1] = int(sin(radians(_deg - 60)) * 100.0);
       val[2] = int(sin(radians(_deg - 180)) * 100.0);
+
       if (abs(val[0]) < abs(val[1])) {
         if (abs(val[1]) < abs(val[2])) {
           s = 100.0 / (float)abs(val[2]);
@@ -166,7 +177,6 @@ void _motor::drive(int _deg,
       val[i] += correctionVal;
     }
 
-    //正規化
     if (abs(val[0]) < abs(val[1])) {
       if (abs(val[1]) < abs(val[2])) {
         s = 100.0 / (float)abs(val[2]);
@@ -186,7 +196,7 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -100, 100);
+      val[i] = constrain(val[i], -98, 98);
     }
 
     if (correctionDeg) {
@@ -194,9 +204,6 @@ void _motor::drive(int _deg,
         val[i] = correctionVal;
       }
     }
-
-    //駆動
-    Serial.println(correctionVal);
     directDrive(val);
   }
 }

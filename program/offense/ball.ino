@@ -30,7 +30,7 @@ void _ball::calc(void) {
     }
   }
 
-  if (val[top] > 550) {
+  if (val[top] > 540) {
     exist = false;
   } else {
     exist = true;
