@@ -64,7 +64,6 @@ void _motor::drive(int _deg,
 
     front = front > 180 ? front - 360 : front;
 
-    front = front > 180 ? front - 360 : front;
     integral += front;
     // deg_integral = constrain(deg_integral, -350, 350);
     front *= Kp * -1;                       //比例制御
@@ -196,7 +195,7 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -98, 98);
+      val[i] = constrain(val[i], -100, 100);
     }
 
     if (correctionDeg) {
@@ -204,6 +203,7 @@ void _motor::drive(int _deg,
         val[i] = correctionVal;
       }
     }
+    
     directDrive(val);
   }
 }

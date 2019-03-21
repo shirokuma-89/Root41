@@ -18,14 +18,14 @@
 #define Accel_Y -2060
 #define Accel_Z 1456
 
-#else  //久留君のオフセット値を入力
+#else  //久留君
 
-#define Gyro_X 87
-#define Gyro_Y -66
-#define Gyro_Z 70
-#define Accel_X -4775
-#define Accel_Y -2060
-#define Accel_Z 1456
+#define Gyro_X 90
+#define Gyro_Y 45
+#define Gyro_Z -38
+#define Accel_X -452
+#define Accel_Y -648
+#define Accel_Z 1647
 
 #endif
 
@@ -109,12 +109,13 @@ class _line {
   int mode = 0;
   int offset = 0;
 
- private:
   int first = 5;
   int second = 5;
 
   unsigned long inTimer;  
   unsigned long outTimer;
+
+ private:
 } line;
 
 class _motor {
@@ -286,6 +287,11 @@ void loop(void) {
   device.error = false;
 
   gyro.deg = gyro.read();
+  if (line.touch) {
+    if (line.offset == 1000) {
+      line.offset = gyro.deg;
+    }
+  }
 
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);
@@ -322,7 +328,6 @@ void loop(void) {
         device.errorCode = 1;
       }
     }
-
     if (motor.deg != 1000) {
       if (line.flag) {
         LED.lineShow();
