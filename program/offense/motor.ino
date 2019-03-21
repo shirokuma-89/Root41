@@ -68,7 +68,7 @@ void _motor::drive(int _deg,
     }
 
     correctionVal = round(front);
-    correctionVal = constrain(correctionVal, -45, 45);
+    correctionVal = constrain(correctionVal, -75, 75);
 
     if (!correction) {
       correctionVal = 0;

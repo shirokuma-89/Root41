@@ -8,9 +8,9 @@ void _ball::read(int* b) {
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = round((float)analogRead(BALL7) * 0.8);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.8);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.8);
+  *(b + 7) = round((float)analogRead(BALL7) * 0.82);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.82);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.82);
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
@@ -37,16 +37,34 @@ void _ball::calc(void) {
   }
 
   //回り込み
-  if (top > 3 && top < 13) {
-    if (val[top] < 243) {
+  if (top > 2 && top < 14) {
+    if (val[top] < 245) {
       if (deg > 180) {
-        top -= 4;
+        if (top <= 4 || top >= 12) {
+          top -= 1;
+        } else if (top <= 7 || top >= 11) {
+          top -= 2;
+        } else {
+          top -= 4;
+        }
       } else {
-        top += 4;
+        if (top <= 4 || top >= 12) {
+          top += 1;
+        } else if (top <= 7 || top >= 11) {
+          top += 2;
+        } else {
+          top += 4;
+        }
       }
+
       top += 16;
       top %= 16;
-      top %= 16;
+    }
+
+    motor.power -= 15;
+
+    if(top <= 5 || top >= 12){
+      motor.power -= 30;
     }
   }
 

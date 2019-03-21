@@ -279,7 +279,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 15;
+    motor.move = 10;
 
     ball.reset();
 
@@ -421,8 +421,8 @@ void loop(void) {
 
       lcd.setCursor(9, 1);  //改行
 
-      lcd.print(usonic.distance);
-      lcd.print(" cm");
+      // lcd.print(usonic.distance);
+      // lcd.print(" cm");
 
       // lcd.print(gyro.differentialRead());
       // lcd.print(" deg");
