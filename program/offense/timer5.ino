@@ -22,7 +22,6 @@ ISR(timer5Event) {
     if (line.touch) {
       line.flag = true;
       if (line.deg == 1000 && line.outMove == 1000) {
-        //初めて反応
         if (line.val[0]) {
           line.deg = 180;
         } else if (line.val[1]) {
@@ -33,7 +32,6 @@ ISR(timer5Event) {
           line.deg = 0;
         }
       } else if (line.deg != 1000 && line.outMove == 1000) {
-        //反応した後
         if (line.deg == 90) {
           if (line.val[0]) {
             if (line.offset >= 330) {
@@ -56,7 +54,6 @@ ISR(timer5Event) {
           }
         }
       } else if (line.deg == 1000 && line.outMove != 1000) {
-        //継続中に反応
         line.deg = line.outMove;
         line.outMove = 1000;
         if (line.deg <= 45 || line.deg >= 315) {
