@@ -48,9 +48,9 @@ void _motor::drive(int _deg,
 
     //各自調整
     if (ROBOT == 1) {
-      Kp = 0.753;
-      Ki = 0.00037;
-      Kd = 0.175;
+      Kp = 0.762;
+      Ki = 0.00040;
+      Kd = 0.165;
     } else {
       Kp = 0.753;
       Ki = 0.00037;
@@ -64,6 +64,7 @@ void _motor::drive(int _deg,
 
     front = front > 180 ? front - 360 : front;
 
+    front = front > 180 ? front - 360 : front;
     integral += front;
     // deg_integral = constrain(deg_integral, -350, 350);
     front *= Kp * -1;                       //比例制御
@@ -77,7 +78,7 @@ void _motor::drive(int _deg,
 
     // motor
     correctionVal = round(front);
-    correctionVal = constrain(correctionVal, -45, 45);
+    correctionVal = constrain(correctionVal, -75, 75);
     if (!correction) {
       correctionVal = 0;
     }

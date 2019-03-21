@@ -113,7 +113,7 @@ class _line {
   int first = 5;
   int second = 5;
 
-  unsigned long inTimer;
+  unsigned long inTimer;  
   unsigned long outTimer;
 } line;
 
@@ -293,7 +293,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 20;
+    motor.move = 10;
 
     ball.reset();
 
