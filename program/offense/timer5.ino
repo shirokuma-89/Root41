@@ -21,30 +21,51 @@ ISR(timer5Event) {
 
     if (line.touch) {
       line.flag = true;
-      if (line.val[0]) {
-        line.deg = 180;
-      } else if (line.val[1]) {
-        line.deg = 90;
-      } else if (line.val[2]) {
-        line.deg = 270;
-      } else if (line.val[3]) {
-        line.dge = 0;
-      }
-      if (line.deg == 180) {
-        if (line.val[1]) {
-          line.deg -= 45;
+      if (line.deg == 1000) {
+        if (line.val[0]) {
+          line.deg = 180;
+        } else if (line.val[1]) {
+          line.deg = 90;
         } else if (line.val[2]) {
-          line.deg += 45;
+          line.deg = 270;
+        } else if (line.val[3]) {
+          line.deg = 0;
+        }
+        if (line.deg == 180) {
+          if (line.val[1]) {
+            line.deg -= 45;
+          } else if (line.val[2]) {
+            line.deg += 45;
+          }
+        }
+        if (line.deg == 0) {
+          if (line.val[1]) {
+            line.deg += 45;
+          } else if (line.val[2]) {
+            line.deg -= 45;
+          }
+        }
+      } else {
+        if (line.deg == 180) {
+          if (line.val[1]) {
+            line.deg -= 45;
+          } else if (line.val[2]) {
+            line.deg += 45;
+          }
+        }
+        if (line.deg == 0) {
+          if (line.val[1]) {
+            line.deg += 45;
+          } else if (line.val[2]) {
+            line.deg -= 45;
+          }
         }
       }
-      if (line.deg == 0) {
-        if (line.val[1]) {
-          line.deg += 45;
-        } else if (line.val[2]) {
-          line.deg -= 45;
-        }
-      }
-      // line.deg = 0;
+    } else if (line.flag && line.outMove == 1000) {
+      line.outMove = line.deg;
+      line.deg = 1000;
+      line.outTimer = millis();
+    } else if (line.flag && line.outMove != 1000) {
     } else {
       line.flag = false;
       line.deg = 1000;
