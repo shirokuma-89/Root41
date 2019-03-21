@@ -42,7 +42,7 @@ void _ball::calc(void) {
       if (deg > 180) {
         if (top <= 4 || top >= 12) {
           top -= 1;
-        } else if (top <= 7 || top >= 11) {
+        } else if (top <= 6 || top >= 10) {
           top -= 2;
         } else {
           top -= 4;
@@ -50,7 +50,7 @@ void _ball::calc(void) {
       } else {
         if (top <= 4 || top >= 12) {
           top += 1;
-        } else if (top <= 7 || top >= 11) {
+        } else if (top <= 6 || top >= 10) {
           top += 2;
         } else {
           top += 4;
@@ -63,7 +63,11 @@ void _ball::calc(void) {
 
     motor.power -= 15;
 
-    if(top <= 5 || top >= 12){
+    if(top <= 6 || top >= 10){
+      motor.power -= 30;
+    }
+
+    if (top <= 4 || top >= 12) {
       motor.power -= 30;
     }
   }
