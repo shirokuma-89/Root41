@@ -21,7 +21,8 @@ ISR(timer5Event) {
 
     if (line.touch) {
       line.flag = true;
-      if (line.deg == 1000) {
+      if (line.deg == 1000 && line.outMove == 1000) {
+        //初めて反応
         if (line.val[0]) {
           line.deg = 180;
         } else if (line.val[1]) {
@@ -31,33 +32,38 @@ ISR(timer5Event) {
         } else if (line.val[3]) {
           line.deg = 0;
         }
-        if (line.deg == 180) {
-          if (line.val[1]) {
-            line.deg -= 45;
-          } else if (line.val[2]) {
-            line.deg += 45;
+      } else if (line.deg != 1000 && line.outMove == 1000) {
+        //反応した後
+        if (line.offset <= 20 || line.offset >= 340) {
+          if (line.deg == 90) {
+            if (line.val[0]) {
+              line.deg = 135;
+            } else if (line.val[3]) {
+              line.deg = 45;
+            }
+          } else if (line.deg == 270) {
+            if (line.val[0]) {
+              line.deg = 225;
+            } else if (line.val[3]) {
+              line.deg = 315;
+            }
           }
         }
+      } else if (line.deg == 1000 && line.outMove != 1000) {
+        //継続中に反応
+        line.deg = line.outMove;
+        line.outMove = 1000;
         if (line.deg == 0) {
           if (line.val[1]) {
-            line.deg += 45;
+            line.deg = 45;
           } else if (line.val[2]) {
-            line.deg -= 45;
+            line.deg = 315;
           }
-        }
-      } else {
-        if (line.deg == 180) {
+        } else if (line.deg == 180) {
           if (line.val[1]) {
-            line.deg -= 45;
+            line.deg = 135;
           } else if (line.val[2]) {
-            line.deg += 45;
-          }
-        }
-        if (line.deg == 0) {
-          if (line.val[1]) {
-            line.deg += 45;
-          } else if (line.val[2]) {
-            line.deg -= 45;
+            line.deg = 225;
           }
         }
       }
@@ -66,7 +72,7 @@ ISR(timer5Event) {
       line.deg = 1000;
       line.outTimer = millis();
     } else if (line.flag && line.outMove != 1000) {
-      if (millis() - line.outTimer >= 300) {
+      if (millis() - line.outTimer >= 400) {
         line.flag = false;
         line.outMove = 1000;
       }

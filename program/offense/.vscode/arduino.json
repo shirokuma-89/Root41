@@ -1,5 +1,6 @@
 {
     "board": "arduino:avr:mega",
     "configuration": "cpu=atmega2560",
-    "sketch": "ball.ino"
+    "port": "COM8",
+    "sketch": "offense.ino"
 }

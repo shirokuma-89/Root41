@@ -46,15 +46,16 @@ void _motor::drive(int _deg,
     static float Ki;
     static float Kd;
 
-    Kp = 0.76;
-    Ki = 0.00039;
+    Kp = 0.755;
+    Ki = 0.00040;
     Kd = 0.167;
 
     front = gyro.deg;
-    front -= line.offset;
-    front = front + 360;
-    front = front >= 360 ? front - 360 : front;
+    // front -= line.offset;
+    // front = front + 360;
+    // front = front >= 360 ? front - 360 : front;
 
+    front = front > 180 ? front - 360 : front;
     integral += front;
     front *= Kp * -1;                       //比例制御
     front += gyro.differentialRead() * Kd;  //微分制御
@@ -185,16 +186,17 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -98, 98);
+      val[i] = constrain(val[i], -100, 100);
     }
 
     if (correctionDeg) {
       for (int i = 0; i <= 2; i++) {
-        val[i] = correctionDeg;
+        val[i] = correctionVal;
       }
     }
 
     //駆動
+    Serial.println(correctionVal);
     directDrive(val);
   }
 }
