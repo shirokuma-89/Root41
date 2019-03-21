@@ -99,7 +99,7 @@ class _line {
   int first = 5;
   int second = 5;
 
-  unsigned long inTimer;
+  unsigned long inTimer;  
   unsigned long outTimer;
 } line;
 
@@ -288,7 +288,7 @@ void loop(void) {
     // ボール処理
     ball.read(ball.val);
     ball.calc();
-    Serial.println(ball.top);
+    // Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -421,11 +421,11 @@ void loop(void) {
 
       lcd.setCursor(9, 1);  //改行
 
-      // lcd.print(usonic.distance);
-      // lcd.print(" cm");
-
-      lcd.print(gyro.differentialRead());
+      lcd.print(usonic.distance);
       lcd.print(" cm");
+
+      // lcd.print(gyro.differentialRead());
+      // lcd.print(" deg");
 
       LCD.output = 1;
       LCD.timer = millis();
