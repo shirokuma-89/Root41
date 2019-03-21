@@ -3,22 +3,16 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\arduino-1.8.6\\tools\\**",
-                "C:\\arduino-1.8.6\\hardware\\arduino\\avr\\**"
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\ATTinyCore-master\\avr\\**",
+                "C:\\my_apps\\arduino-1.8.6-VScode\\tools\\**",
+                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**",
+                "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
             ],
             "forcedInclude": [
-                "C:\\arduino-1.8.6\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:\\arduino-1.8.6\\tools\\**",
-                    "C:\\arduino-1.8.6\\hardware\\arduino\\avr\\**"
-                ]
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++17"
+            "intelliSenseMode": "msvc-x64"
         }
     ],
-    "version": 3
+    "version": 4
 }

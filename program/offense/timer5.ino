@@ -16,7 +16,6 @@ ISR(timer5Event) {
     //ライン処理をここに記述
     //ライン動作中はline.flagをtrueにしておくこと
 
-    //試験的実装
     line.read();
 
     if (line.touch) {

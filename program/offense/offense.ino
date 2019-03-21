@@ -7,9 +7,8 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 2
+#define ROBOT 1  // 1:宮里　2:久留
 
-//ジャイロセンサのオフセット値
 #if ROBOT == 1
 
 #define Gyro_X 87
@@ -89,10 +88,10 @@ class _ball {
   float x;
   float y;
 
- private:
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
 
+ private:
 } ball;
 
 class _line {
@@ -113,7 +112,7 @@ class _line {
   int first = 5;
   int second = 5;
 
-  unsigned long inTimer;
+  unsigned long inTimer;  
   unsigned long outTimer;
 
  private:
@@ -162,6 +161,19 @@ class _gyro {
   // none
 } gyro;
 
+class _usonic {
+ public:
+  int getDistance(void);
+
+  int distance = 0;
+
+ private:
+  byte data;
+
+  unsigned long timeOut;
+
+} usonic;
+
 class _LCD {
  public:
   void init(void);
@@ -205,6 +217,7 @@ class _LED {
  public:
   void gyroShow(void);
   void lineShow(void);
+  void ballShow(int deg);
   void changeAll(int red, int green, int blue);
 
   int bright = 60;
@@ -234,7 +247,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
-  TWBR = 12;  // I2C通信を高速化
+  TWBR = 12;  // ATtiny85との通信エラーが起きるならコメントアウトする
 
   LCD.init();
   lcd.print("Root41 starting");
@@ -255,7 +268,7 @@ void setup(void) {
     if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
       device.monitorBegin = true;
     }
-    delay(10);
+    delay(5);
   }
 
   //ジャイロセンサをセットアップ
@@ -286,13 +299,16 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
+    motor.move = 10;
+
     ball.reset();
 
     motor.power = 100;
 
-    //ボール処理
-    ball.deg = 1000;
+    // ボール処理
+    ball.read(ball.val);
     ball.calc();
+    // Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
@@ -317,6 +333,8 @@ void loop(void) {
         LED.lineShow();
         motor.drive(motor.deg, 100);
       } else {
+        LED.ballShow(motor.deg);
+
         motor.correction = true;
 
         motor.moveTimer = millis();
@@ -397,15 +415,20 @@ void loop(void) {
     }
 
     if (!device.boot) {
-      LED.changeAll(255, 135, 0);
+      if (ROBOT == 1) {
+        LED.changeAll(255, 135, 0);
+      } else {
+        LED.changeAll(100, 255, 255);
+      }
     } else {
       LED.changeAll(0, 0, 0);
     }
 
     LED.gyroShow();
 
-    // LCD表示
-    if (millis() - LCD.timer >= 100) {
+    if (millis() - LCD.timer >= 300) {
+      // usonic.distance = usonic.getDistance();
+
       lcd.clear();
 
       if (!device.boot) {
@@ -418,6 +441,14 @@ void loop(void) {
 
       lcd.print(gyro.deg);
       lcd.print(" deg");
+
+      lcd.setCursor(9, 1);  //改行
+
+      // lcd.print(usonic.distance);
+      // lcd.print(" cm");
+
+      // lcd.print(gyro.differentialRead());
+      // lcd.print(" deg");
 
       LCD.output = 1;
       LCD.timer = millis();
