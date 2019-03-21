@@ -1,6 +1,7 @@
 // usonic.ino
 
 int _usonic::getDistance(void) {
+  pauseTimer5();
   Wire.requestFrom(8, 1);
 
   timeOut = millis();
@@ -11,6 +12,7 @@ int _usonic::getDistance(void) {
       break;
     }
   }
+  startTimer5(50);
 
   return (int)data;
 }
