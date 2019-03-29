@@ -1,4 +1,4 @@
-// ball.ino
+// ino
 
 void _ball::read(int* b) {
   *b = analogRead(BALL0);
@@ -20,6 +20,7 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
+  //ball.degは deg = round((float)top * 22.5);まで使用不可
   deg = 1000;
 
   top = 0;
@@ -38,10 +39,10 @@ void _ball::calc(void) {
 
   //回り込み
   if (top > 2 && top < 14) {
-    if (val[top] < 255) {
-      if (deg > 180) {
+    if (val[top] < 245) {
+      if (top > 8) {
         if (top <= 4 || top >= 12) {
-          top -= 3;
+          top -= 2;
         } else if (top <= 6 || top >= 10) {
           top -= 3;
         } else {
@@ -49,7 +50,7 @@ void _ball::calc(void) {
         }
       } else {
         if (top <= 4 || top >= 12) {
-          top += 3;
+          top += 2;
         } else if (top <= 6 || top >= 10) {
           top += 3;
         } else {
@@ -59,17 +60,13 @@ void _ball::calc(void) {
 
       top += 16;
       top %= 16;
+
+      motor.power -= 35;
+
+      if (top <= 6 || top >= 10) {
+        motor.power += 10;
+      }
     }
-
-    motor.power -= 30;
-
-    if (top <= 6 || top >= 10) {
-      motor.power += 15;
-    }
-
-    // if (top <= 4 || top >= 12) {
-    //   motor.power -= 25;
-    // }
   }
 
   deg = round((float)top * 22.5);
