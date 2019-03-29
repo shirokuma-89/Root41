@@ -112,7 +112,7 @@ class _line {
   int first = 5;
   int second = 5;
 
-  unsigned long inTimer;  
+  unsigned long inTimer;
   unsigned long outTimer;
 
  private:
@@ -130,18 +130,21 @@ class _motor {
   bool correction = true;
 
   int val[3];
+  int subVal[3] = {0, 0, 0};
 
   int deg;
   int power;
   int move = 15;
 
+  unsigned long restart = 0;
   unsigned long moveTimer;
 
- private:
-  int correctionVal;
+  int correctionVal = 0;
   int integral = 0;
 
   float front;
+
+ private:
 
   unsigned long integralTimer = 0;
 

@@ -48,9 +48,9 @@ void _motor::drive(int _deg,
 
     //各自調整
     if (ROBOT == 1) {
-      Kp = 0.762;
-      Ki = 0.00040;
-      Kd = 0.165;
+      Kp = 0.747;
+      Ki = 0.00031;
+      Kd = 0.168;
     } else {
       Kp = 0.753;
       Ki = 0.00037;
@@ -58,7 +58,7 @@ void _motor::drive(int _deg,
     }
 
     front = gyro.deg;
-    front -= line.offset;
+
     front = front + 360;
     front = front >= 360 ? front - 360 : front;
 
@@ -201,7 +201,7 @@ void _motor::drive(int _deg,
         val[i] = correctionVal;
       }
     }
-    
+
     directDrive(val);
   }
 }

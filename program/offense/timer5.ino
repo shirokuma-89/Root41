@@ -85,5 +85,13 @@ ISR(timer5Event) {
     }
   }
 
+  motor.restart++;
+
+  if(motor.restart >= 4000){
+    motor.restart = 0;
+    motor.directDrive(motor.subVal);
+    motor.directDrive(motor.val);
+  }
+
   startTimer5(50);  //タイマー割り込みを有効化
 }
