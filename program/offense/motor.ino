@@ -82,8 +82,6 @@ void _motor::drive(int _deg,
       correctionVal = 0;
     }
 
-    // front = constrain(front, -40, 40);
-
     float s;
     if (_deg == 0) {
       val[0] = 97;
