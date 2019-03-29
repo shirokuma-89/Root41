@@ -45,13 +45,13 @@ void _motor::drive(int _deg,
     static float Kd;  //             Kd = 0.15
 
     if (line.flug) {
-      Kp = 0.63;      // PD制御の場合 Kp = 0.85
+      Kp = 0.63;     // PD制御の場合 Kp = 0.85
       Ki = 0.00037;  //             Ki = 0
-      Kd = 0.175;     //             Kd = 0.15
+      Kd = 0.175;    //             Kd = 0.15
     } else {
-    Kp = 0.76;     // PD制御の場合 Kp = 0.85
-    Ki = 0.00039;  //             Ki = 0
-    Kd = 0.167;    //             Kd = 0.15
+      Kp = 0.76;     // PD制御の場合 Kp = 0.85
+      Ki = 0.00039;  //             Ki = 0
+      Kd = 0.167;    //             Kd = 0.15
     }
 
     front = gyro.deg;

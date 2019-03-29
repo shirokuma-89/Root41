@@ -165,6 +165,9 @@ int integral = 0;
 float front;
 姿勢制御値（理論値）を格納する変数
 
+unsigned long restart = 0;
+モーターをリスタートするためのカウントを行う関数
+
 unsigned long moveTimer;
 モーター最小連続動作時間を計測するタイマー変数
 
