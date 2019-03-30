@@ -39,7 +39,7 @@ void _ball::calc(void) {
 
   //回り込み
   if (top > 2 && top < 14) {
-    if (val[top] < 245) {
+    if (val[top] < 250) {
       if (top > 8) {
         if (top <= 4 || top >= 12) {
           top -= 2;
@@ -64,7 +64,7 @@ void _ball::calc(void) {
       motor.power -= 35;
 
       if (top <= 6 || top >= 10) {
-        motor.power += 10;
+        motor.power -= 15;
       }
     }
   }

@@ -147,6 +147,9 @@ bool correction = true;
 int val[3];
 モーターの駆動値を格納する配列
 
+int subVal[3];
+モーターの駆動値（固定）を格納する配列
+
 int correctionVal;
 姿勢制御のモータ駆動値を格納する変数
 

@@ -2,17 +2,22 @@
 
 int _usonic::getDistance(void) {
   pauseTimer5();
-  Wire.requestFrom(8, 1);
+  try {
+    Wire.requestFrom(8, 1);
 
-  timeOut = millis();
-  while (timeOut + 5 >= millis()) {
-    if (Wire.available()) {
-      data = Wire.read();
+    timeOut = millis();
+    while (timeOut + 5 >= millis()) {
+      if (Wire.available()) {
+        data = Wire.read();
 
-      break;
+        break;
+      }
     }
+    startTimer5(50);
+  } catch {
+    Wire.begin();
+    TWBR = 12;
   }
-  startTimer5(50);
 
   return (int)data;
 }
