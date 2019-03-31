@@ -58,7 +58,7 @@ void _motor::drive(int _deg,
     }
 
     front = gyro.deg;
-    front -= line.offset;
+    // front -= line.offset;
     front = front + 360;
     front = front >= 360 ? front - 360 : front;
 
@@ -203,7 +203,7 @@ void _motor::drive(int _deg,
         val[i] = correctionVal;
       }
     }
-    
+
     directDrive(val);
   }
 }
