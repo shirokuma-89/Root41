@@ -22,7 +22,7 @@ void _ball::read(int* b) {
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
 
-  motor.power -= 10;
+  // motor.power -= 10;
   deg = 1000;
 
   top = 0;
