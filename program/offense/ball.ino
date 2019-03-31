@@ -22,7 +22,7 @@ void _ball::read(int* b) {
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
 
-  // motor.power -= 10;
+  motor.power -= 15;
   deg = 1000;
 
   top = 0;
@@ -71,7 +71,7 @@ void _ball::calc(void) {
   deg = round((float)top * 22.5);
 
   if (line.near && !line.flag) {
-    if (line.inTimer + 5000 > millis()) {
+    if (line.inTimer + 1500 > millis()) {
       if (line.highPin == 0) {
         if (ball.top_backup <= 2 || ball.top_backup >= 14) {
           line.near = true;
