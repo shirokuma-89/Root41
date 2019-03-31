@@ -46,24 +46,18 @@ void _ball::calc(void) {
       motor.power -= 10;
 
       if (top <= 6 || top >= 12) {
-        motor.power -= 20;
+        motor.power -= 15;
       }
 
       if (top > 8) {
-        // if (top >= 12) {
-        //   top -= 1;
-        // } else
         if (top >= 12) {
-          top -= 3;
+          top -= 2;
         } else {
           top -= 4;
         }
       } else {
-        // if (top <= 4) {
-        //   top += 1;
-        // } else
         if (top <= 4) {
-          top += 3;
+          top += 2;
         } else {
           top += 4;
         }
