@@ -108,6 +108,7 @@ class _line {
   int outMove = 1000;
   int mode = 0;
   int offset = 0;
+  int highPin = 5;
 
   int first = 5;
   int second = 5;

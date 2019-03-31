@@ -22,7 +22,7 @@ void _ball::read(int* b) {
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
 
-  motor.power -= 20;
+  motor.power -= 10;
   deg = 1000;
 
   top = 0;
@@ -32,6 +32,7 @@ void _ball::calc(void) {
       top = i;
     }
   }
+  top_backup = top;
 
   if (val[top] > 540) {
     exist = false;
@@ -41,11 +42,11 @@ void _ball::calc(void) {
 
   //回り込み
   if (top > 3 && top < 13) {
-    if (val[top] < 250) {
-      motor.power -= 20;
+    if (val[top] < 252) {
+      motor.power -= 10;
 
       if (top <= 6 || top >= 12) {
-        motor.power -= 10;
+        motor.power -= 20;
       }
 
       if (top > 8) {
@@ -74,6 +75,50 @@ void _ball::calc(void) {
   }
 
   deg = round((float)top * 22.5);
+
+  if (line.near && !line.flag) {
+    if (line.inTimer + 5000 > millis()) {
+      if (line.highPin == 0) {
+        if (ball.top_backup <= 2 || ball.top_backup >= 14) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else if (line.highPin == 2) {
+        if (ball.top_backup >= 2 && ball.top_backup <= 6) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else if (line.highPin == 3) {
+        if (ball.top_backup >= 6 && ball.top_backup <= 10) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else {
+        if (ball.top_backup >= 10 && ball.top_backup <= 14) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      }
+    } else {
+      line.near = false;
+    }
+  }
+
+  if (line.near){
+    ball.exist = false;
+  }
 }
 
 void _ball::reset(void) {
