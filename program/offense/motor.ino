@@ -48,9 +48,9 @@ void _motor::drive(int _deg,
 
     //各自調整
     if (ROBOT == 1) {
-      Kp = 0.762;
-      Ki = 0.00040;
-      Kd = 0.165;
+      Kp = 0.747;
+      Ki = 0.00031;
+      Kd = 0.168;
     } else {
       Kp = 0.753;
       Ki = 0.00037;
@@ -58,7 +58,6 @@ void _motor::drive(int _deg,
     }
 
     front = gyro.deg;
-    // front -= line.offset;
     front = front + 360;
     front = front >= 360 ? front - 360 : front;
 
@@ -78,11 +77,9 @@ void _motor::drive(int _deg,
     // motor
     correctionVal = round(front);
     correctionVal = constrain(correctionVal, -75, 75);
-    if (!correction) {
-      correctionVal = 0;
-    }
-
-    // front = constrain(front, -40, 40);
+    // if (!correction) {
+    //   correctionVal = 0;
+    // }
 
     float s;
     if (_deg == 0) {
@@ -195,7 +192,7 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -100, 100);
+      val[i] = constrain(val[i], -98, 98);
     }
 
     if (correctionDeg) {

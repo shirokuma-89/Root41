@@ -132,19 +132,21 @@ class _motor {
   bool correction = true;
 
   int val[3];
+  int subVal[3] = {0, 0, 0};
 
   int deg;
   int power;
   int move = 15;
 
+  unsigned long restart = 0;
   unsigned long moveTimer;
 
- private:
-  int correctionVal;
+  int correctionVal = 0;
   int integral = 0;
 
   float front;
 
+ private:
   unsigned long integralTimer = 0;
 
 } motor;
@@ -205,7 +207,7 @@ class _device {
   bool monitorBegin = false;
   bool error = false;
 
-  int process = HIGH;
+  int process = LOW;
   int mode = 0;
   int rotary = 0;
   int rotaryResult = 0;
@@ -340,6 +342,7 @@ void loop(void) {
         device.errorCode = 1;
       }
     }
+
     if (motor.deg != 1000) {
       if (line.flag) {
         LED.lineShow();
@@ -383,15 +386,18 @@ void loop(void) {
           LCD.output = 2;
         }
       } else {
-        if (millis() - LCD.timer >= 100) {
+        if (millis() - LCD.timer >= 300) {
           lcd.clear();
 
           lcd.print("Root41 running");
 
           lcd.setCursor(0, 1);  //改行
 
-          lcd.print(gyro.deg);
-          lcd.print(" deg");
+          // lcd.print(gyro.deg);
+          // lcd.print(" deg");
+
+          lcd.print(motor.correctionVal);
+          lcd.print(" %");
 
           LCD.output = 2;
           LCD.timer = millis();

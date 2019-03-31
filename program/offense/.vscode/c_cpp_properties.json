@@ -1,15 +1,15 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Root41",
             "includePath": [
-                "C:\\Users\\Takaki_M\\Documents\\Arduino\\hardware\\ATTinyCore-master\\avr\\**",
-                "C:\\my_apps\\arduino-1.8.6-VScode\\tools\\**",
-                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**",
-                "C:\\Users\\Takaki_M\\Documents\\Arduino\\libraries\\**"
+                "C:\\Users\\Takaki\\Documents\\Arduino\\hardware\\ATTinyCore-master\\avr\\**",
+                "C:\\Application\\arduino-1.8.6-VScode\\tools\\**",
+                "C:\\Application\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\**",
+                "C:\\Users\\Takaki\\Documents\\Arduino\\libraries\\**"
             ],
             "forcedInclude": [
-                "C:\\my_apps\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+                "C:\\Application\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
             "intelliSenseMode": "msvc-x64",
             "cStandard": "c11",
