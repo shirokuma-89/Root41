@@ -384,8 +384,14 @@ void loop(void) {
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
 
-          lcd.print(motor.correctionVal);
-          lcd.print(" %");
+          // lcd.print(motor.correctionVal);
+          // lcd.print(" %");
+
+          lcd.print(line.deg);
+
+          lcd.setCursor(8, 1);
+
+          lcd.print(line.outMove);
 
           LCD.output = 2;
           LCD.timer = millis();

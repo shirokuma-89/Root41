@@ -38,21 +38,21 @@ void _ball::calc(void) {
   }
 
   //回り込み
-  if (top > 2 && top < 14) {
+  if (top > 3 && top < 13) {
     if (val[top] < 250) {
       if (top > 8) {
         if (top >= 12) {
+          top -= 1;
+        } else if (top >= 10) {
           top -= 2;
-        // } else if (top >= 10) {
-        //   top -= 3;
         } else {
           top -= 4;
         }
       } else {
-        if (top <= 6) {
+        if (top <= 4) {
+          top += 1;
+        } else if (top <= 6) {
           top += 2;
-        // } else if (top <= 6) {
-        //   top += 3;
         } else {
           top += 4;
         }
@@ -64,7 +64,7 @@ void _ball::calc(void) {
       motor.power -= 20;
 
       if (top <= 6 || top >= 12) {
-        motor.power -= 25;
+        motor.power -= 35;
       }
     }
   }
