@@ -8,10 +8,10 @@ void _ball::read(int* b) {
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = round((float)analogRead(BALL7) * 0.82);
+  *(b + 7) = analogRead(BALL7);
   *(b + 8) = round((float)analogRead(BALL8) * 0.82);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.82);
-  *(b + 10) = analogRead(BALL10);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.75);
+  *(b + 10) = round((float)analogRead(BALL10) * 0.82);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
@@ -26,6 +26,8 @@ void _ball::read(int* b) {
 
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
+  motor.power -= 15;
+
   deg = 1000;
 
   top = 0;
@@ -35,6 +37,7 @@ void _ball::calc(void) {
       top = i;
     }
   }
+  top_backup = top;
 
   if (val[top] > 540) {
     exist = false;
@@ -43,21 +46,23 @@ void _ball::calc(void) {
   }
 
   //回り込み
-  if (top > 2 && top < 14) {
-    if (val[top] < 250) {
+  if (top > 3 && top < 13) {
+    if (val[top] < 252) {
+      motor.power -= 10;
+
+      if (top <= 6 || top >= 12) {
+        motor.power -= 15;
+      }
+
       if (top > 8) {
         if (top >= 12) {
           top -= 2;
-          // } else if (top >= 10) {
-          //   top -= 3;
         } else {
           top -= 4;
         }
       } else {
-        if (top <= 6) {
-          top += 2;
-          // } else if (top <= 6) {
-          //   top += 3;
+        if (top <= 4) {
+          top += 2;n
         } else {
           top += 4;
         }
@@ -65,16 +70,54 @@ void _ball::calc(void) {
 
       top += 16;
       top %= 16;
-
-      motor.power -= 20;
-
-      if (top <= 6 || top >= 12) {
-        motor.power -= 25;
-      }
     }
   }
 
   deg = round((float)top * 22.5);
+
+  if (line.near && !line.flag) {
+    if (line.inTimer + 1500 > millis()) {
+      if (line.highPin == 0) {
+        if (ball.top_backup <= 2 || ball.top_backup >= 14) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else if (line.highPin == 2) {
+        if (ball.top_backup >= 2 && ball.top_backup <= 6) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else if (line.highPin == 3) {
+        if (ball.top_backup >= 6 && ball.top_backup <= 10) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      } else {
+        if (ball.top_backup >= 10 && ball.top_backup <= 14) {
+          line.near = true;
+        } else {
+          if (ball.exist) {
+            line.near = false;
+          }
+        }
+      }
+    } else {
+      line.near = false;
+    }
+  }
+
+  if (line.near){
+    ball.exist = false;
+  }
 }
 
 void _ball::reset(void) {

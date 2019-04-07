@@ -20,11 +20,11 @@
 
 #else  //久留君
 
-#define Gyro_X 90
-#define Gyro_Y 45
-#define Gyro_Z -38
-#define Accel_X -452
-#define Accel_Y -648
+#define Gyro_X 91
+#define Gyro_Y 43
+#define Gyro_Z -39
+#define Accel_X -447
+#define Accel_Y -646
 #define Accel_Z 1647
 
 #endif
@@ -109,6 +109,9 @@ class _line {
   int outMove = 1000;
   int mode = 0;
   int offset = 0;
+  int highPin = 5;
+
+  int allval = 0;
 
   int first = 5;
   int second = 5;
@@ -290,6 +293,10 @@ void setup(void) {
 }
 
 void loop(void) {
+  Serial.print(line.deg);
+  Serial.print(" ");
+  Serial.println(line.outMove);
+
   device.error = false;
 
   // if (millis() - usonic.timer >= 200) {
@@ -298,10 +305,11 @@ void loop(void) {
   // }
 
   gyro.deg = gyro.read();
+
   if (line.touch) {
-    if (line.offset == 1000) {
-      line.offset = gyro.deg;
-    }
+    line.offset = gyro.deg;
+  } else {
+    line.offset = 0;
   }
 
   RGBLED.begin();
@@ -318,6 +326,11 @@ void loop(void) {
 
     // ボール処理
     ball.read(ball.val);
+    if (ROBOT == 2) {
+      //久留マシン設定
+      ball.val[4] = (ball.val[3] + ball.val[5]) / 2;
+      ball.val[12] = (ball.val[11] + ball.val[13]) / 2;
+    }
     ball.calc();
     // Serial.println(ball.top);
 
@@ -399,8 +412,14 @@ void loop(void) {
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
 
-          lcd.print(motor.correctionVal);
-          lcd.print(" %");
+          // lcd.print(motor.correctionVal);
+          // lcd.print(" %");
+
+          lcd.print(line.deg);
+
+          lcd.setCursor(8, 1);
+
+          lcd.print(line.outMove);
 
           LCD.output = 2;
           LCD.timer = millis();

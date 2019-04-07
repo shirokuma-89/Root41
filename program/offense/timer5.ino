@@ -20,6 +20,7 @@ ISR(timer5Event) {
 
     if (line.touch) {
       line.flag = true;
+
       if (line.stop) {
         if (millis() - line.inTimer >= 200) {
           line.stop = false;
@@ -61,6 +62,7 @@ ISR(timer5Event) {
           } else if (line.val[3]) {
             line.deg = 315;
           }
+
         } else if (line.first == 3) {
           if (line.val[1]) {
             line.deg = 45;
@@ -91,7 +93,7 @@ ISR(timer5Event) {
 
   motor.restart++;
 
-  if (motor.restart >= 10000) {
+  if(motor.restart >= 4000){
     motor.restart = 0;
     motor.directDrive(motor.subVal);
     motor.directDrive(motor.val);
