@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -103,6 +103,7 @@ class _line {
   bool near = false;
   bool touch = false;
   bool val[4];
+  bool stop;
 
   int deg = 1000;
   int outMove = 1000;
@@ -168,6 +169,7 @@ class _usonic {
   int getDistance(void);
 
   int distance = 0;
+  unsigned long timer;
 
  private:
   byte data;
@@ -255,6 +257,8 @@ void setup(void) {
   lcd.print("Root41 starting");
   LCD.output = 0;
 
+  // usonic.timer = millis();
+
   //起動イルミネーション
   for (int i = 0; i <= 15; i++) {
     RGBLED.begin();
@@ -287,6 +291,11 @@ void setup(void) {
 
 void loop(void) {
   device.error = false;
+
+  // if (millis() - usonic.timer >= 200) {
+  //   usonic.distance = usonic.getDistance();
+  //   usonic.timer = millis();
+  // }
 
   gyro.deg = gyro.read();
   if (line.touch) {
@@ -321,7 +330,9 @@ void loop(void) {
         motor.deg = 1000;
       }
     } else {
-      if (line.deg != 1000) {
+      if (line.stop) {
+        motor.deg = 1000;
+      } else if (line.deg != 1000) {
         motor.deg = line.deg;
       } else if (line.outMove != 1000) {
         motor.deg = line.outMove;
@@ -350,8 +361,11 @@ void loop(void) {
         }
       }
     } else {
-      motor.drive(NULL, NULL, false, true);
-
+      if (line.stop) {
+        motor.drive(NULL, NULL, true);
+      } else {
+        motor.drive(NULL, NULL, false, true);
+      }
       if (line.near) {
         LED.changeAll(135, 0, 255);
       } else {
@@ -380,7 +394,8 @@ void loop(void) {
           lcd.print("Root41 running");
 
           lcd.setCursor(0, 1);  //改行
-
+          lcd.print(usonic.distance);
+          lcd.setCursor(8, 1);
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
 

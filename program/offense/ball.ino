@@ -17,10 +17,15 @@ void _ball::read(int* b) {
   *(b + 13) = analogRead(BALL13);
   *(b + 14) = analogRead(BALL14);
   *(b + 15) = analogRead(BALL15);
+
+  if (ROBOT == 2) {
+    *(b + 4) = (*(b + 3) + *(b + 5)) / 2;
+    *(b + 12) = (*(b + 11) + *(b + 13)) / 2;
+  }
 }
 
 void _ball::calc(void) {
-  //ball.degは deg = round((float)top * 22.5);まで使用不可
+  // ball.degは deg = round((float)top * 22.5);まで使用不可
   deg = 1000;
 
   top = 0;
@@ -43,16 +48,16 @@ void _ball::calc(void) {
       if (top > 8) {
         if (top >= 12) {
           top -= 2;
-        // } else if (top >= 10) {
-        //   top -= 3;
+          // } else if (top >= 10) {
+          //   top -= 3;
         } else {
           top -= 4;
         }
       } else {
         if (top <= 6) {
           top += 2;
-        // } else if (top <= 6) {
-        //   top += 3;
+          // } else if (top <= 6) {
+          //   top += 3;
         } else {
           top += 4;
         }
