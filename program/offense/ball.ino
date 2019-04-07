@@ -26,7 +26,7 @@ void _ball::read(int* b) {
 
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
-  motor.power -= 15;
+  // motor.power -= 15;
 
   deg = 1000;
 
@@ -48,10 +48,10 @@ void _ball::calc(void) {
   //回り込み
   if (top > 3 && top < 13) {
     if (val[top] < 252) {
-      motor.power -= 10;
+      motor.power -= 15;
 
       if (top <= 6 || top >= 12) {
-        motor.power -= 15;
+        motor.power -= 25;
       }
 
       if (top > 8) {
@@ -62,7 +62,7 @@ void _ball::calc(void) {
         }
       } else {
         if (top <= 4) {
-          top += 2;n
+          top += 2;
         } else {
           top += 4;
         }
