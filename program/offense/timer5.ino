@@ -61,19 +61,6 @@ ISR(timer5Event) {
       } else if (line.deg == 1000 && line.outMove != 1000) {
         line.deg = line.outMove;
         line.outMove = 1000;
-        // if (line.deg <= 45 || line.deg >= 315) {
-        //   if (line.val[1]) {
-        //     line.deg = 45;
-        //   } else if (line.val[2]) {
-        //     line.deg = 315;
-        //   }
-        // } else if (line.deg >= 135 && line.deg <= 225) {
-        //   if (line.val[1]) {
-        //     line.deg = 135;
-        //   } else if (line.val[2]) {
-        //     line.deg = 225;
-        //   }
-        // }
       }
     } else if (line.flag && line.outMove == 1000) {
       line.outMove = line.deg;

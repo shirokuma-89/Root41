@@ -58,7 +58,6 @@ void _motor::drive(int _deg,
     }
 
     front = gyro.deg;
-
     front = front + 360;
     front = front >= 360 ? front - 360 : front;
 
