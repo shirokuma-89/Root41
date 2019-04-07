@@ -34,7 +34,7 @@ void _device::initialize(void) {
 }
 
 void _device::monitor(void) {
-  if ((digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) || monitorBegin) {
+  if (digitalRead(SW_LEFT) || digitalRead(SW_RIGHT) || monitorBegin) {
     startTimer5(100);
     lcd.print("Root41 monitor");
 
