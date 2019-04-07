@@ -39,26 +39,32 @@ ISR(timer5Event) {
             line.highPin = 3;
           }
         }
+        line.inTimer = millis();
       } else if (line.deg != 1000 && line.outMove == 1000) {
-        if (line.deg == 90) {
-          if (line.val[0]) {
-            if (line.offset >= 330) {
-              line.deg = 135;
-            }
-          } else if (line.val[3]) {
-            if (line.offset <= 30) {
-              line.deg = 45;
-            }
+        if (line.first == 0) {
+          if (line.val[1]) {
+            line.deg = 135;
+          } else if (line.val[2]) {
+            line.deg = 225;
           }
-        } else if (line.deg == 270) {
+        } else if (line.first == 1) {
           if (line.val[0]) {
-            if (line.offset <= 30) {
-              line.deg = 225;
-            }
+            line.deg = 135;
           } else if (line.val[3]) {
-            if (line.offset >= 330) {
-              line.deg = 315;
-            }
+            line.deg = 45;
+          }
+        } else if (line.first == 2) {
+          if (line.val[0]) {
+            line.deg = 225;
+          } else if (line.val[3]) {
+            line.deg = 315;
+          }
+
+        } else if (line.first == 3) {
+          if (line.val[1]) {
+            line.deg = 45;
+          } else if (line.val[2]) {
+            line.deg = 315;
           }
         }
       } else if (line.deg == 1000 && line.outMove != 1000) {
@@ -70,7 +76,7 @@ ISR(timer5Event) {
       line.deg = 1000;
       line.outTimer = millis();
     } else if (line.flag && line.outMove != 1000) {
-      if (millis() - line.outTimer >= 400) {
+      if (millis() - line.outTimer >= 600) {
         line.flag = false;
         line.outMove = 1000;
       }
@@ -79,6 +85,7 @@ ISR(timer5Event) {
       line.flag = false;
       line.deg = 1000;
       line.outMove = 1000;
+      line.first = 5;
     }
   }
 
