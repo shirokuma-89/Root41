@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -109,6 +109,7 @@ class _line {
   int mode = 0;
   int offset = 0;
   int highPin = 5;
+  int count = 0;
 
   int first = 5;
   int second = 5;
@@ -440,7 +441,7 @@ void loop(void) {
     LED.gyroShow();
 
     if (millis() - LCD.timer >= 300) {
-      // usonic.distance = usonic.getDistance();
+      usonic.distance = usonic.getDistance();
 
       lcd.clear();
 
@@ -457,8 +458,8 @@ void loop(void) {
 
       lcd.setCursor(9, 1);  //改行
 
-      // lcd.print(usonic.distance);
-      // lcd.print(" cm");
+      lcd.print(usonic.distance);
+      lcd.print(" cm");
 
       // lcd.print(gyro.differentialRead());
       // lcd.print(" deg");
@@ -468,7 +469,7 @@ void loop(void) {
     }
 
     //ジャイロセンサリセット
-    if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
+    if (digitalRead(SW_LEFT) || digitalRead(SW_RIGHT)) {
       RGBLED.begin();
       RGBLED.setBrightness(LED.bright);
 
