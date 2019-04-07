@@ -11,8 +11,10 @@
             "forcedInclude": [
                 "C:\\Application\\arduino-1.8.6-VScode\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
-            "intelliSenseMode": "msvc-x64"
+            "intelliSenseMode": "msvc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
     ],
-    "version": 4
+    "version": 3
 }
