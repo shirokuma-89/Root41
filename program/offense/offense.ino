@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 2  // 1:宮里　2:久留
+#define ROBOT 1  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -319,7 +319,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 10;
+    motor.move = 20;
 
     ball.reset();
 
@@ -327,11 +327,6 @@ void loop(void) {
 
     // ボール処理
     ball.read(ball.val);
-    if (ROBOT == 2) {
-      //久留マシン設定
-      ball.val[4] = (ball.val[3] + ball.val[5]) / 2;
-      ball.val[12] = (ball.val[11] + ball.val[13]) / 2;
-    }
     ball.calc();
     // Serial.println(ball.top);
 

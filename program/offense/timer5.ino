@@ -99,7 +99,7 @@ ISR(timer5Event) {
 
   motor.restart++;
 
-  if (motor.restart >= 4000) {
+  if (motor.restart >= 2000) {
     motor.restart = 0;
     motor.directDrive(motor.subVal);
     motor.directDrive(motor.val);
