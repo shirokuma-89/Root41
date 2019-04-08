@@ -61,9 +61,6 @@ void _ball::calc(void) {
           top -= 4;
         // }
       } else {
-        // if (top <= 4) {
-        //   top += 3;
-        // } else {
           top += 4;
         // }
       }
@@ -115,7 +112,7 @@ void _ball::calc(void) {
     }
   }
 
-  if (line.near){
+  if (line.near) {
     ball.exist = false;
   }
 }
