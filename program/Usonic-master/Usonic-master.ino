@@ -41,10 +41,10 @@ int _usonic::getDistance(void) {
   }
 
   //受信バッファをクリア
-  while (Serial.available()) {
-    Serial.read();
+  while (Wire.available()) {
+    Wire.read();
   }
-  Serial.flush();
+  Wire.flush();
 
   return (int)data;
 }
