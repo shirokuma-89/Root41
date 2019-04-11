@@ -28,6 +28,7 @@ void loop(void) {
 }
 
 int _usonic::getDistance(void) {
+  Wire.begin();
   Wire.requestFrom(8, 1);
 
   timeOut = millis();
