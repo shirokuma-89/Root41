@@ -44,7 +44,6 @@ int _usonic::getDistance(void) {
   while (Wire.available()) {
     Wire.read();
   }
-  Wire.flush();
 
   return (int)data;
 }
