@@ -1,5 +1,7 @@
 #include <Wire.h>
 
+int process_timer;
+
 class _usonic {
  public:
   int getDistance(void);
@@ -24,12 +26,18 @@ void setup(void) {
 void loop(void) {
   usonic.distance = usonic.getDistance();
 
-  Serial.println(usonic.distance);
+  Serial.print(usonic.distance);
+  Serial.print("\t");
+  Serial.println(millis()-process_timer);
+
+  Serial.flush();
 }
 
 int _usonic::getDistance(void) {
+  process_timer = millis();
   Wire.begin();
   Wire.requestFrom(8, 1);
+  Wire.flush();
 
   timeOut = millis();
   while (timeOut + 5 >= millis()) {
@@ -44,6 +52,7 @@ int _usonic::getDistance(void) {
   while (Wire.available()) {
     Wire.read();
   }
+  Wire.flush();
 
   return (int)data;
 }
