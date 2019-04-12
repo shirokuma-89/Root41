@@ -22,7 +22,7 @@ int _usonic::getDistance(void) {
   }
   Wire.flush();
 
-  startTimer5();
+  startTimer5(50);
 
   return (int)data;
 }

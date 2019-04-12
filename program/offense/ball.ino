@@ -48,11 +48,6 @@ void _ball::calc(void) {
   //回り込み
   if (top > 3 && top < 13) {
     if (val[top] < 255) {
-      motor.power -= 35;
-
-      if (top <= 6 || top >= 12) {
-        motor.power -= 25;
-      }
 
       if (top > 8) {
           top -= 4;
