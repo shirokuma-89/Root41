@@ -55,14 +55,9 @@ void _ball::calc(void) {
       }
 
       if (top > 8) {
-        // if (top >= 12) {
-        //   top -= 3;
-        // } else {
           top -= 4;
-        // }
       } else {
           top += 4;
-        // }
       }
 
       top += 16;
