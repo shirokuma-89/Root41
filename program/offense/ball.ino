@@ -9,9 +9,9 @@ void _ball::read(int* b) {
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
   *(b + 7) = analogRead(BALL7);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.82);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.77);
   *(b + 9) = round((float)analogRead(BALL9) * 0.65);
-  *(b + 10) = round((float)analogRead(BALL10) * 0.82);
+  *(b + 10) = round((float)analogRead(BALL10) * 0.77);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
@@ -46,8 +46,8 @@ void _ball::calc(void) {
   }
 
   //回り込み
-  if (top > 3 && top < 13) {
-    if (val[top] < 265) {
+  if (top > 2 && top < 14) {
+    if (val[top] < 260) {
       if (top > 8) {
         top -= 4;
       } else {
