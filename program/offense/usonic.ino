@@ -23,6 +23,4 @@ int _usonic::getDistance(void) {
   Wire.flush();
 
   return (int)data;
-
-  return (int)data;
 }
