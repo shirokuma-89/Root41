@@ -82,6 +82,7 @@ class _ball {
   int deg;
   int old_top;
   int top_backup;
+  int turn = 0;
 
   const int move = 20;
 
