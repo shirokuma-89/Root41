@@ -101,7 +101,17 @@ ISR(timer5Event) {
 
   if (motor.restart >= 2000) {
     motor.restart = 0;
-    motor.directDrive(motor.subVal);
+    for (int i = 0; i <= 100; i++) {
+      digitalWrite(4, LOW);
+      digitalWrite(5, LOW);
+      digitalWrite(6, LOW);
+      digitalWrite(7, LOW);
+      digitalWrite(8, LOW);
+      digitalWrite(9, LOW);
+      digitalWrite(10, LOW);
+      digitalWrite(11, LOW);
+      digitalWrite(12, LOW);
+    }
     motor.directDrive(motor.val);
   }
 

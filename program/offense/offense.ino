@@ -82,6 +82,7 @@ class _ball {
   int deg;
   int old_top;
   int top_backup;
+  int turn = 0;
 
   const int move = 20;
 
@@ -319,7 +320,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 20;
+    motor.move = 30;
 
     ball.reset();
 
