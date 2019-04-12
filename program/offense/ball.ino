@@ -10,7 +10,7 @@ void _ball::read(int* b) {
   *(b + 6) = analogRead(BALL6);
   *(b + 7) = analogRead(BALL7);
   *(b + 8) = round((float)analogRead(BALL8) * 0.82);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.75);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.65);
   *(b + 10) = round((float)analogRead(BALL10) * 0.82);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
@@ -26,7 +26,7 @@ void _ball::read(int* b) {
 
 void _ball::calc(void) {
   // ball.degは deg = round((float)top * 22.5);まで使用不可
-  motor.power -= 15;
+  // motor.power -= 15;
 
   deg = 1000;
 
@@ -47,25 +47,17 @@ void _ball::calc(void) {
 
   //回り込み
   if (top > 3 && top < 13) {
-    if (val[top] < 252) {
-      motor.power -= 10;
+    if (val[top] < 255) {
+      motor.power -= 35;
 
       if (top <= 6 || top >= 12) {
-        motor.power -= 15;
+        motor.power -= 25;
       }
 
       if (top > 8) {
-        if (top >= 12) {
-          top -= 2;
-        } else {
           top -= 4;
-        }
       } else {
-        if (top <= 4) {
-          top += 2;
-        } else {
           top += 4;
-        }
       }
 
       top += 16;
@@ -115,7 +107,7 @@ void _ball::calc(void) {
     }
   }
 
-  if (line.near){
+  if (line.near) {
     ball.exist = false;
   }
 }
