@@ -47,12 +47,11 @@ void _ball::calc(void) {
 
   //回り込み
   if (top > 3 && top < 13) {
-    if (val[top] < 255) {
-
+    if (val[top] < 265) {
       if (top > 8) {
-          top -= 4;
+        top -= 4;
       } else {
-          top += 4;
+        top += 4;
       }
 
       top += 16;
