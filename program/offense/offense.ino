@@ -327,11 +327,6 @@ void loop(void) {
 
     // ボール処理
     ball.read(ball.val);
-    if (ROBOT == 2) {
-      //久留マシン設定
-      ball.val[4] = (ball.val[3] + ball.val[5]) / 2;
-      ball.val[12] = (ball.val[11] + ball.val[13]) / 2;
-    }
     ball.calc();
     // Serial.println(ball.top);
 
