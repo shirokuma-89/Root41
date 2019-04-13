@@ -211,7 +211,6 @@ class _device {
   bool boot = true;
   bool monitorBegin = false;
   bool error = false;
-  bool keeper = false;
 
   int process = LOW;
   int mode = 0;
@@ -330,10 +329,11 @@ void loop(void) {
     // ボール処理
     ball.read(ball.val);
     ball.calc();
+    // Serial.println(ball.top);
 
     LED.changeAll(0, 135, 255);
 
-    if (!line.flag || device.keeper) {
+    if (!line.flag) {
       if (ball.exist) {
         motor.deg = ball.deg;
       } else {
@@ -353,7 +353,7 @@ void loop(void) {
     }
 
     if (motor.deg != 1000) {
-      if (line.flag && !device.keeper) {
+      if (line.flag) {
         LED.lineShow();
         motor.drive(motor.deg, 100);
       } else {
@@ -444,12 +444,6 @@ void loop(void) {
   } else {
     device.mode = 1;
 
-    if (device.rotary % 10 >= 5) {
-      device.keeper = true;
-    } else {
-      device.keeper = false;
-    }
-
     motor.drive(NULL, NULL, true);
 
     //起動エラーを検知
@@ -458,14 +452,10 @@ void loop(void) {
     }
 
     if (!device.boot) {
-      if (!device.keeper) {
-        if (ROBOT == 1) {
-          LED.changeAll(255, 135, 0);
-        } else {
-          LED.changeAll(100, 255, 255);
-        }
+      if (ROBOT == 1) {
+        LED.changeAll(255, 135, 0);
       } else {
-        LED.changeAll(255, 255, 255);
+        LED.changeAll(100, 255, 255);
       }
     } else {
       LED.changeAll(0, 0, 0);
@@ -479,11 +469,7 @@ void loop(void) {
       lcd.clear();
 
       if (!device.boot) {
-        if (device.keeper) {
-          lcd.print("Root41 keeper");
-        } else {
-          lcd.print("Root41 waiting");
-        }
+        lcd.print("Root41 waiting");
       } else {
         lcd.print("Root41 Boot ERR!");
       }
