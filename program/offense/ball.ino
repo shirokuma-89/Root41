@@ -175,7 +175,7 @@ void _ball::calc(void) {
       exist = false;
     }
 
-    if (top >= 5 && top <= 11) {
+    if (top >= 4 && top <= 12) {
       exist = false;
     }
 
