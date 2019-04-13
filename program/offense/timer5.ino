@@ -22,7 +22,8 @@ ISR(timer5Event) {
         line.stop = false;
       }
     } else if (line.touch) {
-      if (line.count >= 100) {
+      if (line.count[0] >= 100 || line.count[1] >= 100 ||
+          line.count[2] >= 100 || line.count[3] >= 100 ||) {
         line.flag = true;
         if (line.deg == 1000 && line.outMove == 1000) {
           // first
@@ -56,7 +57,8 @@ ISR(timer5Event) {
               line.second = -5;
             } else if (line.val[2] && line.first != 5) {
               line.second = 5;
-            } else if (line.val[3] && line.first != 10) {
+            } else if (line.val[3] && line.first != 10 &&
+                       line.count[3] >= 100) {
               line.second = 10;
             }
           } else if (line.third == 100) {
@@ -66,7 +68,8 @@ ISR(timer5Event) {
               line.third = -5;
             } else if (line.val[2] && line.first != 5 && line.second != 5) {
               line.third = 5;
-            } else if (line.val[3] && line.first != 10 && line.second != 10) {
+            } else if (line.val[3] && line.first != 10 && line.second != 10 &&
+                       line.count[3] >= 100) {
               line.third = 10;
             }
           } else if (line.forth == 100) {
@@ -80,7 +83,7 @@ ISR(timer5Event) {
                        line.third != 5) {
               line.forth = 5;
             } else if (line.val[3] && line.first != 10 && line.second != 10 &&
-                       line.third != 10) {
+                       line.third != 10 && line.count[3] >= 100) {
               line.forth = 10;
             }
           }
@@ -91,6 +94,18 @@ ISR(timer5Event) {
               line.deg = 210;
             } else {
               line.deg = 180;
+            }
+          } else if (line.first == -5) {
+            if (line.second == 0) {
+              line.deg = 150;
+            } else {
+              line.deg = 90;
+            }
+          } else if (line.first == 5) {
+            if (line.second == 0) {
+              line.deg = 210;
+            } else {
+              line.deg = 270;
             }
           } else if (line.first == 10) {
             if (line.second == -5) {
