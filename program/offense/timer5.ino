@@ -13,9 +13,8 @@ ISR(timer5Event) {
     }
 
   } else if (device.mode == 2) {  //動作中
-    //ライン処理をここに記述
+                                  //ライン処理をここに記述
     //ライン動作中はline.flagをtrueにしておくこと
-
     line.read();
     // line.count += 1;
     if (line.stop) {
@@ -159,15 +158,27 @@ ISR(timer5Event) {
       line.third = 100;
       line.forth = 100;
     }
+
+    motor.restart++;
+
+    if (motor.restart >= 2000) {
+      motor.restart = 0;
+      for (int i = 0; i <= 100; i++) {
+        digitalWrite(4, LOW);
+        digitalWrite(5, LOW);
+        digitalWrite(6, LOW);
+        digitalWrite(7, LOW);
+        digitalWrite(8, LOW);
+        digitalWrite(9, LOW);
+        digitalWrite(10, LOW);
+        digitalWrite(11, LOW);
+        digitalWrite(12, LOW);
+      }
+      motor.directDrive(motor.val);
+    }
   }
 
-  motor.restart++;
-
-  if (motor.restart >= 2000) {
-    motor.restart = 0;
-    motor.directDrive(motor.subVal);
-    motor.directDrive(motor.val);
-  }
-
+  // if (device.mode != 2 || !device.keeper) {
   startTimer5(50);  //タイマー割り込みを有効化
+  // }
 }
