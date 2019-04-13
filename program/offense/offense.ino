@@ -212,7 +212,7 @@ class _device {
   bool monitorBegin = false;
   bool error = false;
   bool keeper = false;
-  bool attack = true;
+  bool attack = false;
 
   int process = LOW;
   int mode = 0;
@@ -417,11 +417,11 @@ void loop(void) {
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
 
-          lcd.print(line.deg);
+          lcd.print(ball.top);
 
-          lcd.setCursor(8, 1);
+          // lcd.setCursor(8, 1);
 
-          lcd.print(line.outMove);
+          // lcd.print(line.outMove);
 
           LCD.output = 2;
           LCD.timer = millis();
