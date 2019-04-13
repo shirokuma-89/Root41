@@ -333,7 +333,7 @@ void loop(void) {
 
     LED.changeAll(0, 135, 255);
 
-    if (!line.flag && exist) {
+    if (!line.flag) {
       if (ball.exist) {
         motor.deg = ball.deg;
       } else {
