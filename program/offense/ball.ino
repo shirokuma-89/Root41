@@ -39,7 +39,7 @@ void _ball::calc(void) {
   }
   top_backup = top;
 
-  if (val[top] > 520) {
+  if (val[top] > 540) {
     exist = false;
   } else {
     exist = true;
@@ -142,29 +142,67 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    motor.power -= 40;
+    // motor.power -= 20;
 
-    // usonic.distance = usonic.getDistance();
-    if (top <= 8) {
-      if (!line.touch) {
-        deg = 113;
-      } else if (line.touch) {
-        deg = 68;
+    usonic.distance = usonic.getDistance();
+    if (usonic.distance <= 20) {
+      if (val[top] > 500) {
+        exist = false;
       } else {
-        deg = 90;
+        exist = true;
+      }
+      if (top <= 8) {
+        if (!line.touch) {
+          deg = 113;
+        } else if (line.touch) {
+          deg = 90;
+        } else {
+          deg = 90;
+        }
+      } else {
+        if (!line.touch) {
+          deg = 248;
+        } else if (line.touch) {
+          deg = 270;
+        } else {
+          deg = 270;
+        }
+      }
+
+      if (top == 0) {
+        if(val[14] >= val[2]){
+          if (!line.touch) {
+            deg = 248;
+          } else if (line.touch) {
+            deg = 270;
+          } else {
+            deg = 270;
+          }
+        } else {
+          if (!line.touch) {
+            deg = 113;
+          } else if (line.touch) {
+            deg = 90;
+          } else {
+            deg = 90;
+          }
+        }
+        // exist = false;
       }
     } else {
       if (!line.touch) {
-        deg = 248;
-      } else if (line.touch) {
-        deg = 393;
+        exist = true;
+        deg = 180;
       } else {
-        deg = 270;
+        exist = true;
+        if (line.val[1]) {
+          deg = 90;
+        } else if (line.val[2]) {
+          deg = 270;
+        } else {
+          deg = 0;
+        }
       }
-    }
-
-    if (top == 0) {
-      exist = false;
     }
   }
 }

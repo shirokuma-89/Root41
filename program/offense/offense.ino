@@ -444,7 +444,7 @@ void loop(void) {
   } else {
     device.mode = 1;
 
-    if (device.rotary % 10 >= 5) {
+    if (abs(device.rotary % 10) >= 5) {
       device.keeper = true;
     } else {
       device.keeper = false;
