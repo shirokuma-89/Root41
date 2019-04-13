@@ -8,10 +8,10 @@ void _ball::read(int* b) {
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = analogRead(BALL7);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.77);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.65);
-  *(b + 10) = round((float)analogRead(BALL10) * 0.77);
+  *(b + 7) = round((float)analogRead(BALL8) * 0.7);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.65);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.7);
+  *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
@@ -41,11 +41,26 @@ void _ball::calc(void) {
 
   if (val[top] > 540) {
     exist = false;
+    device.attack = false;
   } else {
     exist = true;
   }
 
-  if (!device.keeper) {
+  if (millis() - device.keeperTimeout >= 3000) {
+    device.attack = true;
+  }
+
+  if (device.attack) {
+    if (millis() - device.attackTimeout >= 7000) {
+      if (val[0] >= 240) {
+        device.attack = false;
+        device.keeperTimeout = millis();
+        device.attackTimeout = millis();
+      }
+    }
+  }
+
+  if (!device.keeper || device.attack) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
       if (val[top] < 255) {
@@ -128,6 +143,7 @@ void _ball::calc(void) {
       exist = false;
     }
   } else {
+    device.attack = false;
     line.near = false;
     line.touch = false;
 
@@ -178,7 +194,19 @@ void _ball::calc(void) {
     if (top == 0) {
       exist = false;
     }
-    
+
+    if (top == (device.keeperExit + 17) % 16) {
+      device.attackTimeout = millis();
+    } else if (top == device.keeperExit) {
+      device.attackTimeout = millis();
+    } else if (top == (device.keeperExit + 1) % 16) {
+      device.attackTimeout = millis();
+    } else if (top == 9) {
+      device.attackTimeout = millis();
+    } else {
+      device.keeperExit = top;
+      device.keeperTimeout = millis();
+    }
 
     if (top >= 5 && top <= 11) {
       exist = false;
