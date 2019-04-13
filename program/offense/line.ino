@@ -30,6 +30,9 @@ void _line::read(void) {
       count[3]++;
     }
   } else {
-    count = 0;
+    count[0] = 0;
+    count[1] = 0;
+    count[2] = 0;
+    count[3] = 0;
   }
 }
