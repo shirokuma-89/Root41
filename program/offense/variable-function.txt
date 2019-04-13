@@ -259,6 +259,9 @@ bool monitorBegin = false;
 bool error = false;
 エラーが起きないか監視する変数
 
+bool keeper = false;
+キーパーを有効にするか
+
 int process = HIGH;
 処理速度を向上するかを示す変数
 

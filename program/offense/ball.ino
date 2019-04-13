@@ -39,93 +39,133 @@ void _ball::calc(void) {
   }
   top_backup = top;
 
-  if (val[top] > 540) {
+  if (val[top] > 520) {
     exist = false;
   } else {
     exist = true;
   }
 
-  //回り込み
-  if (top > 2 + turn && top < 14 - turn) {
-    if (val[top] < 255) {
-
-      if(turn == 1){
-        if(top == 3){
-          top = 12;
-        } else if (top == 4) {
-          top = 12;
-        } else if (top == 13) {
-          top = 4;
-        } else if (top == 12) {
-          top = 4;
+  if (!device.keeper) {
+    //回り込み
+    if (top > 2 + turn && top < 14 - turn) {
+      if (val[top] < 255) {
+        if (turn == 1) {
+          if (top == 3) {
+            top = 12;
+          } else if (top == 4) {
+            top = 12;
+          } else if (top == 13) {
+            top = 4;
+          } else if (top == 12) {
+            top = 4;
+          }
         }
-      }
-      if (top > 8) {
-        top -= 4;
+        if (top > 8) {
+          top -= 4;
+        } else {
+          top += 4;
+        }
+
+        top += 16;
+        top %= 16;
+
+        turn = 1;
       } else {
-        top += 4;
+        turn = 0;
       }
-
-      top += 16;
-      top %= 16;
-
-      turn = 1;
     } else {
+      // if (top == 1) {
+      //   top = 0;
+      // } else if (top == 15) {
+      //   top = 0;
+      // }
       turn = 0;
     }
-  } else {
-    // if (top == 1) {
-    //   top = 0;
-    // } else if (top == 15) {
-    //   top = 0;
-    // }
-    turn = 0;
-  }
 
-  deg = round((float)top * 22.5);
+    deg = round((float)top * 22.5);
 
-  if (line.near && !line.flag) {
-    if (line.inTimer + 1500 > millis()) {
-      if (line.highPin == 0) {
-        if (ball.top_backup <= 2 || ball.top_backup >= 14) {
-          line.near = true;
-        } else {
-          if (ball.exist) {
-            line.near = false;
+    if (line.near && !line.flag) {
+      if (line.inTimer + 1500 > millis()) {
+        if (line.highPin == 0) {
+          if (ball.top_backup <= 2 || ball.top_backup >= 14) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
           }
-        }
-      } else if (line.highPin == 2) {
-        if (ball.top_backup >= 2 && ball.top_backup <= 6) {
-          line.near = true;
-        } else {
-          if (ball.exist) {
-            line.near = false;
+        } else if (line.highPin == 2) {
+          if (ball.top_backup >= 2 && ball.top_backup <= 6) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
           }
-        }
-      } else if (line.highPin == 3) {
-        if (ball.top_backup >= 6 && ball.top_backup <= 10) {
-          line.near = true;
+        } else if (line.highPin == 3) {
+          if (ball.top_backup >= 6 && ball.top_backup <= 10) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
+          }
         } else {
-          if (ball.exist) {
-            line.near = false;
+          if (ball.top_backup >= 10 && ball.top_backup <= 14) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
           }
         }
       } else {
-        if (ball.top_backup >= 10 && ball.top_backup <= 14) {
-          line.near = true;
-        } else {
-          if (ball.exist) {
-            line.near = false;
-          }
-        }
+        line.near = false;
+      }
+    }
+
+    if (line.near) {
+      exist = false;
+    }
+  } else {
+    line.near = false;
+    line.touch = false;
+
+    line.val[0] = !digitalRead(LINE1);
+    line.val[1] = !digitalRead(LINE2);
+    line.val[2] = !digitalRead(LINE3);
+    line.val[3] = !digitalRead(LINE4);
+
+    //どれか一つでも反応しているならば
+    if (line.val[0] | line.val[1] | line.val[2] | line.val[3]) {
+      line.touch = true;
+    }
+    line.flag = false;
+
+    motor.power -= 40;
+
+    // usonic.distance = usonic.getDistance();
+    if (top <= 8) {
+      if (!line.touch) {
+        deg = 113;
+      } else if (line.touch) {
+        deg = 68;
+      } else {
+        deg = 90;
       }
     } else {
-      line.near = false;
+      if (!line.touch) {
+        deg = 248;
+      } else if (line.touch) {
+        deg = 393;
+      } else {
+        deg = 270;
+      }
     }
-  }
 
-  if (line.near) {
-    ball.exist = false;
+    if (top == 0) {
+      exist = false;
+    }
   }
 }
 
