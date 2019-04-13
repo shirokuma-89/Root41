@@ -7,7 +7,7 @@ int _usonic::getDistance(void) {
   Wire.flush();
 
   timeOut = millis();
-  while (timeOut + 20 >= millis()) {
+  while (timeOut + 35 >= millis()) {
     if (Wire.available()) {
       data = Wire.read();
 
