@@ -21,42 +21,10 @@ void loop() {
   } else {
     usonic[1] = cm[1];
   }
-  cm[2] = UsonicMeasurRead(pingPin2);  // センサーから距離を調べる
-  if (cm[2] > 255) {
-    usonic[2] = 255;
-  } else {
-    usonic[2] = cm[2];
-  }
-  cm[3] = UsonicMeasurRead(pingPin3);  // センサーから距離を調べる
-  if (cm[3] > 255) {
-    usonic[3] = 255;
-  } else {
-    usonic[3] = cm[3];
-  }
-  _go = usonic[1] / 5;
-  wgo[1] = ceil(_go);
-  wgo[1] = constrain(wgo[1], 0, 31);
-  wgo[1] = wgo[1] << 3;
-
-  _go = usonic[2] / 5;
-  wgo[2] = ceil(_go);
-  wgo[2] = constrain(wgo[2], 0, 31);
-  wgo[0] = wgo[2] & 3;
-  wgo[0] = wgo[0] << 6;
-  wgo[2] = wgo[2] >> 2;
-
-  _go = usonic[3] / 5;
-  wgo[3] = ceil(_go);
-  wgo[3] = constrain(wgo[3], 0, 31);
-  wgo[3] = wgo[3] << 1;
-
-  go[0] = wgo[1] + wgo[2];
-  go[1] = wgo[0] + wgo[3];
 }
 
 void requestEvent() {
-  TinyWireS.send(byte(go[0]));
-  TinyWireS.send(byte(go[1]));
+  TinyWireS.send(byte(usonic[1]));
 }
 
 int UsonicMeasurRead(int pin) {
