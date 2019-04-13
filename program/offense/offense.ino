@@ -110,12 +110,14 @@ class _line {
   int mode = 0;
   int offset = 0;
   int highPin = 5;
-  int count = 0;
+  int count[4];
 
   int allval = 0;
 
-  int first = 5;
-  int second = 5;
+  int first = 100;
+  int second = 100;
+  int third = 100;
+  int forth = 100;
 
   unsigned long inTimer;
   unsigned long outTimer;
@@ -408,19 +410,36 @@ void loop(void) {
           lcd.print("Root41 running");
 
           lcd.setCursor(0, 1);  //改行
-          lcd.print(usonic.distance);
+          if (line.first != 100) {
+            lcd.print(line.first);
+          } else {
+            lcd.print("NO");
+          }
+          lcd.setCursor(4, 1);
+          if (line.second != 100) {
+            lcd.print(line.second);
+          } else {
+            lcd.print("NO");
+          }
           lcd.setCursor(8, 1);
+          if (line.third != 100) {
+            lcd.print(line.third);
+          } else {
+            lcd.print("NO");
+          }
+          lcd.setCursor(12, 1);
+          // if (line.forth != 100) {
+          //   lcd.print(line.forth);
+          // } else {
+          //   lcd.print("NO");
+          // }
+          lcd.print(line.val[3]);
+
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
 
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
-
-          lcd.print(line.deg);
-
-          lcd.setCursor(8, 1);
-
-          lcd.print(line.outMove);
 
           LCD.output = 2;
           LCD.timer = millis();
