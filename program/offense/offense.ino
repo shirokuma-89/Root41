@@ -212,12 +212,17 @@ class _device {
   bool monitorBegin = false;
   bool error = false;
   bool keeper = false;
+  bool attack = true;
 
   int process = LOW;
   int mode = 0;
   int rotary = 0;
   int rotaryResult = 0;
   int errorCode = 0;
+  int keeperExit = 20;
+
+  unsigned long attackTimeout;
+  unsigned long keeperTimeout;
 
  private:
   // none
