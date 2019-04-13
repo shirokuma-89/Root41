@@ -333,7 +333,7 @@ void loop(void) {
 
     LED.changeAll(0, 135, 255);
 
-    if (!line.flag || device.keeper) {
+    if (!line.flag && exist) {
       if (ball.exist) {
         motor.deg = ball.deg;
       } else {
@@ -353,7 +353,7 @@ void loop(void) {
     }
 
     if (motor.deg != 1000) {
-      if (line.flag && !device.keeper) {
+      if (line.flag) {
         LED.lineShow();
         motor.drive(motor.deg, 100);
       } else {

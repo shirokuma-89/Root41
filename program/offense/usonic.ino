@@ -1,7 +1,6 @@
 // usonic.ino
 
 int _usonic::getDistance(void) {
-  pauseTimer5();
   Wire.begin();
   TWBR = 12;
   Wire.requestFrom(8, 1);
@@ -21,8 +20,6 @@ int _usonic::getDistance(void) {
     Wire.read();
   }
   Wire.flush();
-
-  startTimer5(50);
 
   return (int)data;
 }

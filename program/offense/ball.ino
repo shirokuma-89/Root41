@@ -144,76 +144,54 @@ void _ball::calc(void) {
 
     motor.power -= 30;
 
+    pauseTimer5();
     usonic.distance = usonic.getDistance();
-    if (usonic.distance <= 40) {
-      if (!line.val[1] && !line.val[2]) {
-        if (val[top] > 520) {
-          exist = false;
-        } else {
-          exist = true;
-        }
-        if (top <= 8) {
-          if (!line.touch) {
-            deg = 113;
-          } else if (line.touch) {
-            deg = 68;
-          } else {
-            deg = 90;
-          }
-        } else {
-          if (!line.touch) {
-            deg = 248;
-          } else if (line.touch) {
-            deg = 293;
-          } else {
-            deg = 270;
-          }
-        }
-
-        if (top == 0) {
-          if (val[14] >= val[2]) {
-            if (!line.touch) {
-              deg = 248;
-            } else if (line.touch) {
-              deg = 270;
-            } else {
-              deg = 270;
-            }
-          } else {
-            if (!line.touch) {
-              deg = 113;
-            } else if (line.touch) {
-              deg = 90;
-            } else {
-              deg = 90;
-            }
-          }
-          exist = false;
-        }
+    startTimer5(30);
+    if (val[top] > 400) {
+      exist = false;
+    } else {
+      exist = true;
+    }
+    if (top <= 8) {
+      if (usonic.distance >= 15) {
+        deg = 113;
+      } else if (usonic.distance <= 25) {
+        deg = 68;
       } else {
-        exist = true;
-        motor.move = 200;
-        if (line.val[1]) {
-          deg = 90;
-        } else if (line.val[2]) {
-          deg = 270;
-        }
+        deg = 90;
       }
     } else {
-      if (!line.touch) {
-        exist = true;
-        deg = 180;
+      if (usonic.distance >= 15) {
+        deg = 248;
+      } else if (usonic.distance <= 25) {
+        deg = 293;
       } else {
-        exist = true;
-        motor.move = 200;
-        if (line.val[1]) {
-          deg = 90;
-        } else if (line.val[2]) {
-          deg = 270;
-        } else {
-          deg = 0;
-        }
+        deg = 270;
       }
+    }
+
+    if (top <= 1 || top >= 15) {
+      exist = false;
+    }
+
+    if (usonic.distance >= 40) {
+      deg = 180;
+      exist = true;
+    }
+
+    line.read();
+    if (line.val[1]) {
+      exist = true;
+      deg = 45;
+      motor.move = 400;
+    } else if (line.val[2]) {
+      exist = true;
+      deg = 315;
+      motor.move = 400;
+    } else if (line.val[3]) {
+      exist = true;
+      deg = 0;
+      motor.move = 400;
     }
   }
 }
