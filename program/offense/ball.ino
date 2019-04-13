@@ -142,13 +142,13 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    motor.power -= 30;
+    motor.power -= 20;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
     startTimer5(50);
 
-    if (val[top] > 480) {
+    if (val[top] > 500) {
       exist = false;
     } else {
       exist = true;
@@ -171,34 +171,22 @@ void _ball::calc(void) {
       }
     }
 
-    if (top <= 1 || top >= 15) {
+    // if (top <= 1 || top >= 15) {
+    //   exist = false;
+    // }
+
+    if (top == 0) {
       exist = false;
     }
+    
 
-    if (top >= 4 && top <= 12) {
+    if (top >= 5 && top <= 11) {
       exist = false;
     }
 
     if (usonic.distance >= 40) {
       deg = 180;
       exist = true;
-    }
-
-    if (!line.flag) {
-      line.read();
-      if (line.val[1]) {
-        exist = true;
-        deg = 45;
-        // motor.move = 600;
-      } else if (line.val[2]) {
-        exist = true;
-        deg = 315;
-        // motor.move = 600;
-      } else if (line.val[3]) {
-        exist = true;
-        deg = 0;
-        // motor.move = 600;
-      }
     }
   }
 }

@@ -322,14 +322,14 @@ void loop(void) {
     device.mode = 2;
 
     motor.move = 30;
-
-    ball.reset();
-
     motor.power = 100;
 
     // ボール処理
-    ball.read(ball.val);
-    ball.calc();
+    if (!line.flag) {
+      ball.reset();
+      ball.read(ball.val);
+      ball.calc();
+    }
 
     LED.changeAll(0, 135, 255);
 

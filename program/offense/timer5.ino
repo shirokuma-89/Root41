@@ -115,6 +115,6 @@ ISR(timer5Event) {
   }
 
   // if (device.mode != 2 || !device.keeper) {
-    startTimer5(50);  //タイマー割り込みを有効化
+  startTimer5(50);  //タイマー割り込みを有効化
   // }
 }
