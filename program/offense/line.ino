@@ -17,7 +17,18 @@ void _line::read(void) {
   //どれか一つでも反応しているならば
   if (val[0] | val[1] | val[2] | val[3]) {
     touch = true;
-    count++;
+    if (val[0]) {
+      count[0]++;
+    }
+    if (val[1]) {
+      count[1]++;
+    }
+    if (val[2]) {
+      count[2]++;
+    }
+    if (val[3]) {
+      count[3]++;
+    }
   } else {
     count = 0;
   }
