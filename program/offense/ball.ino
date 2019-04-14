@@ -30,6 +30,8 @@ void _ball::calc(void) {
 
   deg = 1000;
 
+  motor.power -= 25;
+
   top = 0;
 
   for (int i = 0; i <= 15; i++) {
@@ -46,12 +48,12 @@ void _ball::calc(void) {
     exist = true;
   }
 
-  if (millis() - device.keeperTimeout >= 3000) {
+  if (millis() - device.keeperTimeout >= 5000) {
     device.attack = true;
   }
 
   if (device.attack) {
-    if (millis() - device.attackTimeout >= 7000) {
+    if (millis() - device.attackTimeout >= 5000) {
       if (val[0] >= 240) {
         device.attack = false;
         device.keeperTimeout = millis();
@@ -64,6 +66,7 @@ void _ball::calc(void) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
       if (val[top] < 255) {
+        motor.power -= 20;
         if (turn == 1) {
           if (top == 3) {
             top = 12;
@@ -164,23 +167,23 @@ void _ball::calc(void) {
     usonic.distance = usonic.getDistance();
     startTimer5(50);
 
-    if (val[top] > 500) {
+    if (val[top] > 520) {
       exist = false;
     } else {
       exist = true;
     }
     if (top <= 8) {
-      if (usonic.distance >= 15) {
+      if (usonic.distance >= 10) {
         deg = 113;
-      } else if (usonic.distance <= 25) {
+      } else if (usonic.distance <= 20) {
         deg = 68;
       } else {
         deg = 90;
       }
     } else {
-      if (usonic.distance >= 15) {
+      if (usonic.distance >= 10) {
         deg = 248;
-      } else if (usonic.distance <= 25) {
+      } else if (usonic.distance <= 20) {
         deg = 293;
       } else {
         deg = 270;
@@ -213,8 +216,16 @@ void _ball::calc(void) {
     }
 
     if (usonic.distance >= 40) {
-      deg = 180;
       exist = true;
+      if (top >= 6 && top <= 10) {
+        if(top >= 8){
+          deg = 135;
+        } else {
+          deg = 225;
+        }
+      } else {
+        deg = 180;
+      }
     }
   }
 }

@@ -195,7 +195,7 @@ void _motor::drive(int _deg,
       val[i] = constrain(val[i], -98, 98);
     }
 
-    if (correctionDeg || (gyro.deg >= 80 && gyro.deg <= 280)) {
+    if (correctionDeg || (gyro.deg >= 30 && gyro.deg <= 330)) {
       for (int i = 0; i <= 2; i++) {
         val[i] = correctionVal;
       }
