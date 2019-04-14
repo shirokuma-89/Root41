@@ -1,5 +1,5 @@
 {
-    "port": "COM5",
+    "port": "COM3",
     "board": "arduino:avr:mega",
     "configuration": "cpu=atmega2560",
     "sketch": "Usonic.ino"

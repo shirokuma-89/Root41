@@ -1,5 +1,5 @@
 #include <TinyWireS.h>
-#define pingPin1 1
+#define pingPin1 4
 #define pingPin2 3
 #define pingPin3 4
 
