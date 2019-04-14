@@ -178,8 +178,9 @@ class _usonic {
   int distance = 0;
   unsigned long timer;
 
- private:
   byte data;
+
+ private:
 
   unsigned long timeOut;
 

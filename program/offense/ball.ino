@@ -46,12 +46,12 @@ void _ball::calc(void) {
     exist = true;
   }
 
-  if (millis() - device.keeperTimeout >= 3000) {
+  if (millis() - device.keeperTimeout >= 5000) {
     device.attack = true;
   }
 
   if (device.attack) {
-    if (millis() - device.attackTimeout >= 7000) {
+    if (millis() - device.attackTimeout >= 5000) {
       if (val[0] >= 240) {
         device.attack = false;
         device.keeperTimeout = millis();
