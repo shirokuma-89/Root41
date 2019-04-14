@@ -167,7 +167,7 @@ void _ball::calc(void) {
     usonic.distance = usonic.getDistance();
     startTimer5(50);
 
-    if (val[top] > 500) {
+    if (val[top] > 520) {
       exist = false;
     } else {
       exist = true;
