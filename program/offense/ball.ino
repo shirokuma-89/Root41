@@ -161,7 +161,7 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    // motor.power -= 20;
+    motor.power -= 20;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
