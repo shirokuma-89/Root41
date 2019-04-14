@@ -158,7 +158,7 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    motor.power -= 20;
+    // motor.power -= 20;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
@@ -170,17 +170,17 @@ void _ball::calc(void) {
       exist = true;
     }
     if (top <= 8) {
-      if (usonic.distance >= 15) {
+      if (usonic.distance >= 10) {
         deg = 113;
-      } else if (usonic.distance <= 25) {
+      } else if (usonic.distance <= 20) {
         deg = 68;
       } else {
         deg = 90;
       }
     } else {
-      if (usonic.distance >= 15) {
+      if (usonic.distance >= 10) {
         deg = 248;
-      } else if (usonic.distance <= 25) {
+      } else if (usonic.distance <= 20) {
         deg = 293;
       } else {
         deg = 270;
@@ -213,8 +213,16 @@ void _ball::calc(void) {
     }
 
     if (usonic.distance >= 40) {
-      deg = 180;
       exist = true;
+      if (top >= 6 && top <= 10) {
+        if(top >= 8){
+          deg = 135;
+        } else {
+          deg = 225;
+        }
+      } else {
+        deg = 180;
+      }
     }
   }
 }

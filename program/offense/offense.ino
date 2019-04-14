@@ -434,7 +434,8 @@ void loop(void) {
           // } else {
           //   lcd.print("NO");
           // }
-          lcd.print(line.val[3]);
+          // lcd.print(line.val[3]);
+          lcd.print(usonic.distance);
 
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
