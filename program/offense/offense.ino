@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -112,6 +112,7 @@ class _line {
   int offset = 0;
   int highPin = 5;
   int count[4];
+  int refresh;
 
   int allval = 0;
 
@@ -122,6 +123,7 @@ class _line {
 
   unsigned long inTimer;
   unsigned long outTimer;
+  unsigned long usonicTimer;
 
  private:
 } line;
@@ -316,12 +318,6 @@ void loop(void) {
 
   gyro.deg = gyro.read();
 
-  if (line.touch) {
-    line.offset = gyro.deg;
-  } else {
-    line.offset = 0;
-  }
-
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);
 
@@ -416,33 +412,32 @@ void loop(void) {
           } else {
             lcd.print("NO");
           }
-          lcd.setCursor(4, 1);
+          lcd.setCursor(3, 1);
           if (line.second != 100) {
             lcd.print(line.second);
           } else {
             lcd.print("NO");
           }
-          lcd.setCursor(8, 1);
+          lcd.setCursor(6, 1);
           if (line.third != 100) {
             lcd.print(line.third);
           } else {
             lcd.print("NO");
           }
+          lcd.setCursor(9, 1);
+          if (line.forth != 100) {
+            lcd.print(line.forth);
+          } else {
+            lcd.print("NO");
+          }
           lcd.setCursor(12, 1);
-          // if (line.forth != 100) {
-          //   lcd.print(line.forth);
-          // } else {
-          //   lcd.print("NO");
-          // }
-          lcd.print(line.val[3]);
+          lcd.print(motor.deg);
 
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
 
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
-
-          lcd.print(ball.top);
 
           // lcd.setCursor(8, 1);
 

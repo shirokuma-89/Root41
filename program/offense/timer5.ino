@@ -18,15 +18,22 @@ ISR(timer5Event) {
     line.read();
     // line.count += 1;
     if (line.stop) {
-      if (millis() - line.inTimer >= 50) {
-        line.stop = false;
+      if (line.first == 0) {
+        if (millis() - line.inTimer >= 20) {
+          line.stop = false;
+        }
+      } else {
+        if (millis() - line.inTimer >= 20) {
+          line.stop = false;
+        }
       }
     } else if (line.touch) {
       if (line.count[0] >= 100 || line.count[1] >= 100 ||
-          line.count[2] >= 100 || line.count[3] >= 100 ||) {
+          line.count[2] >= 100 || line.count[3] >= 100) {
         line.flag = true;
         if (line.deg == 1000 && line.outMove == 1000) {
           // first
+          line.stop = true;
           line.near = true;
           line.inTimer = millis();
           if (line.val[0]) {
@@ -45,9 +52,6 @@ ISR(timer5Event) {
             line.deg = 0;
             line.highPin = 3;
             line.first = 10;
-          }
-          if (line.highPin == 1 || line.highPin == 2) {
-            line.stop = true;
           }
         } else if (line.deg != 1000 && line.outMove == 1000) {
           if (line.second == 100) {
@@ -88,34 +92,37 @@ ISR(timer5Event) {
             }
           }
           if (line.first == 0) {
-            if (line.second == -5) {
+            if (line.second == -5 && line.third != 5 && line.forth != 5) {
               line.deg = 150;
-            } else if (line.second == 5) {
+            } else if (line.second == 5 && line.third != -5 &&
+                       line.forth != -5) {
               line.deg = 210;
             } else {
               line.deg = 180;
             }
           } else if (line.first == -5) {
-            if (line.second == 0) {
-              line.deg = 150;
+            if (line.second != 5 && line.third != 5 && line.second != 100 &&
+                line.third != 100) {
+              line.deg = 90;
+            } else if (line.second == 0) {
+              line.deg = 135;
+            } else if (line.second == 10) {
+              line.deg = 45;
             } else {
               line.deg = 90;
             }
           } else if (line.first == 5) {
-            if (line.second == 0) {
-              line.deg = 210;
-            } else {
+            if (line.second != -5 && line.third != -5 && line.second != 100 &&
+                line.third != 100) {
               line.deg = 270;
+            } else if (line.second == 0) {
+              line.deg = 225;
+            } else if (line.second == 10) {
+              line.deg = 315;
+            } else {
+              line.deg = 90;
             }
           } else if (line.first == 10) {
-            if (line.second == -5) {
-              line.deg = 30;
-            } else if (line.second == 5) {
-              line.deg = 330;
-            } else {
-              line.deg = 0;
-            }
-            line.deg = 0;
           }
           // if (line.deg == 180) {
           //   if (line.val[1]) {
@@ -151,9 +158,10 @@ ISR(timer5Event) {
       line.outMove = line.deg;
       line.deg = 1000;
       line.outTimer = millis();
+      line.refresh++;
     } else if (line.flag && line.outMove != 1000) {
-      if (line.first == 0) {
-        if (millis() - line.outTimer >= 500) {
+      if (line.first == 0 || line.first == 10) {
+        if (millis() - line.outTimer >= 700) {
           line.flag = false;
           line.outMove = 1000;
         }
@@ -172,6 +180,7 @@ ISR(timer5Event) {
       line.second = 100;
       line.third = 100;
       line.forth = 100;
+      line.refresh = 0;
     }
 
     motor.restart++;
