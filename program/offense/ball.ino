@@ -64,6 +64,7 @@ void _ball::calc(void) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
       if (val[top] < 255) {
+        motor.power -= 20;
         if (turn == 1) {
           if (top == 3) {
             top = 12;
