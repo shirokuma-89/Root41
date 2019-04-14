@@ -30,6 +30,8 @@ void _ball::calc(void) {
 
   deg = 1000;
 
+  motor.power -= 25;
+
   top = 0;
 
   for (int i = 0; i <= 15; i++) {
