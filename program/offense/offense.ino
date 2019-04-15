@@ -93,6 +93,7 @@ class _ball {
 
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
+  unsigned long turnTimer = 0;
 
  private:
 } ball;

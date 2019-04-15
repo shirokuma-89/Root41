@@ -65,28 +65,18 @@ void _ball::calc(void) {
   if (!device.keeper || device.attack) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
-      if (val[top] < 255) {
-        // motor.power -= 20;
-        if (turn == 1) {
-          // if (top == 3) {
-          //   top = 12;
-          // } else if (top == 4) {
-          //   top = 13;
-          // } else if (top == 13) {
-          //   top = 4;
-          // } else if (top == 12) {
-          //   top = 3;
-          // }
-        }
+      if (val[top] < 256) {
+        turnTimer = millis();
+        motor.power -= 20;
         if (top > 8) {
           if (top >= 13) {
-            top -= 2;
+            top -= 3;
           } else {
             top -= 4;
           }
         } else {
           if (top <= 3) {
-            top += 2;
+            top += 3;
           } else {
             top += 4;
           }
@@ -98,14 +88,14 @@ void _ball::calc(void) {
         turn = 1;
       } else {
         turn = 0;
+        // if (turnTimer + 2000 <= millis()) {
+        //   turn = 0;
+        // }
       }
     } else {
-      // if (top == 1) {
-      //   top = 0;
-      // } else if (top == 15) {
-      //   top = 0;
-      // }
-      turn = 0;
+      if (turnTimer + 2000 <= millis()) {
+        turn = 0;
+      }
     }
 
     deg = round((float)top * 22.5);
@@ -212,7 +202,7 @@ void _ball::calc(void) {
       device.attackTimeout = millis();
     } else if (top == (device.keeperExit + 1) % 16) {
       device.attackTimeout = millis();
-    } else if (top == 9) {
+    } else if (top == 9 || top == 8) {
       device.attackTimeout = millis();
     } else {
       device.keeperExit = top;
