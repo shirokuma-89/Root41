@@ -69,7 +69,7 @@ void _motor::drive(int _deg,
     front += gyro.differentialRead() * Kd;  //微分制御
     front -= integral * Ki;                 //積分制御
 
-    if (integralTimer + 5000 <= millis()) {
+    if (integralTimer + 10000 <= millis()) {
       integralTimer = millis();
       integral = 0;
     }
@@ -192,10 +192,10 @@ void _motor::drive(int _deg,
 
     for (int i = 0; i <= 2; i++) {
       val[i] = map(val[i], -100, 100, -_power, _power);
-      val[i] = constrain(val[i], -98, 98);
+      val[i] = constrain(val[i], -100, 100);
     }
 
-    if (correctionDeg || (gyro.deg >= 30 && gyro.deg <= 330)) {
+    if (correctionDeg || (gyro.deg >= 50 && gyro.deg <= 310)) {
       for (int i = 0; i <= 2; i++) {
         val[i] = correctionVal;
       }
@@ -206,81 +206,73 @@ void _motor::drive(int _deg,
 }
 
 void _motor::directDrive(int* p) {
-  if (*(p + 2) == 0) {
-    digitalWrite(10, LOW);
-    digitalWrite(11, LOW);
-    digitalWrite(12, HIGH);
-  } else if (*(p + 2) >= 1) {
-    if (*(p + 2) >= 100) {
-      digitalWrite(10, HIGH);
-      digitalWrite(11, LOW);
-      digitalWrite(12, HIGH);
-    }
-
-    digitalWrite(10, HIGH);
-    digitalWrite(11, LOW);
-    analogWrite(12, abs(round((float)*(p + 2) * 2.55)));
-  } else if (*(p + 2) <= -1) {
-    if (*(p + 2) <= -100) {
-      digitalWrite(10, LOW);
-      digitalWrite(11, HIGH);
-      digitalWrite(12, HIGH);
-    }
-
-    digitalWrite(11, HIGH);
-    digitalWrite(10, LOW);
-    analogWrite(12, abs(round((float)*(p + 2) * 2.55)));
-  }
-
   if (*p == 0) {
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
+    PORTG &= ~(_BV(5));
+    PORTE &= ~(_BV(3));
     digitalWrite(6, HIGH);
   } else if (*p >= 1) {
+    PORTG |= _BV(5);
+    PORTE &= ~(_BV(3));
+
     if (*p >= 100) {
-      digitalWrite(4, HIGH);
-      digitalWrite(5, LOW);
       digitalWrite(6, HIGH);
+    } else {
+      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
     }
-
-    digitalWrite(4, HIGH);
-    digitalWrite(5, LOW);
-    analogWrite(6, round((float)*p * 2.55));
   } else if (*p <= -1) {
-    if (*p <= -100) {
-      digitalWrite(5, HIGH);
-      digitalWrite(4, LOW);
-      digitalWrite(6, HIGH);
-    }
+    PORTG &= ~(_BV(5));
+    PORTE |= _BV(3);
 
-    digitalWrite(5, HIGH);
-    digitalWrite(4, LOW);
-    analogWrite(6, abs(round((float)*p * 2.55)));
+    if (*p <= -100) {
+      digitalWrite(6, HIGH);
+    } else {
+      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
+    }
   }
 
   if (*(p + 1) == 0) {
-    digitalWrite(7, LOW);
-    digitalWrite(8, LOW);
+    PORTH &= ~(_BV(4) | _BV(5));
     digitalWrite(9, HIGH);
   } else if (*(p + 1) >= 1) {
+    PORTH |= _BV(4);
+    PORTH &= ~(_BV(5));
+
     if (*(p + 1) >= 100) {
-      digitalWrite(7, HIGH);
-      digitalWrite(8, LOW);
       digitalWrite(9, HIGH);
+    } else {
+      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
     }
-
-    digitalWrite(7, HIGH);
-    digitalWrite(8, LOW);
-    analogWrite(9, abs(round((float)*(p + 1) * 2.55)));
   } else if (*(p + 1) <= -1) {
-    if (*(p + 1) <= -100) {
-      digitalWrite(7, LOW);
-      digitalWrite(8, HIGH);
-      digitalWrite(9, HIGH);
-    }
+    PORTH &= ~(_BV(4));
+    PORTH |= _BV(5);
 
-    digitalWrite(8, HIGH);
-    digitalWrite(7, LOW);
-    analogWrite(9, abs(round((float)*(p + 1) * 2.55)));
+    if (*(p + 1) <= -100) {
+      digitalWrite(9, HIGH);
+    } else {
+      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
+    }
+  }
+
+  if (*(p + 2) == 0) {
+    PORTB &= ~(_BV(4) | _BV(5));
+    digitalWrite(12, HIGH);
+  } else if (*(p + 2) >= 1) {
+    PORTB |= _BV(4);
+    PORTB &= ~(_BV(5));
+
+    if (*(p + 2) >= 100) {
+      digitalWrite(12, HIGH);
+    } else {
+      analogWrite(12, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
+    }
+  } else if (*(p + 2) <= -1) {
+    PORTB &= ~(_BV(4));
+    PORTB |= _BV(5);
+
+    if (*(p + 2) <= -100) {
+      digitalWrite(12, HIGH);
+    } else {
+      analogWrite(12, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
+    }
   }
 }
