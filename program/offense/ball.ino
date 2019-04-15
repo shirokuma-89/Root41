@@ -66,22 +66,30 @@ void _ball::calc(void) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
       if (val[top] < 255) {
-        motor.power -= 20;
+        // motor.power -= 20;
         if (turn == 1) {
-          if (top == 3) {
-            top = 12;
-          } else if (top == 4) {
-            top = 12;
-          } else if (top == 13) {
-            top = 4;
-          } else if (top == 12) {
-            top = 4;
-          }
+          // if (top == 3) {
+          //   top = 12;
+          // } else if (top == 4) {
+          //   top = 13;
+          // } else if (top == 13) {
+          //   top = 4;
+          // } else if (top == 12) {
+          //   top = 3;
+          // }
         }
         if (top > 8) {
-          top -= 4;
+          if (top >= 13) {
+            top -= 2;
+          } else {
+            top -= 4;
+          }
         } else {
-          top += 4;
+          if (top <= 3) {
+            top += 2;
+          } else {
+            top += 4;
+          }
         }
 
         top += 16;
@@ -218,7 +226,7 @@ void _ball::calc(void) {
     if (usonic.distance >= 40) {
       exist = true;
       if (top >= 6 && top <= 10) {
-        if(top >= 8){
+        if (top >= 8) {
           deg = 135;
         } else {
           deg = 225;
