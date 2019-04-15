@@ -69,7 +69,7 @@ void _motor::drive(int _deg,
     front += gyro.differentialRead() * Kd;  //微分制御
     front -= integral * Ki;                 //積分制御
 
-    if (integralTimer + 5000 <= millis()) {
+    if (integralTimer + 10000 <= millis()) {
       integralTimer = millis();
       integral = 0;
     }
@@ -195,7 +195,7 @@ void _motor::drive(int _deg,
       val[i] = constrain(val[i], -100, 100);
     }
 
-    if (correctionDeg || (gyro.deg >= 30 && gyro.deg <= 330)) {
+    if (correctionDeg || (gyro.deg >= 50 && gyro.deg <= 310)) {
       for (int i = 0; i <= 2; i++) {
         val[i] = correctionVal;
       }

@@ -53,6 +53,8 @@
 #define LINE3 26
 #define LINE4 27
 
+#define USONIC 46
+
 #define SW_TOGGLE 28
 #define SW_RIGHT 29
 #define SW_LEFT 30
