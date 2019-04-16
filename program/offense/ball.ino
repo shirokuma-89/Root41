@@ -34,6 +34,10 @@ void _ball::calc(void) {
 
   top = 0;
 
+  x = 0;
+  y = 0;
+
+  // x += 
   for (int i = 0; i <= 15; i++) {
     if (val[top] >= val[i]) {
       top = i;
@@ -64,21 +68,23 @@ void _ball::calc(void) {
 
   if (!device.keeper || device.attack) {
     //回り込み
+    if(turn){
+      motor.power -= 30;
+    }
     if (top > 2 + turn && top < 14 - turn) {
-      if (val[top] < 254) {
+      if (val[top] < 257) {
         turnTimer = millis();
-        motor.power -= 20;
         if (top > 8) {
-          if (top >= 13) {
+          if (top >= 12) {
             top -= 3;
-            motor.power -= 20;
+            motor.power -= 15;
           } else {
             top -= 4;
           }
         } else {
-          if (top <= 3) {
+          if (top <= 4) {
             top += 3;
-            motor.power -= 20;
+            motor.power -= 15;
           } else {
             top += 4;
           }
@@ -89,13 +95,13 @@ void _ball::calc(void) {
 
         turn = 1;
       } else {
-        turn = 0;
-        // if (turnTimer + 2000 <= millis()) {
-        //   turn = 0;
-        // }
+        // turn = 0;
+        if (turnTimer + 1200 <= millis()) {
+          turn = 0;
+        }
       }
     } else {
-      if (turnTimer + 2000 <= millis()) {
+      if (turnTimer + 1200 <= millis()) {
         turn = 0;
       }
     }
