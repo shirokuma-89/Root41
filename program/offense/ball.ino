@@ -25,7 +25,7 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
-  // ball.degは deg = round((float)top * 22.5);まで使用不可
+  // degは deg = round((float)top * 22.5);まで使用不可
   // motor.power -= 15;
 
   deg = 1000;
@@ -34,6 +34,10 @@ void _ball::calc(void) {
 
   top = 0;
 
+  x = 0;
+  y = 0;
+
+  // x += 
   for (int i = 0; i <= 15; i++) {
     if (val[top] >= val[i]) {
       top = i;
@@ -48,9 +52,9 @@ void _ball::calc(void) {
     exist = true;
   }
 
-  if (millis() - device.keeperTimeout >= 5000) {
-    device.attack = true;
-  }
+  // if (millis() - device.keeperTimeout >= 5000) {
+  //   device.attack = true;
+  // }
 
   if (device.attack) {
     if (millis() - device.attackTimeout >= 5000) {
@@ -64,19 +68,23 @@ void _ball::calc(void) {
 
   if (!device.keeper || device.attack) {
     //回り込み
+    if(turn){
+      motor.power -= 30;
+    }
     if (top > 2 + turn && top < 14 - turn) {
-      if (val[top] < 256) {
+      if (val[top] < 257) {
         turnTimer = millis();
-        motor.power -= 20;
         if (top > 8) {
-          if (top >= 13) {
+          if (top >= 12) {
             top -= 3;
+            motor.power -= 15;
           } else {
             top -= 4;
           }
         } else {
-          if (top <= 3) {
+          if (top <= 4) {
             top += 3;
+            motor.power -= 15;
           } else {
             top += 4;
           }
@@ -87,13 +95,13 @@ void _ball::calc(void) {
 
         turn = 1;
       } else {
-        turn = 0;
-        // if (turnTimer + 2000 <= millis()) {
-        //   turn = 0;
-        // }
+        // turn = 0;
+        if (turnTimer + 1200 <= millis()) {
+          turn = 0;
+        }
       }
     } else {
-      if (turnTimer + 2000 <= millis()) {
+      if (turnTimer + 1200 <= millis()) {
         turn = 0;
       }
     }
@@ -101,36 +109,36 @@ void _ball::calc(void) {
     deg = round((float)top * 22.5);
 
     if (line.near && !line.flag) {
-      if (line.inTimer + 1500 > millis()) {
+      if (line.inTimer + 2500 > millis()) {
         if (line.highPin == 0) {
-          if (ball.top_backup <= 2 || ball.top_backup >= 14) {
+          if (top_backup <= 2 || top_backup >= 14) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else if (line.highPin == 2) {
-          if (ball.top_backup >= 2 && ball.top_backup <= 6) {
+          if (top_backup >= 2 && top_backup <= 6) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else if (line.highPin == 3) {
-          if (ball.top_backup >= 6 && ball.top_backup <= 10) {
+          if (top_backup >= 6 && top_backup <= 10) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else {
-          if (ball.top_backup >= 10 && ball.top_backup <= 14) {
+          if (top_backup >= 10 && top_backup <= 14) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
@@ -159,7 +167,7 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    motor.power -= 20;
+    // motor.power -= 20;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
@@ -171,17 +179,17 @@ void _ball::calc(void) {
       exist = true;
     }
     if (top <= 8) {
-      if (usonic.distance >= 10) {
+      if (usonic.distance >= 20) {
         deg = 113;
-      } else if (usonic.distance <= 20) {
+      } else if (usonic.distance <= 25) {
         deg = 68;
       } else {
         deg = 90;
       }
     } else {
-      if (usonic.distance >= 10) {
+      if (usonic.distance >= 20) {
         deg = 248;
-      } else if (usonic.distance <= 20) {
+      } else if (usonic.distance <= 25) {
         deg = 293;
       } else {
         deg = 270;
@@ -209,13 +217,17 @@ void _ball::calc(void) {
       device.keeperTimeout = millis();
     }
 
-    if (top >= 5 && top <= 11) {
+    if (top <= 2 || top <= 14) {
+      motor.power -= 30;
+    }
+
+    if (top >= 4 && top <= 12) {
       exist = false;
     }
 
-    if (usonic.distance >= 40) {
-      exist = true;
-      if (top >= 6 && top <= 10) {
+    if (usonic.distance >= 45) {
+      motor.power -= 40;
+      if (top >= 6 && top <= 10 && exist) {
         if (top >= 8) {
           deg = 135;
         } else {
@@ -224,6 +236,36 @@ void _ball::calc(void) {
       } else {
         deg = 180;
       }
+
+      exist = true;
+    }
+
+    if (line.near) {
+      if (line.inTimer + 4000 > millis()) {
+        if (line.highPin == 2) {
+          if (top <= 8) {
+            line.near = true;
+          } else {
+            if (exist) {
+              line.near = false;
+            }
+          }
+        } else if (line.highPin == 1) {
+          if (top >= 8) {
+            line.near = true;
+          } else {
+            if (exist) {
+              line.near = false;
+            }
+          }
+        }
+      } else {
+        line.near = false;
+      }
+    }
+
+    if (line.near) {
+      exist = false;
     }
   }
 }
