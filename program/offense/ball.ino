@@ -48,9 +48,9 @@ void _ball::calc(void) {
     exist = true;
   }
 
-  if (millis() - device.keeperTimeout >= 5000) {
-    device.attack = true;
-  }
+  // if (millis() - device.keeperTimeout >= 5000) {
+  //   device.attack = true;
+  // }
 
   if (device.attack) {
     if (millis() - device.attackTimeout >= 5000) {
@@ -101,7 +101,7 @@ void _ball::calc(void) {
     deg = round((float)top * 22.5);
 
     if (line.near && !line.flag) {
-      if (line.inTimer + 1500 > millis()) {
+      if (line.inTimer + 2500 > millis()) {
         if (line.highPin == 0) {
           if (ball.top_backup <= 2 || ball.top_backup >= 14) {
             line.near = true;
@@ -159,7 +159,7 @@ void _ball::calc(void) {
     }
     line.flag = false;
 
-    motor.power -= 20;
+    // motor.power -= 20;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
@@ -209,13 +209,17 @@ void _ball::calc(void) {
       device.keeperTimeout = millis();
     }
 
-    if (top >= 5 && top <= 11) {
+    if (top <= 2 || top <= 14) {
+      motor.power -= 30;
+    }
+
+    if (top >= 4 && top <= 12) {
       exist = false;
     }
 
-    if (usonic.distance >= 40) {
-      exist = true;
-      if (top >= 6 && top <= 10) {
+    if (usonic.distance >= 45) {
+      motor.power -= 40;
+      if (top >= 6 && top <= 10 && exist) {
         if (top >= 8) {
           deg = 135;
         } else {
@@ -224,6 +228,36 @@ void _ball::calc(void) {
       } else {
         deg = 180;
       }
+
+      exist = true;
+    }
+
+    if (line.near) {
+      if (line.inTimer + 4000 > millis()) {
+        if (line.highPin == 2) {
+          if (ball.top <= 8) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
+          }
+        } else if (line.highPin == 1) {
+          if (ball.top >= 8) {
+            line.near = true;
+          } else {
+            if (ball.exist) {
+              line.near = false;
+            }
+          }
+        }
+      } else {
+        line.near = false;
+      }
+    }
+
+    if (line.near) {
+      exist = false;
     }
   }
 }
