@@ -25,7 +25,7 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
-  // ball.degは deg = round((float)top * 22.5);まで使用不可
+  // degは deg = round((float)top * 22.5);まで使用不可
   // motor.power -= 15;
 
   deg = 1000;
@@ -65,18 +65,20 @@ void _ball::calc(void) {
   if (!device.keeper || device.attack) {
     //回り込み
     if (top > 2 + turn && top < 14 - turn) {
-      if (val[top] < 256) {
+      if (val[top] < 254) {
         turnTimer = millis();
         motor.power -= 20;
         if (top > 8) {
           if (top >= 13) {
             top -= 3;
+            motor.power -= 20;
           } else {
             top -= 4;
           }
         } else {
           if (top <= 3) {
             top += 3;
+            motor.power -= 20;
           } else {
             top += 4;
           }
@@ -103,34 +105,34 @@ void _ball::calc(void) {
     if (line.near && !line.flag) {
       if (line.inTimer + 2500 > millis()) {
         if (line.highPin == 0) {
-          if (ball.top_backup <= 2 || ball.top_backup >= 14) {
+          if (top_backup <= 2 || top_backup >= 14) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else if (line.highPin == 2) {
-          if (ball.top_backup >= 2 && ball.top_backup <= 6) {
+          if (top_backup >= 2 && top_backup <= 6) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else if (line.highPin == 3) {
-          if (ball.top_backup >= 6 && ball.top_backup <= 10) {
+          if (top_backup >= 6 && top_backup <= 10) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else {
-          if (ball.top_backup >= 10 && ball.top_backup <= 14) {
+          if (top_backup >= 10 && top_backup <= 14) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
@@ -235,18 +237,18 @@ void _ball::calc(void) {
     if (line.near) {
       if (line.inTimer + 4000 > millis()) {
         if (line.highPin == 2) {
-          if (ball.top <= 8) {
+          if (top <= 8) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
         } else if (line.highPin == 1) {
-          if (ball.top >= 8) {
+          if (top >= 8) {
             line.near = true;
           } else {
-            if (ball.exist) {
+            if (exist) {
               line.near = false;
             }
           }
