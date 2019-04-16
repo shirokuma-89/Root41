@@ -171,17 +171,17 @@ void _ball::calc(void) {
       exist = true;
     }
     if (top <= 8) {
-      if (usonic.distance >= 10) {
+      if (usonic.distance >= 20) {
         deg = 113;
-      } else if (usonic.distance <= 20) {
+      } else if (usonic.distance <= 25) {
         deg = 68;
       } else {
         deg = 90;
       }
     } else {
-      if (usonic.distance >= 10) {
+      if (usonic.distance >= 20) {
         deg = 248;
-      } else if (usonic.distance <= 20) {
+      } else if (usonic.distance <= 25) {
         deg = 293;
       } else {
         deg = 270;
