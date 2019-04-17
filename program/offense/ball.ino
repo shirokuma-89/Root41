@@ -1,22 +1,22 @@
 // ino
 
 void _ball::read(int* b) {
-  *b = analogRead(BALL0);
-  *(b + 1) = analogRead(BALL1);
+  *b = round((float)analogRead(BALL0) * 0.8);
+  *(b + 1) = round((float)analogRead(BALL1) * 0.8);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
-  *(b + 6) = analogRead(BALL6);
-  *(b + 7) = round((float)analogRead(BALL8) * 0.7);
+  *(b + 6) = round((float)analogRead(BALL6) * 0.8);
+  *(b + 7) = round((float)analogRead(BALL7) * 0.7);
   *(b + 8) = round((float)analogRead(BALL8) * 0.65);
   *(b + 9) = round((float)analogRead(BALL9) * 0.7);
-  *(b + 10) = analogRead(BALL10);
+  *(b + 10) = round((float)analogRead(BALL10) * 0.8);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
   *(b + 14) = analogRead(BALL14);
-  *(b + 15) = analogRead(BALL15);
+  *(b + 15) = round((float)analogRead(BALL15) * 0.8);
 
   if (ROBOT == 2) {
     *(b + 4) = (*(b + 3) + *(b + 5)) / 2;
@@ -52,6 +52,13 @@ void _ball::calc(void) {
     exist = true;
   }
 
+  distance = 0;
+  for (int i = 0; i <= 15; i++) {
+    if (450 >= val[i]) {
+      distance++;
+    }
+  }
+
   // if (millis() - device.keeperTimeout >= 5000) {
   //   device.attack = true;
   // }
@@ -71,8 +78,9 @@ void _ball::calc(void) {
     // if(turn){
     //   motor.power -= 30;
     // }
-    if (top > 2 && top < 14) {
-      if (val[top] < 259) {
+    if (top > 2 + turn && top < 14 - turn) {
+      // if (val[top] < 253) {
+      if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
           if (top >= 12) {
@@ -105,9 +113,9 @@ void _ball::calc(void) {
         turn = 0;
       }
 
-      if (turn != 0) {
-        top = 0;
-      }
+      // if (turn != 0) {
+      //   top = 0;
+      // }
     }
 
     deg = round((float)top * 22.5);
