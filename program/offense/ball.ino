@@ -2,21 +2,21 @@
 
 void _ball::read(int* b) {
   *b = round((float)analogRead(BALL0) * 0.8);
-  *(b + 1) = round((float)analogRead(BALL1) * 0.8);
+  *(b + 1) = analogRead(BALL1);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
-  *(b + 6) = round((float)analogRead(BALL6) * 0.8);
+  *(b + 6) = analogRead(BALL6);
   *(b + 7) = round((float)analogRead(BALL7) * 0.7);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.65);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.5);
   *(b + 9) = round((float)analogRead(BALL9) * 0.7);
-  *(b + 10) = round((float)analogRead(BALL10) * 0.8);
+  *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
   *(b + 14) = analogRead(BALL14);
-  *(b + 15) = round((float)analogRead(BALL15) * 0.8);
+  *(b + 15) = analogRead(BALL15);
 
   if (ROBOT == 2) {
     *(b + 4) = (*(b + 3) + *(b + 5)) / 2;
