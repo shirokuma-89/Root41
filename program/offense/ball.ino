@@ -37,7 +37,7 @@ void _ball::calc(void) {
   x = 0;
   y = 0;
 
-  // x += 
+  // x +=
   for (int i = 0; i <= 15; i++) {
     if (val[top] >= val[i]) {
       top = i;
@@ -68,11 +68,11 @@ void _ball::calc(void) {
 
   if (!device.keeper || device.attack) {
     //回り込み
-    if(turn){
-      motor.power -= 30;
-    }
-    if (top > 2 + turn && top < 14 - turn) {
-      if (val[top] < 257) {
+    // if(turn){
+    //   motor.power -= 30;
+    // }
+    if (top > 2 && top < 14) {
+      if (val[top] < 259) {
         turnTimer = millis();
         if (top > 8) {
           if (top >= 12) {
@@ -96,13 +96,17 @@ void _ball::calc(void) {
         turn = 1;
       } else {
         // turn = 0;
-        if (turnTimer + 1200 <= millis()) {
+        if (turnTimer + 500 <= millis()) {
           turn = 0;
         }
       }
     } else {
-      if (turnTimer + 1200 <= millis()) {
+      if (turnTimer + 500 <= millis()) {
         turn = 0;
+      }
+
+      if (turn != 0) {
+        top = 0;
       }
     }
 
@@ -271,35 +275,39 @@ void _ball::calc(void) {
 }
 
 void _ball::reset(void) {
-  if (millis() - resetTimer >= 1000) {
-    digitalWrite(BALL_RESET, LOW);
-    resettingTimer = millis();
-    while (millis() - resettingTimer <= 7) {
-      if (!line.flag) {
-        if (exist) {
-          motor.drive(motor.deg, motor.power);
+  if (turn == 0) {
+    if (millis() - resetTimer >= 1000) {
+      digitalWrite(BALL_RESET, LOW);
+      resettingTimer = millis();
+      while (millis() - resettingTimer <= 7) {
+        if (!line.flag) {
+          if (exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
         } else {
-          motor.drive(NULL, NULL, false, true);
+          break;
         }
-      } else {
-        break;
       }
-    }
-    digitalWrite(BALL_RESET, HIGH);
-    resettingTimer = millis();
-    while (millis() - resettingTimer <= 7) {
-      if (!line.flag) {
-        if (exist) {
-          motor.drive(motor.deg, motor.power);
+      digitalWrite(BALL_RESET, HIGH);
+      resettingTimer = millis();
+      while (millis() - resettingTimer <= 7) {
+        if (!line.flag) {
+          if (exist) {
+            motor.drive(motor.deg, motor.power);
+          } else {
+            motor.drive(NULL, NULL, false, true);
+          }
         } else {
-          motor.drive(NULL, NULL, false, true);
+          break;
         }
-      } else {
-        break;
       }
+      resetTimer = millis();
+      motor.move -= 10;
+    } else {
+      return;
     }
-    resetTimer = millis();
-    motor.move -= 10;
   } else {
     return;
   }
