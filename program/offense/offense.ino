@@ -85,6 +85,7 @@ class _ball {
   int old_top;
   int top_backup;
   int turn = 0;
+  int distance = 0;
 
   const int move = 20;
 
@@ -307,9 +308,11 @@ void setup(void) {
 }
 
 void loop(void) {
-  Serial.print(line.deg);
-  Serial.print(" ");
-  Serial.println(line.outMove);
+  // Serial.print(line.deg);
+  // Serial.print(" ");
+  // Serial.println(line.outMove);
+
+  Serial.println(ball.distance);
 
   device.error = false;
 
@@ -332,7 +335,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 30;
+    motor.move = 25;
     motor.power = 100;
 
     // ボール処理
