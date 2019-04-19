@@ -51,6 +51,8 @@ void _device::monitor(void) {
         }
         RGBLED.show();
 
+        ball.reset();
+
         LED.timer = millis();
         while (millis() - LED.timer <= 20) {
           gyro.deg = gyro.read();
