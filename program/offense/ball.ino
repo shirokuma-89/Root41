@@ -8,15 +8,20 @@ void _ball::read(int* b) {
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = round((float)analogRead(BALL7) * 0.7);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.5);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.7);
+  *(b + 7) = round((float)analogRead(BALL7) * 0.8);
+  // *(b + 8) = round((float)analogRead(BALL8) * 0.5);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.8);
+  *(b + 8) = (*(b + 7) + *(b + 9)) / 2 * 0.8;
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
   *(b + 14) = analogRead(BALL14);
   *(b + 15) = analogRead(BALL15);
+
+  if (ROBOT == 1) {
+    *(b + 1) = (*(b + 0) + *(b + 2)) / 2;
+  }
 
   if (ROBOT == 2) {
     *(b + 4) = (*(b + 3) + *(b + 5)) / 2;
@@ -78,20 +83,20 @@ void _ball::calc(void) {
     // if(turn){
     //   motor.power -= 30;
     // }
-    if (top > 2 + turn && top < 14 - turn) {
-      // if (val[top] < 253) {
-      if (distance >= 8) {
+    if (top > 1 + turn && top < 15 - turn) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 257) {
+        // if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
-          if (top >= 12) {
-            top -= 3;
+          if (top >= 11) {
+            top -= 4;
             motor.power -= 15;
           } else {
             top -= 4;
           }
         } else {
-          if (top <= 4) {
-            top += 3;
+          if (top <= 5) {
+            top += 4;
             motor.power -= 15;
           } else {
             top += 4;
@@ -283,40 +288,40 @@ void _ball::calc(void) {
 }
 
 void _ball::reset(void) {
-  if (turn == 0) {
-    if (millis() - resetTimer >= 1000) {
-      digitalWrite(BALL_RESET, LOW);
-      resettingTimer = millis();
-      while (millis() - resettingTimer <= 7) {
-        if (!line.flag) {
-          if (exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
+  // if (turn == 0) {
+  if (millis() - resetTimer >= 300) {
+    digitalWrite(BALL_RESET, LOW);
+    resettingTimer = millis();
+    while (millis() - resettingTimer <= 7) {
+      if (!line.flag) {
+        if (exist) {
+          motor.drive(motor.deg, motor.power);
         } else {
-          break;
+          motor.drive(NULL, NULL, false, true);
         }
+      } else {
+        break;
       }
-      digitalWrite(BALL_RESET, HIGH);
-      resettingTimer = millis();
-      while (millis() - resettingTimer <= 7) {
-        if (!line.flag) {
-          if (exist) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            motor.drive(NULL, NULL, false, true);
-          }
-        } else {
-          break;
-        }
-      }
-      resetTimer = millis();
-      motor.move -= 10;
-    } else {
-      return;
     }
+    digitalWrite(BALL_RESET, HIGH);
+    resettingTimer = millis();
+    while (millis() - resettingTimer <= 7) {
+      if (!line.flag) {
+        if (exist) {
+          motor.drive(motor.deg, motor.power);
+        } else {
+          motor.drive(NULL, NULL, false, true);
+        }
+      } else {
+        break;
+      }
+    }
+    resetTimer = millis();
+    motor.move -= 10;
   } else {
     return;
   }
+  // } else {
+  //   return;
+  // }
 }

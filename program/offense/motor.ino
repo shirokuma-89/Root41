@@ -206,30 +206,6 @@ void _motor::drive(int _deg,
 }
 
 void _motor::directDrive(int* p) {
-  if (*p == 0) {
-    PORTG &= ~(_BV(5));
-    PORTE &= ~(_BV(3));
-    digitalWrite(6, HIGH);
-  } else if (*p >= 1) {
-    PORTG |= _BV(5);
-    PORTE &= ~(_BV(3));
-
-    if (*p >= 100) {
-      digitalWrite(6, HIGH);
-    } else {
-      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
-    }
-  } else if (*p <= -1) {
-    PORTG &= ~(_BV(5));
-    PORTE |= _BV(3);
-
-    if (*p <= -100) {
-      digitalWrite(6, HIGH);
-    } else {
-      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
-    }
-  }
-
   if (*(p + 1) == 0) {
     PORTH &= ~(_BV(4) | _BV(5));
     digitalWrite(9, HIGH);
@@ -250,6 +226,36 @@ void _motor::directDrive(int* p) {
       digitalWrite(9, HIGH);
     } else {
       analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
+    }
+  }
+
+  if (*p == 0) {
+    // PORTG &= ~(_BV(5));
+    // PORTE &= ~(_BV(3));
+    digitalWrite(4, LOW);
+    digitalWrite(5, LOW);
+    digitalWrite(6, HIGH);
+  } else if (*p >= 1) {
+    // PORTG |= _BV(5);
+    // PORTE &= ~(_BV(3));
+    digitalWrite(4, HIGH);
+    digitalWrite(5, LOW);
+
+    if (*p >= 100) {
+      digitalWrite(6, HIGH);
+    } else {
+      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
+    }
+  } else if (*p <= -1) {
+    // PORTG &= ~(_BV(5));
+    // PORTE |= _BV(3);
+    digitalWrite(4, LOW);
+    digitalWrite(5, HIGH);
+
+    if (*p <= -100) {
+      digitalWrite(6, HIGH);
+    } else {
+      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
     }
   }
 

@@ -450,7 +450,7 @@ void loop(void) {
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
 
-          lcd.print(ball.top);
+          lcd.print(ball.val[ball.top]);
 
           // lcd.setCursor(8, 1);
 
