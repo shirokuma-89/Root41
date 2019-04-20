@@ -9,9 +9,9 @@ void _ball::read(int* b) {
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
   *(b + 7) = round((float)analogRead(BALL7) * 0.8);
-  // *(b + 8) = round((float)analogRead(BALL8) * 0.5);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.5);
   *(b + 9) = round((float)analogRead(BALL9) * 0.8);
-  *(b + 8) = (*(b + 7) + *(b + 9)) / 2 * 0.8;
+  *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.5;
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
@@ -20,12 +20,13 @@ void _ball::read(int* b) {
   *(b + 15) = analogRead(BALL15);
 
   if (ROBOT == 1) {
-    *(b + 1) = (*(b + 0) + *(b + 2)) / 2;
+    *(b + 1) = (*(b + 0) + *(b + 2)) * 0.5;
+    *(b + 5) = (*(b + 4) + *(b + 6)) * 0.5;
   }
 
   if (ROBOT == 2) {
-    *(b + 4) = (*(b + 3) + *(b + 5)) / 2;
-    *(b + 12) = (*(b + 11) + *(b + 13)) / 2;
+    *(b + 4) = (*(b + 3) + *(b + 5)) * 0.5;
+    *(b + 12) = (*(b + 11) + *(b + 13)) * 0.5;
   }
 }
 
@@ -64,9 +65,14 @@ void _ball::calc(void) {
     }
   }
 
-  // if (millis() - device.keeperTimeout >= 5000) {
-  //   device.attack = true;
-  // }
+  if (millis() - device.keeperTimeout >= 2000) {
+    device.attack = true;
+  }
+  if (top <= 1 || top >= 15) {
+    if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 261) {
+      device.attack = true;
+    }
+  }
 
   if (device.attack) {
     if (millis() - device.attackTimeout >= 5000) {
@@ -83,8 +89,12 @@ void _ball::calc(void) {
     // if(turn){
     //   motor.power -= 30;
     // }
+    if (device.keeper) {
+      motor.power -= 20;
+    }
+
     if (top > 1 + turn && top < 15 - turn) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 257) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 246) {
         // if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
@@ -242,9 +252,14 @@ void _ball::calc(void) {
       exist = false;
     }
 
+    if (usonic.distance <= 3) {
+      motor.power -= 20;
+      deg = 0;
+    }
+
     if (usonic.distance >= 45) {
       motor.power -= 40;
-      if (top >= 6 && top <= 10 && exist) {
+      if (top >= 5 && top <= 11 && exist) {
         if (top >= 8) {
           deg = 135;
         } else {
@@ -289,7 +304,7 @@ void _ball::calc(void) {
 
 void _ball::reset(void) {
   // if (turn == 0) {
-  if (millis() - resetTimer >= 300) {
+  if (millis() - resetTimer >= 200) {
     digitalWrite(BALL_RESET, LOW);
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
