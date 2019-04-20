@@ -51,28 +51,29 @@ void _device::monitor(void) {
         }
         RGBLED.show();
 
-        ball.reset();
+        // ball.reset();
 
         LED.timer = millis();
         while (millis() - LED.timer <= 20) {
           gyro.deg = gyro.read();
 
-          ball.val[0] = analogRead(BALL0);
-          ball.val[1] = analogRead(BALL1);
-          ball.val[2] = analogRead(BALL2);
-          ball.val[3] = analogRead(BALL3);
-          ball.val[4] = analogRead(BALL4);
-          ball.val[5] = analogRead(BALL5);
-          ball.val[6] = analogRead(BALL6);
-          ball.val[7] = analogRead(BALL7);
-          ball.val[8] = analogRead(BALL8);
-          ball.val[9] = analogRead(BALL9);
-          ball.val[10] = analogRead(BALL10);
-          ball.val[11] = analogRead(BALL11);
-          ball.val[12] = analogRead(BALL12);
-          ball.val[13] = analogRead(BALL13);
-          ball.val[14] = analogRead(BALL14);
-          ball.val[15] = analogRead(BALL15);
+          // ball.val[0] = analogRead(BALL0);
+          // ball.val[1] = analogRead(BALL1);
+          // ball.val[2] = analogRead(BALL2);
+          // ball.val[3] = analogRead(BALL3);
+          // ball.val[4] = analogRead(BALL4);
+          // ball.val[5] = analogRead(BALL5);
+          // ball.val[6] = analogRead(BALL6);
+          // ball.val[7] = analogRead(BALL7);
+          // ball.val[8] = analogRead(BALL8);
+          // ball.val[9] = analogRead(BALL9);
+          // ball.val[10] = analogRead(BALL10);
+          // ball.val[11] = analogRead(BALL11);
+          // ball.val[12] = analogRead(BALL12);
+          // ball.val[13] = analogRead(BALL13);
+          // ball.val[14] = analogRead(BALL14);
+          // ball.val[15] = analogRead(BALL15);
+          ball.read(ball.val);
           for (int i = 0; i <= 15; i++) {
             ball.val[i] = round((float)ball.val[i] / 10.24);
           }

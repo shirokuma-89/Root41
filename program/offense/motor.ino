@@ -207,11 +207,15 @@ void _motor::drive(int _deg,
 
 void _motor::directDrive(int* p) {
   if (*(p + 1) == 0) {
-    PORTH &= ~(_BV(4) | _BV(5));
+    // PORTH &= ~(_BV(4) | _BV(5));
+    digitalWrite(7, HIGH);
+    digitalWrite(8, HIGH);
     digitalWrite(9, HIGH);
   } else if (*(p + 1) >= 1) {
-    PORTH |= _BV(4);
-    PORTH &= ~(_BV(5));
+    // PORTH |= _BV(4);
+    // PORTH &= ~(_BV(5));
+    digitalWrite(7, HIGH);
+    digitalWrite(8, LOW);
 
     if (*(p + 1) >= 100) {
       digitalWrite(9, HIGH);
@@ -219,8 +223,10 @@ void _motor::directDrive(int* p) {
       analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
     }
   } else if (*(p + 1) <= -1) {
-    PORTH &= ~(_BV(4));
-    PORTH |= _BV(5);
+    // PORTH &= ~(_BV(4));
+    // PORTH |= _BV(5);
+    digitalWrite(7, LOW);
+    digitalWrite(8, HIGH);
 
     if (*(p + 1) <= -100) {
       digitalWrite(9, HIGH);
@@ -232,8 +238,8 @@ void _motor::directDrive(int* p) {
   if (*p == 0) {
     // PORTG &= ~(_BV(5));
     // PORTE &= ~(_BV(3));
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
+    digitalWrite(4,HIGH);
+    digitalWrite(5, HIGH);
     digitalWrite(6, HIGH);
   } else if (*p >= 1) {
     // PORTG |= _BV(5);
@@ -260,11 +266,15 @@ void _motor::directDrive(int* p) {
   }
 
   if (*(p + 2) == 0) {
-    PORTB &= ~(_BV(4) | _BV(5));
+    // PORTB &= ~(_BV(4) | _BV(5));
+    digitalWrite(10, HIGH);
+    digitalWrite(11, HIGH);
     digitalWrite(12, HIGH);
   } else if (*(p + 2) >= 1) {
-    PORTB |= _BV(4);
-    PORTB &= ~(_BV(5));
+    // PORTB |= _BV(4);
+    // PORTB &= ~(_BV(5));
+    digitalWrite(10, HIGH);
+    digitalWrite(11, LOW);
 
     if (*(p + 2) >= 100) {
       digitalWrite(12, HIGH);
@@ -272,8 +282,10 @@ void _motor::directDrive(int* p) {
       analogWrite(12, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
     }
   } else if (*(p + 2) <= -1) {
-    PORTB &= ~(_BV(4));
-    PORTB |= _BV(5);
+    // PORTB &= ~(_BV(4));
+    // PORTB |= _BV(5);
+    digitalWrite(10, LOW);
+    digitalWrite(11, HIGH);
 
     if (*(p + 2) <= -100) {
       digitalWrite(12, HIGH);
