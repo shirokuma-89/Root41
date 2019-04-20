@@ -89,8 +89,12 @@ void _ball::calc(void) {
     // if(turn){
     //   motor.power -= 30;
     // }
+    if (device.keeper) {
+      motor.power -= 20;
+    }
+
     if (top > 1 + turn && top < 15 - turn) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 257) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 245) {
         // if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
@@ -246,6 +250,11 @@ void _ball::calc(void) {
 
     if (top >= 4 && top <= 12) {
       exist = false;
+    }
+
+    if (usonic.distance <= 3) {
+      motor.power -= 20;
+      deg = 0;
     }
 
     if (usonic.distance >= 45) {
