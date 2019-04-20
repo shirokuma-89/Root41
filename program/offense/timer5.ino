@@ -16,192 +16,203 @@ ISR(timer5Event) {
                                   //ライン処理をここに記述
     //ライン動作中はline.flagをtrueにしておくこと
     line.read();
-    // line.count += 1;
     if (line.stop) {
-      if (line.first == 0) {
-        if (millis() - line.inTimer >= 20) {
-          line.stop = false;
-        }
-      } else {
-        if (millis() - line.inTimer >= 20) {
-          line.stop = false;
-        }
+      if (millis() - line.inTimer >= 200) {
+        line.stop = false;
       }
     } else if (line.touch) {
-      if (line.count[0] >= 100 || line.count[1] >= 100 ||
-          line.count[2] >= 100 || line.count[3] >= 100) {
-        line.flag = true;
-        if (line.deg == 1000 && line.outMove == 1000) {
-          // first
-          line.stop = true;
-          line.near = true;
-          line.inTimer = millis();
-          if (line.val[0]) {
-            line.deg = 180;
-            line.highPin = 0;
-            line.first = 0;
-          } else if (line.val[1]) {
-            line.deg = 90;
-            line.highPin = 1;
-            line.first = -5;
-          } else if (line.val[2]) {
-            line.deg = 270;
-            line.highPin = 2;
-            line.first = 5;
-          } else if (line.val[3]) {
-            line.deg = 0;
-            line.highPin = 3;
-            line.first = 10;
-          }
-        } else if (line.deg != 1000 && line.outMove == 1000) {
-          if (line.second == 100) {
-            if (line.val[0] && line.first != 0) {
-              line.second = 0;
-            } else if (line.val[1] && line.first != -5) {
-              line.second = -5;
-            } else if (line.val[2] && line.first != 5) {
-              line.second = 5;
-            } else if (line.val[3] && line.first != 10 &&
-                       line.count[3] >= 100) {
-              line.second = 10;
-            }
-          } else if (line.third == 100) {
-            if (line.val[0] && line.first != 0 && line.second != 0) {
-              line.third = 0;
-            } else if (line.val[1] && line.first != -5 && line.second != -5) {
-              line.third = -5;
-            } else if (line.val[2] && line.first != 5 && line.second != 5) {
-              line.third = 5;
-            } else if (line.val[3] && line.first != 10 && line.second != 10 &&
-                       line.count[3] >= 100) {
-              line.third = 10;
-            }
-          } else if (line.forth == 100) {
-            if (line.val[0] && line.first != 0 && line.second != 0 &&
-                line.third != 0) {
-              line.forth = 0;
-            } else if (line.val[1] && line.first != -5 && line.second != -5 &&
-                       line.third != -5) {
-              line.forth = -5;
-            } else if (line.val[2] && line.first != 5 && line.second != 5 &&
-                       line.third != 5) {
-              line.forth = 5;
-            } else if (line.val[3] && line.first != 10 && line.second != 10 &&
-                       line.third != 10 && line.count[3] >= 100) {
-              line.forth = 10;
-            }
-          }
-          if (line.first == 0) {
-            if (line.second == -5 && line.third != 5 && line.forth != 5) {
-              line.deg = 150;
-            } else if (line.second == 5 && line.third != -5 &&
-                       line.forth != -5) {
-              line.deg = 210;
-            } else {
-              line.deg = 180;
-            }
-          } else if (line.first == -5) {
-            if (line.second != 5 && line.third != 5 && line.second != 100 &&
-                line.third != 100) {
-              line.deg = 90;
-            } else if (line.second == 0) {
-              line.deg = 135;
-            } else if (line.second == 10) {
-              line.deg = 45;
-            } else {
-              line.deg = 90;
-            }
-          } else if (line.first == 5) {
-            if (line.second != -5 && line.third != -5 && line.second != 100 &&
-                line.third != 100) {
-              line.deg = 270;
-            } else if (line.second == 0) {
-              line.deg = 225;
-            } else if (line.second == 10) {
-              line.deg = 315;
-            } else {
-              line.deg = 90;
-            }
-          } else if (line.first == 10) {
-          }
-          // if (line.deg == 180) {
-          //   if (line.val[1]) {
-          //     line.deg = 135;
-          //   } else if (line.val[2]) {
-          //     line.deg = 225;
-          //   }
-          // } else if (line.deg == 90) {
-          //   if (line.val[0]) {
-          //     line.deg = 135;
-          //   } else if (line.val[3]) {
-          //     line.deg = 45;
-          //   }
-          // } else if (line.deg == 270) {
-          //   if (line.val[0]) {
-          //     line.deg = 225;
-          //   } else if (line.val[3]) {
-          //     line.deg = 315;
-          //   }
-          // } else if (line.deg == 0) {
-          //   if (line.val[1]) {
-          //     line.deg = 45;
-          //   } else if (line.val[2]) {
-          //     line.deg = 315;
-          //   }
-          // }
-        } else if (line.deg == 1000 && line.outMove != 1000) {
-          line.deg = line.outMove;
-          line.outMove = 1000;
+      line.flag = true;
+      if (line.deg == 1000 && line.outMove == 1000) {
+        line.stop = true;
+        line.near = true;
+        line.inTimer = millis();
+        if (line.val[0]) {
+          line.deg = 180;
+          line.highPin = 0;
+          line.logs[0] = 0;
+        } else if (line.val[1]) {
+          line.deg = 90;
+          line.highPin = 1;
+          line.logs[0] = 1;
+        } else if (line.val[2]) {
+          line.deg = 270;
+          line.highPin = 2;
+          line.logs[0] = 2;
+        } else if (line.val[3]) {
+          line.deg = 0;
+          line.highPin = 3;
+          line.logs[0] = 3;
         }
+      } else if (line.deg != 1000 && line.outMove == 1000) {
+        for (int i = 1; i <= 9; i++) {
+          if (line.logs[i] == 5) {
+            if (line.val[0]) {
+              for (int j = 0; j <= i - 1; j++) {
+                if (line.logs[j] == 0) {
+                  break;
+                }
+                if (j == i - 1) {
+                  line.logs[i] = 0;
+                }
+              }
+            }
+            if (line.val[1]) {
+              for (int j = 0; j <= i - 1; j++) {
+                if (line.logs[j] == 1) {
+                  break;
+                }
+                if (j == i - 1) {
+                  line.logs[i] = 1;
+                }
+              }
+            }
+            if (line.val[2]) {
+              for (int j = 0; j <= i - 1; j++) {
+                if (line.logs[j] == 2) {
+                  break;
+                }
+                if (j == i - 1) {
+                  line.logs[i] = 2;
+                }
+              }
+            }
+            if (line.val[3]) {
+              for (int j = 0; j <= i - 1; j++) {
+                if (line.logs[j] == 3) {
+                  break;
+                }
+                if (j == i - 1) {
+                  line.logs[i] = 3;
+                }
+              }
+            }
+          }
+        }
+
+        if (line.logs[0] == 0) {
+        } else if (line.logs[0] == 1) {
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 0) {
+              line.deg = 135;
+            }
+          }
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 3) {
+              line.deg = 45;
+            }
+          }
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 0) {
+              for (int j = 0; j <= 9; j++) {
+                if (line.logs[j] == 3) {
+                  for (int k = 0; k <= 9; k++) {
+                    if (line.logs[k] == 2) {
+                      break;
+                    }
+                    if (k == 9) {
+                      line.deg = 90;
+                    }
+                  }
+                }
+              }
+            } else if (line.logs[i] == 3) {
+              for (int j = 0; j <= 9; j++) {
+                if (line.logs[j] == 0) {
+                  for (int k = 0; k <= 9; k++) {
+                    if (line.logs[k] == 2) {
+                      break;
+                    }
+                    if (k == 9) {
+                      line.deg = 90;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } else if (line.logs[0] == 2) {
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 0) {
+              line.deg = 225;
+            }
+          }
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 3) {
+              line.deg = 315;
+            }
+          }
+          for (int i = 0; i <= 9; i++) {
+            if (line.logs[i] == 0) {
+              for (int j = 0; j <= 9; j++) {
+                if (line.logs[j] == 3) {
+                  for (int k = 0; k <= 9; k++) {
+                    if (line.logs[k] == 1) {
+                      break;
+                    }
+                    if (k == 9) {
+                      line.deg = 270;
+                    }
+                  }
+                }
+              }
+            } else if (line.logs[i] == 3) {
+              for (int j = 0; j <= 9; j++) {
+                if (line.logs[j] == 0) {
+                  for (int k = 0; k <= 9; k++) {
+                    if (line.logs[k] == 1) {
+                      break;
+                    }
+                    if (k == 9) {
+                      line.deg = 270;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } else if (line.logs[0] == 3) {
+        }
+      } else if (line.deg == 1000 && line.outMove != 1000) {
+        line.deg = line.outMove;
+        line.outMove = 1000;
       }
     } else if (line.flag && line.outMove == 1000) {
       line.outMove = line.deg;
       line.deg = 1000;
       line.outTimer = millis();
-      line.refresh++;
     } else if (line.flag && line.outMove != 1000) {
-      if (line.first == 0 || line.first == 10) {
-        if (millis() - line.outTimer >= 700) {
-          line.flag = false;
-          line.outMove = 1000;
-        }
-      } else {
-        if (millis() - line.outTimer >= 300) {
-          line.flag = false;
-          line.outMove = 1000;
-        }
+      if (millis() - line.outTimer >= 400) {
+        line.flag = false;
+        line.outMove = 1000;
       }
     } else {
-      // line.count = 0;
       line.flag = false;
       line.deg = 1000;
       line.outMove = 1000;
-      line.first = 100;
-      line.second = 100;
-      line.third = 100;
-      line.forth = 100;
-      line.refresh = 0;
-    }
-
-    motor.restart++;
-
-    if (motor.restart >= 2000) {
-      motor.restart = 0;
-      for (int i = 0; i <= 100; i++) {
-        digitalWrite(4, LOW);
-        digitalWrite(5, LOW);
-        digitalWrite(6, LOW);
-        digitalWrite(7, LOW);
-        digitalWrite(8, LOW);
-        digitalWrite(9, LOW);
-        digitalWrite(10, LOW);
-        digitalWrite(11, LOW);
-        digitalWrite(12, LOW);
+      for (int i = 0; i <= 9; i++) {
+        line.logs[i] = 5;
       }
-      motor.directDrive(motor.val);
     }
   }
 
+  //   motor.restart++;
+
+  //   if (motor.restart >= 2000) {
+  //     motor.restart = 0;
+  //     for (int i = 0; i <= 100; i++) {
+  //       digitalWrite(4, LOW);
+  //       digitalWrite(5, LOW);
+  //       digitalWrite(6, LOW);
+  //       digitalWrite(7, LOW);
+  //       digitalWrite(8, LOW);
+  //       digitalWrite(9, LOW);
+  //       digitalWrite(10, LOW);
+  //       digitalWrite(11, LOW);
+  //       digitalWrite(12, LOW);
+  //     }
+  //     motor.directDrive(motor.val);
+  //   }
+  // }
   // if (device.mode != 2 || !device.keeper) {
   startTimer5(50);  //タイマー割り込みを有効化
   // }

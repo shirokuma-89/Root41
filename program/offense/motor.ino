@@ -169,9 +169,11 @@ void _motor::drive(int _deg,
       val[2] = round((float)val[2] * s);
     }
 
+    // if (!line.flag) {
     for (int i = 0; i <= 2; i++) {
       val[i] += correctionVal;
     }
+    // }
 
     if (abs(val[0]) < abs(val[1])) {
       if (abs(val[1]) < abs(val[2])) {

@@ -146,18 +146,6 @@ void _ball::calc(void) {
   } else {
     device.attack = false;
     line.near = false;
-    line.touch = false;
-
-    line.val[0] = !digitalRead(LINE1);
-    line.val[1] = !digitalRead(LINE2);
-    line.val[2] = !digitalRead(LINE3);
-    line.val[3] = !digitalRead(LINE4);
-
-    //どれか一つでも反応しているならば
-    if (line.val[0] | line.val[1] | line.val[2] | line.val[3]) {
-      line.touch = true;
-    }
-    line.flag = false;
 
     motor.power -= 20;
 
