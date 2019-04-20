@@ -17,7 +17,7 @@ ISR(timer5Event) {
     //ライン動作中はline.flagをtrueにしておくこと
     line.read();
     if (line.stop) {
-      if (millis() - line.inTimer >= 200) {
+      if (millis() - line.inTimer >= line.stoptime) {
         line.stop = false;
       }
     } else if (line.touch) {
@@ -90,6 +90,14 @@ ISR(timer5Event) {
         }
 
         if (line.logs[0] == 0) {
+          // for (int i = 0; i <= 9; i++) {
+          //   if (line.logs[i] == 1) {
+          //     for (int j = 0; j <= 9; j++) {
+          //       if (line.logs[])
+          //     }
+          //   } else if (line.logs[i] == 2) {
+          //   }
+          // }
         } else if (line.logs[0] == 1) {
           for (int i = 0; i <= 9; i++) {
             if (line.logs[i] == 0) {

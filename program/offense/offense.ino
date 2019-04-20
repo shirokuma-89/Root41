@@ -112,6 +112,7 @@ class _line {
   int offset = 0;
   int highPin = 5;
   int count;
+  int stoptime = 100;
 
   int logs[10] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 
@@ -368,7 +369,7 @@ void loop(void) {
       }
     } else {
       if (line.stop) {
-        if (millis() - line.inTimer <= 30) {
+        if (millis() - line.inTimer <= line.stoptime * 0.2) {
           digitalWrite(4, LOW);
           digitalWrite(5, LOW);
           digitalWrite(6, LOW);
@@ -569,10 +570,17 @@ void loop(void) {
   }
 
   if (line.stop) {
-    RGBLED.begin();
-    RGBLED.setBrightness(LED.bright);
+    if (millis() - line.inTimer >= line.stoptime * 0.2) {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
 
-    LED.changeAll(255, 70, 130);
+      LED.changeAll(255, 160, 160);
+    } else {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
+
+      LED.changeAll(255, 70, 130);
+    }
   }
 
   RGBLED.show();
