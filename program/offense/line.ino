@@ -13,26 +13,31 @@ void _line::read(void) {
   val[1] = !digitalRead(LINE2);
   val[2] = !digitalRead(LINE3);
   val[3] = !digitalRead(LINE4);
-
-  //どれか一つでも反応しているならば
-  if (val[0] | val[1] | val[2] | val[3]) {
-    touch = true;
-    if (val[0]) {
-      count[0]++;
-    }
-    if (val[1]) {
-      count[1]++;
-    }
-    if (val[2]) {
-      count[2]++;
-    }
-    if (val[3]) {
-      count[3]++;
+  if (val[3]) {
+    count++;
+    if (count >= 100) {
+      val[3] = true;
+    } else {
+      val[3] = false;
     }
   } else {
-    count[0] = 0;
-    count[1] = 0;
-    count[2] = 0;
-    count[3] = 0;
+    count = 0;
   }
+  if (val[0] | val[1] | val[2] | val[3]) {
+    touch = true;
+  }
+}
+
+int _line::check(int key, int Min = 0, int Max = 9) {
+  bool returnkey;
+  for (int ci = Min; ci <= Max; ci++) {
+    if (line.logs[ci] == key) {
+      returnkey = true;
+      break;
+    }
+    if (ci == Max) {
+      returnkey = false;
+    }
+  }
+  return returnkey;
 }

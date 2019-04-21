@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -20,12 +20,12 @@
 
 #else  //久留君
 
-#define Gyro_X 91
-#define Gyro_Y 43
-#define Gyro_Z -39
-#define Accel_X -447
-#define Accel_Y -646
-#define Accel_Z 1647
+#define Gyro_X 90
+#define Gyro_Y 46
+#define Gyro_Z -36
+#define Accel_X -451
+#define Accel_Y -637
+#define Accel_Z 1648
 
 #endif
 
@@ -103,6 +103,7 @@ class _line {
  public:
   _line(void);
   void read(void);
+  int check(int key, int Min = 0, int Max = 9);
 
   bool flag = false;
   bool near = false;
@@ -115,14 +116,10 @@ class _line {
   int mode = 0;
   int offset = 0;
   int highPin = 5;
-  int count[4];
+  int count;
+  int stoptime = 100;
 
-  int allval = 0;
-
-  int first = 100;
-  int second = 100;
-  int third = 100;
-  int forth = 100;
+  int logs[10] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 
   unsigned long inTimer;
   unsigned long outTimer;
@@ -316,18 +313,16 @@ void loop(void) {
 
   device.error = false;
 
-  // if (millis() - usonic.timer >= 200) {
-  //   usonic.distance = usonic.getDistance();
-  //   usonic.timer = millis();
-  // }
-
   gyro.deg = gyro.read();
 
-  if (line.touch) {
+  if (line.stop && line.offset == 1000) {
     line.offset = gyro.deg;
   } else {
-    line.offset = 0;
+    line.offset = 1000;
   }
+  // if (line.offset >= 180) {
+  //   line.offset = map(line.offset, 180, 360, 180, 0);
+  // }
 
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);
@@ -386,7 +381,19 @@ void loop(void) {
       }
     } else {
       if (line.stop) {
-        motor.drive(NULL, NULL, true);
+        if (millis() - line.inTimer <= line.stoptime * 0.2) {
+          digitalWrite(4, LOW);
+          digitalWrite(5, LOW);
+          digitalWrite(6, LOW);
+          digitalWrite(7, LOW);
+          digitalWrite(8, LOW);
+          digitalWrite(9, LOW);
+          digitalWrite(10, LOW);
+          digitalWrite(11, LOW);
+          digitalWrite(12, LOW);
+        } else {
+          motor.drive(NULL, NULL, true);
+        }
       } else {
         motor.drive(NULL, NULL, false, true);
       }
@@ -417,30 +424,42 @@ void loop(void) {
 
           lcd.print("Root41 running");
 
-          lcd.setCursor(0, 1);  //改行
-          if (line.first != 100) {
-            lcd.print(line.first);
-          } else {
-            lcd.print("NO");
-          }
+          lcd.setCursor(0, 1);
+          lcd.print(line.logs[0]);
+          lcd.setCursor(2, 1);
+          lcd.print(line.logs[1]);
           lcd.setCursor(4, 1);
-          if (line.second != 100) {
-            lcd.print(line.second);
-          } else {
-            lcd.print("NO");
-          }
+          lcd.print(line.logs[2]);
+          lcd.setCursor(6, 1);
+          lcd.print(line.logs[3]);
           lcd.setCursor(8, 1);
-          if (line.third != 100) {
-            lcd.print(line.third);
-          } else {
-            lcd.print("NO");
-          }
-          lcd.setCursor(12, 1);
+          lcd.print(line.deg);
+          // lcd.setCursor(0, 1);  //改行
+          // if (line.first != 100) {
+          //   lcd.print(line.first);
+          // } else {
+          //   lcd.print("NO");
+          // }
+          // lcd.setCursor(3, 1);
+          // if (line.second != 100) {
+          //   lcd.print(line.second);
+          // } else {
+          //   lcd.print("NO");
+          // }
+          // lcd.setCursor(6, 1);
+          // if (line.third != 100) {
+          //   lcd.print(line.third);
+          // } else {
+          //   lcd.print("NO");
+          // }
+          // lcd.setCursor(9, 1);
           // if (line.forth != 100) {
           //   lcd.print(line.forth);
           // } else {
           //   lcd.print("NO");
           // }
+          // lcd.setCursor(12, 1);
+          // lcd.print(motor.deg);
           // lcd.print(line.val[3]);
           // lcd.print(usonic.distance);
 
@@ -451,7 +470,6 @@ void loop(void) {
           // lcd.print(" %");
 
           lcd.print(ball.val[ball.top]);
-
           // lcd.setCursor(8, 1);
 
           // lcd.print(line.outMove);
@@ -472,8 +490,11 @@ void loop(void) {
 
         lcd.setCursor(0, 1);  //改行
 
-        lcd.print("ErrorCode = ");
-        lcd.print(device.errorCode);
+        lcd.print(line.deg);
+        lcd.print(line.outMove);
+        lcd.print(line.flag);
+        // lcd.print("ErrorCode = ");
+        // lcd.print(device.errorCode);
 
         LCD.output = 3;
         LCD.timer = millis();
@@ -560,6 +581,20 @@ void loop(void) {
       gyro.setting();
       delay(50);
       gyro.offset += gyro.read();
+    }
+  }
+
+  if (line.stop) {
+    if (millis() - line.inTimer >= line.stoptime * 0.2) {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
+
+      LED.changeAll(255, 160, 160);
+    } else {
+      RGBLED.begin();
+      RGBLED.setBrightness(LED.bright);
+
+      LED.changeAll(255, 70, 130);
     }
   }
 

@@ -26,6 +26,7 @@ void _ball::read(int* b) {
 
   if (ROBOT == 2) {
     *(b + 4) = (*(b + 3) + *(b + 5)) * 0.5;
+    *(b + 9) = (*(b + 8) + *(b + 10)) * 0.5;
     *(b + 12) = (*(b + 11) + *(b + 13)) * 0.5;
   }
 }
@@ -181,18 +182,6 @@ void _ball::calc(void) {
   } else {
     device.attack = false;
     line.near = false;
-    line.touch = false;
-
-    line.val[0] = !digitalRead(LINE1);
-    line.val[1] = !digitalRead(LINE2);
-    line.val[2] = !digitalRead(LINE3);
-    line.val[3] = !digitalRead(LINE4);
-
-    //どれか一つでも反応しているならば
-    if (line.val[0] | line.val[1] | line.val[2] | line.val[3]) {
-      line.touch = true;
-    }
-    line.flag = false;
 
     // motor.power -= 20;
 
