@@ -95,21 +95,21 @@ void _ball::calc(void) {
     }
 
     if (top > 1 + turn && top < 15 - turn) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 261 ||
-          val[top] <= 252) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 271 ||
+          val[top] <= 267 || (top <= 9 && top >= 7 && val[8] <= 378)) {
         // if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
           if (top >= 11) {
             top -= 4;
-            motor.power -= 15;
+            motor.power -= 20;
           } else {
             top -= 4;
           }
         } else {
           if (top <= 5) {
             top += 4;
-            motor.power -= 15;
+            motor.power -= 20;
           } else {
             top += 4;
           }
@@ -118,15 +118,15 @@ void _ball::calc(void) {
         top += 16;
         top %= 16;
 
-        turn = 1;
+        turn = 3;
       } else {
         // turn = 0;
-        if (turnTimer + 500 <= millis()) {
+        if (turnTimer + 400 <= millis()) {
           turn = 0;
         }
       }
     } else {
-      if (turnTimer + 500 <= millis()) {
+      if (turnTimer + 400 <= millis()) {
         turn = 0;
       }
 
@@ -294,7 +294,7 @@ void _ball::calc(void) {
 
 void _ball::reset(void) {
   // if (turn == 0) {
-  if (millis() - resetTimer >= 200) {
+  if (millis() - resetTimer >= 100) {
     digitalWrite(BALL_RESET, LOW);
     resettingTimer = millis();
     while (millis() - resettingTimer <= 7) {
