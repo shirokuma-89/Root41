@@ -31,11 +31,11 @@ ISR(timer5Event) {
           line.highPin = 0;
           line.logs[0] = 0;
         } else if (line.val[1]) {
-          line.deg = 90;
+          line.deg = 115;  //ゴールキーパーは65
           line.highPin = 1;
           line.logs[0] = 1;
         } else if (line.val[2]) {
-          line.deg = 270;
+          line.deg = 245;  //ゴールキーパーは295
           line.highPin = 2;
           line.logs[0] = 2;
         } else if (line.val[3]) {
@@ -90,14 +90,28 @@ ISR(timer5Event) {
         }
 
         if (line.logs[0] == 0) {
-          // for (int i = 0; i <= 9; i++) {
-          //   if (line.logs[i] == 1) {
-          //     for (int j = 0; j <= 9; j++) {
-          //       if (line.logs[])
-          //     }
-          //   } else if (line.logs[i] == 2) {
-          //   }
-          // }
+          bool i;
+          i = line.check(1);
+          bool j;
+          j = line.check(2);
+          if (i && j == false) {
+            line.deg = 150;
+          } else if (j && i == false) {
+            line.deg = 210;
+          }
+          if (line.deg == 150) {
+            if (j) {
+              if (line.offset >= 0 && line.offset <= 180) {
+                line.deg = 210;
+              }
+            }
+          } else if (line.deg == 210) {
+            if (i) {
+              if (line.offset <= 360 && line.offset >= 180) {
+                line.deg = 150;
+              }
+            }
+          }
         } else if (line.logs[0] == 1) {
           for (int i = 0; i <= 9; i++) {
             if (line.logs[i] == 0) {
@@ -179,6 +193,17 @@ ISR(timer5Event) {
             }
           }
         } else if (line.logs[0] == 3) {
+          bool i;
+          i = line.check(1);
+          bool j;
+          j = line.check(2);
+          if (i && j == false) {
+            line.deg = 30;
+          } else if (j && i == false) {
+            line.deg = 330;
+          } else if (i && j) {
+            line.deg = 0;
+          }
         }
       } else if (line.deg == 1000 && line.outMove != 1000) {
         line.deg = line.outMove;
@@ -189,6 +214,12 @@ ISR(timer5Event) {
       line.deg = 1000;
       line.outTimer = millis();
     } else if (line.flag && line.outMove != 1000) {
+      int i;
+      if (line.logs[0] == 0 || line.logs[0] == 3) {
+        i = 600;
+      } else {
+        i = 400;
+      }
       if (millis() - line.outTimer >= 400) {
         line.flag = false;
         line.outMove = 1000;

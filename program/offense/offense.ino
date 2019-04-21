@@ -99,6 +99,7 @@ class _line {
  public:
   _line(void);
   void read(void);
+  int check(int key, int Min = 0, int Max = 9);
 
   bool flag = false;
   bool near = false;
@@ -305,12 +306,13 @@ void loop(void) {
 
   device.error = false;
 
-  // if (millis() - usonic.timer >= 200) {
-  //   usonic.distance = usonic.getDistance();
-  //   usonic.timer = millis();
-  // }
-
   gyro.deg = gyro.read();
+
+  if (line.stop && line.offset == 1000) {
+    line.offset = gyro.deg;
+  } else {
+    line.offset = 1000;
+  }
 
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);

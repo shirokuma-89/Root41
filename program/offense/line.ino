@@ -27,3 +27,17 @@ void _line::read(void) {
     touch = true;
   }
 }
+
+int _line::check(int key, int Min = 0, int Max = 9) {
+  bool returnkey;
+  for (int ci = Min; ci <= Max; ci++) {
+    if (line.logs[ci] == key) {
+      returnkey = true;
+      break;
+    }
+    if (ci == Max) {
+      returnkey = false;
+    }
+  }
+  return returnkey;
+}
