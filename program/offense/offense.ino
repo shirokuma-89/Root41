@@ -53,6 +53,8 @@
 #define LINE3 26
 #define LINE4 27
 
+#define USONIC 46
+
 #define SW_TOGGLE 28
 #define SW_RIGHT 29
 #define SW_LEFT 30
@@ -83,6 +85,7 @@ class _ball {
   int old_top;
   int top_backup;
   int turn = 0;
+  int distance = 0;
 
   const int move = 20;
 
@@ -91,6 +94,7 @@ class _ball {
 
   unsigned long resetTimer = 0;
   unsigned long resettingTimer = 0;
+  unsigned long turnTimer = 0;
 
  private:
 } ball;
@@ -175,8 +179,9 @@ class _usonic {
   int distance = 0;
   unsigned long timer;
 
- private:
   byte data;
+
+ private:
 
   unsigned long timeOut;
 
@@ -300,9 +305,11 @@ void setup(void) {
 }
 
 void loop(void) {
-  Serial.print(line.deg);
-  Serial.print(" ");
-  Serial.println(line.outMove);
+  // Serial.print(line.deg);
+  // Serial.print(" ");
+  // Serial.println(line.outMove);
+
+  Serial.println(ball.distance);
 
   device.error = false;
 
@@ -323,7 +330,7 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 30;
+    motor.move = 25;
     motor.power = 100;
 
     // ボール処理
@@ -453,6 +460,8 @@ void loop(void) {
           // }
           // lcd.setCursor(12, 1);
           // lcd.print(motor.deg);
+          // lcd.print(line.val[3]);
+          // lcd.print(usonic.distance);
 
           // lcd.print(gyro.deg);
           // lcd.print(" deg");
@@ -460,6 +469,7 @@ void loop(void) {
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
 
+          lcd.print(ball.val[ball.top]);
           // lcd.setCursor(8, 1);
 
           // lcd.print(line.outMove);

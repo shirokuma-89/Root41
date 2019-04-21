@@ -217,6 +217,7 @@ ISR(timer5Event) {
       line.flag = false;
       line.deg = 1000;
       line.outMove = 1000;
+
       for (int i = 0; i <= 9; i++) {
         line.logs[i] = 5;
       }
