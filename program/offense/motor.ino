@@ -209,7 +209,7 @@ void _motor::drive(int _deg,
 
 void _motor::directDrive(int* p) {
   if (*(p + 1) == 0) {
-    PORTH &= ~(_BV(4) | _BV(5));
+    PORTH |= _BV(4) | _BV(5);
     // digitalWrite(7, HIGH);
     // digitalWrite(8, HIGH);
     digitalWrite(9, HIGH);
@@ -238,8 +238,8 @@ void _motor::directDrive(int* p) {
   }
 
   if (*p == 0) {
-    PORTG &= ~(_BV(5));
-    PORTE &= ~(_BV(3));
+    PORTG |= _BV(5);
+    PORTE |= _BV(3);
     // digitalWrite(4,HIGH);
     // digitalWrite(5, HIGH);
     digitalWrite(6, HIGH);
@@ -268,7 +268,7 @@ void _motor::directDrive(int* p) {
   }
 
   if (*(p + 2) == 0) {
-    PORTB &= ~(_BV(4) | _BV(5));
+    PORTB |= _BV(4) | _BV(5);
     // digitalWrite(10, HIGH);
     // digitalWrite(11, HIGH);
     digitalWrite(12, HIGH);
