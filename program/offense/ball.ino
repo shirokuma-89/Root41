@@ -1,16 +1,16 @@
 // ino
 
 void _ball::read(int* b) {
-  *b = round((float)analogRead(BALL0) * 0.8);
+  *b = round((float)analogRead(BALL0) * 0.9);
   *(b + 1) = analogRead(BALL1);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
   *(b + 4) = analogRead(BALL4);
   *(b + 5) = analogRead(BALL5);
   *(b + 6) = analogRead(BALL6);
-  *(b + 7) = round((float)analogRead(BALL7) * 0.8);
-  *(b + 8) = round((float)analogRead(BALL8) * 0.5);
-  *(b + 9) = round((float)analogRead(BALL9) * 0.8);
+  *(b + 7) = round((float)analogRead(BALL7) * 0.9);
+  *(b + 8) = round((float)analogRead(BALL8) * 0.9);
+  *(b + 9) = round((float)analogRead(BALL9) * 0.9);
   *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.5;
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
@@ -37,7 +37,7 @@ void _ball::calc(void) {
 
   deg = 1000;
 
-  // motor.power -= 25;
+  motor.power -= 20;
 
   top = 0;
 
@@ -70,7 +70,7 @@ void _ball::calc(void) {
     device.attack = true;
   }
   if (top <= 1 || top >= 15) {
-    if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 261) {
+    if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 245) {
       device.attack = true;
     }
   }
@@ -95,7 +95,8 @@ void _ball::calc(void) {
     }
 
     if (top > 1 + turn && top < 15 - turn) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 246) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 261 ||
+          val[top] <= 252) {
         // if (distance >= 8) {
         turnTimer = millis();
         if (top > 8) {
