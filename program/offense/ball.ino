@@ -233,11 +233,11 @@ void _ball::calc(void) {
       device.keeperTimeout = millis();
     }
 
-    if (top <= 3 || top <= 13) {
+    if (top <= 2 || top <= 14) {
       motor.power -= 30;
     }
 
-    if (top >= 5 && top <= 11) {
+    if (top >= 4 && top <= 12) {
       exist = false;
     }
 
