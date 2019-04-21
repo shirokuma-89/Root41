@@ -37,7 +37,7 @@ void _ball::calc(void) {
 
   deg = 1000;
 
-  motor.power -= 20;
+  motor.power -= 25;
 
   top = 0;
 
