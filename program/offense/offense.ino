@@ -313,6 +313,9 @@ void loop(void) {
   } else {
     line.offset = 1000;
   }
+  // if (line.offset >= 180) {
+  //   line.offset = map(line.offset, 180, 360, 180, 0);
+  // }
 
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);

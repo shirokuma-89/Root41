@@ -31,11 +31,11 @@ ISR(timer5Event) {
           line.highPin = 0;
           line.logs[0] = 0;
         } else if (line.val[1]) {
-          line.deg = 115;  //ゴールキーパーは65
+          line.deg = 135;  //ゴールキーパーは65
           line.highPin = 1;
           line.logs[0] = 1;
         } else if (line.val[2]) {
-          line.deg = 245;  //ゴールキーパーは295
+          line.deg = 225;  //ゴールキーパーは295
           line.highPin = 2;
           line.logs[0] = 2;
         } else if (line.val[3]) {
@@ -98,19 +98,8 @@ ISR(timer5Event) {
             line.deg = 150;
           } else if (j && i == false) {
             line.deg = 210;
-          }
-          if (line.deg == 150) {
-            if (j) {
-              if (line.offset >= 0 && line.offset <= 180) {
-                line.deg = 210;
-              }
-            }
-          } else if (line.deg == 210) {
-            if (i) {
-              if (line.offset <= 360 && line.offset >= 180) {
-                line.deg = 150;
-              }
-            }
+          } else if (i & j) {
+            line.deg = 180;
           }
         } else if (line.logs[0] == 1) {
           for (int i = 0; i <= 9; i++) {
@@ -127,27 +116,27 @@ ISR(timer5Event) {
             if (line.logs[i] == 0) {
               for (int j = 0; j <= 9; j++) {
                 if (line.logs[j] == 3) {
-                  for (int k = 0; k <= 9; k++) {
-                    if (line.logs[k] == 2) {
-                      break;
-                    }
-                    if (k == 9) {
-                      line.deg = 90;
-                    }
-                  }
+                  // bool k;
+                  // k = line.check(2);
+                  // if (k) {
+                  //   line.deg = 90;
+                  // } else {
+                  //   line.deg = 135;
+                  // }
+                  line.deg = 150;
                 }
               }
             } else if (line.logs[i] == 3) {
               for (int j = 0; j <= 9; j++) {
                 if (line.logs[j] == 0) {
-                  for (int k = 0; k <= 9; k++) {
-                    if (line.logs[k] == 2) {
-                      break;
-                    }
-                    if (k == 9) {
-                      line.deg = 90;
-                    }
-                  }
+                  // bool k;
+                  // k = line.check(2);
+                  // if (k) {
+                  //   line.deg = 90;
+                  // } else {
+                  //   line.deg = 135;
+                  // }
+                  line.deg = 150;
                 }
               }
             }
@@ -167,27 +156,27 @@ ISR(timer5Event) {
             if (line.logs[i] == 0) {
               for (int j = 0; j <= 9; j++) {
                 if (line.logs[j] == 3) {
-                  for (int k = 0; k <= 9; k++) {
-                    if (line.logs[k] == 1) {
-                      break;
-                    }
-                    if (k == 9) {
-                      line.deg = 270;
-                    }
-                  }
+                  // bool k;
+                  // k = line.check(2);
+                  // if (k) {
+                  //   line.deg = 270;
+                  // } else {
+                  //   line.deg = 225;
+                  // }
+                  line.deg = 210;
                 }
               }
             } else if (line.logs[i] == 3) {
               for (int j = 0; j <= 9; j++) {
                 if (line.logs[j] == 0) {
-                  for (int k = 0; k <= 9; k++) {
-                    if (line.logs[k] == 1) {
-                      break;
-                    }
-                    if (k == 9) {
-                      line.deg = 270;
-                    }
-                  }
+                  // bool k;
+                  // k = line.check(2);
+                  // if (k) {
+                  //   line.deg = 270;
+                  // } else {
+                  //   line.deg = 225;
+                  // }
+                  line.deg = 210;
                 }
               }
             }
@@ -216,7 +205,7 @@ ISR(timer5Event) {
     } else if (line.flag && line.outMove != 1000) {
       int i;
       if (line.logs[0] == 0 || line.logs[0] == 3) {
-        i = 600;
+        i = 800;
       } else {
         i = 400;
       }
