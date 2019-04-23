@@ -37,7 +37,7 @@ void _ball::calc(void) {
 
   deg = 1000;
 
-  motor.power -= 25;
+  // motor.power -= 45;
 
   top = 0;
 
@@ -95,21 +95,23 @@ void _ball::calc(void) {
     }
 
     if (top > 1 + turn && top < 15 - turn) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 271 ||
-          val[top] <= 267 || (top <= 9 && top >= 7 && val[8] <= 378)) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 265 ||
+          val[top] <= 257 || (top <= 9 && top >= 7 && val[8] <= 378)) {
         // if (distance >= 8) {
+        motor.move = 5;
+        motor.power -= 15;
         turnTimer = millis();
         if (top > 8) {
-          if (top >= 11) {
-            top -= 4;
-            motor.power -= 20;
+          if (top >= 12) {
+            top -= 5;
+            motor.power -= 15;
           } else {
             top -= 4;
           }
         } else {
-          if (top <= 5) {
-            top += 4;
-            motor.power -= 20;
+          if (top <= 4) {
+            top += 5;
+            motor.power -= 15;
           } else {
             top += 4;
           }
@@ -118,7 +120,7 @@ void _ball::calc(void) {
         top += 16;
         top %= 16;
 
-        turn = 3;
+        turn = 1;
       } else {
         // turn = 0;
         if (turnTimer + 400 <= millis()) {
