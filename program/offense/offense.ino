@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 2  // 1:宮里　2:久留
+#define ROBOT 1  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -430,15 +430,23 @@ void loop(void) {
           lcd.print("Root41 running");
 
           lcd.setCursor(0, 1);
-          lcd.print(line.logs[0]);
-          lcd.setCursor(2, 1);
-          lcd.print(line.logs[1]);
-          lcd.setCursor(4, 1);
-          lcd.print(line.logs[2]);
-          lcd.setCursor(6, 1);
-          lcd.print(line.logs[3]);
-          lcd.setCursor(8, 1);
-          lcd.print(line.deg);
+          lcd.print(ball.top);
+          lcd.setCursor(3, 1);
+          lcd.print(ball.val[ball.top]);
+          lcd.print("%");
+          lcd.setCursor(9, 1);
+          lcd.print(motor.power);
+          lcd.print("%");
+
+          // lcd.print(line.logs[0]);
+          // lcd.setCursor(2, 1);
+          // lcd.print(line.logs[1]);
+          // lcd.setCursor(4, 1);
+          // lcd.print(line.logs[2]);
+          // lcd.setCursor(6, 1);
+          // lcd.print(line.logs[3]);
+          // lcd.setCursor(8, 1);
+          // lcd.print(line.deg);
           // lcd.setCursor(0, 1);  //改行
           // if (line.first != 100) {
           //   lcd.print(line.first);
@@ -473,7 +481,7 @@ void loop(void) {
 
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
-
+          
           lcd.setCursor(12, 1);
           lcd.print(motor.memory);
           // lcd.setCursor(8, 1);
