@@ -20,30 +20,129 @@ ISR(timer5Event) {
       if (millis() - line.inTimer >= line.stoptime) {
         line.stop = false;
       }
+      for (int i = 1; i <= 9; i++) {
+        if (line.logs[i] == 5) {
+          if (line.val[0]) {
+            for (int j = 0; j <= i - 1; j++) {
+              if (line.logs[j] == 0) {
+                break;
+              }
+              if (j == i - 1) {
+                line.logs[i] = 0;
+              }
+            }
+          }
+          if (line.val[1]) {
+            for (int j = 0; j <= i - 1; j++) {
+              if (line.logs[j] == 1) {
+                break;
+              }
+              if (j == i - 1) {
+                line.logs[i] = 1;
+              }
+            }
+          }
+          if (line.val[2]) {
+            for (int j = 0; j <= i - 1; j++) {
+              if (line.logs[j] == 2) {
+                break;
+              }
+              if (j == i - 1) {
+                line.logs[i] = 2;
+              }
+            }
+          }
+          if (line.val[3]) {
+            for (int j = 0; j <= i - 1; j++) {
+              if (line.logs[j] == 3) {
+                break;
+              }
+              if (j == i - 1) {
+                line.logs[i] = 3;
+              }
+            }
+          }
+        }
+      }
     } else if (line.touch) {
       line.flag = true;
       if (line.deg == 1000 && line.outMove == 1000) {
         line.stop = true;
         line.near = true;
         line.inTimer = millis();
+        line.holdTimer = millis();
+        if (motor.memory <= 180) {
+          line.deg = motor.memory + 180;
+        } else if (motor.memory > 180) {
+          line.deg = motor.memory - 180;
+        }
         if (line.val[0]) {
-          line.deg = 180;
+          line.step = 180;
           line.highPin = 0;
           line.logs[0] = 0;
         } else if (line.val[1]) {
-          line.deg = 135;  //ゴールキーパーは65
+          line.step = 120;  //ゴールキーパーは65
           line.highPin = 1;
           line.logs[0] = 1;
         } else if (line.val[2]) {
-          line.deg = 225;  //ゴールキーパーは295
+          line.step = 240;  //ゴールキーパーは295
           line.highPin = 2;
           line.logs[0] = 2;
         } else if (line.val[3]) {
-          line.deg = 0;
+          line.step = 0;
           line.highPin = 3;
           line.logs[0] = 3;
         }
+        if (line.deg >= 180) {
+          line.deg = map(line.deg, 180, 360, -180, 0);
+        }
+        if (line.step >= 180) {
+          line.step = map(line.step, 180, 360, -180, 0);
+        }
+        //一時的にline.degとline.stepを-180~180にする。
+        if (abs(line.deg - line.step) <= 40) {
+          line.deg = (line.deg + line.step) / 2;
+        } else {
+          if (line.highPin == 1 || line.highPin == 2) {
+            line.deg = (line.deg + line.step) / 2;
+            if (line.highPin == 1) {
+              if (line.deg <= 0) {
+                line.deg += 180;
+              }
+            } else {
+              if (line.deg >= 0) {
+                line.deg -= 180;
+              }
+            }
+          } else if (line.highPin == 0) {
+            if (line.deg >= 0) {
+              line.deg = 150;
+            } else {
+              line.deg = 210;
+            }
+          } else if (line.highPin == 3) {
+            if (line.deg >= 0) {
+              line.deg = 330;
+            } else {
+              line.deg = 30;
+            }
+          }
+        }
+        //戻す
+        if (line.deg <= 0) {
+          line.deg = map(line.deg, 0, -180, 360, 180);
+        }
+        if (line.step <= 0) {
+          line.step = map(line.step, 0, -180, 360, 180);
+        }
       } else if (line.deg != 1000 && line.outMove == 1000) {
+        if (line.highPin == 1 || line.highPin == 2) {
+          if (millis() - line.holdTimer >= 2000) {
+            if (line.logs[1] == 0) {
+              line.deg = 180;
+            }
+          }
+        }
         for (int i = 1; i <= 9; i++) {
           if (line.logs[i] == 5) {
             if (line.val[0]) {
@@ -88,112 +187,6 @@ ISR(timer5Event) {
             }
           }
         }
-
-        if (line.logs[0] == 0) {
-          bool i;
-          i = line.check(1);
-          bool j;
-          j = line.check(2);
-          if (i && j == false) {
-            line.deg = 150;
-          } else if (j && i == false) {
-            line.deg = 210;
-          } else if (i & j) {
-            line.deg = 180;
-          }
-        } else if (line.logs[0] == 1) {
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 0) {
-              line.deg = 135;
-            }
-          }
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 3) {
-              line.deg = 45;
-            }
-          }
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 0) {
-              for (int j = 0; j <= 9; j++) {
-                if (line.logs[j] == 3) {
-                  // bool k;
-                  // k = line.check(2);
-                  // if (k) {
-                  //   line.deg = 90;
-                  // } else {
-                  //   line.deg = 135;
-                  // }
-                  line.deg = 150;
-                }
-              }
-            } else if (line.logs[i] == 3) {
-              for (int j = 0; j <= 9; j++) {
-                if (line.logs[j] == 0) {
-                  // bool k;
-                  // k = line.check(2);
-                  // if (k) {
-                  //   line.deg = 90;
-                  // } else {
-                  //   line.deg = 135;
-                  // }
-                  line.deg = 150;
-                }
-              }
-            }
-          }
-        } else if (line.logs[0] == 2) {
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 0) {
-              line.deg = 225;
-            }
-          }
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 3) {
-              line.deg = 315;
-            }
-          }
-          for (int i = 0; i <= 9; i++) {
-            if (line.logs[i] == 0) {
-              for (int j = 0; j <= 9; j++) {
-                if (line.logs[j] == 3) {
-                  // bool k;
-                  // k = line.check(2);
-                  // if (k) {
-                  //   line.deg = 270;
-                  // } else {
-                  //   line.deg = 225;
-                  // }
-                  line.deg = 210;
-                }
-              }
-            } else if (line.logs[i] == 3) {
-              for (int j = 0; j <= 9; j++) {
-                if (line.logs[j] == 0) {
-                  // bool k;
-                  // k = line.check(2);
-                  // if (k) {
-                  //   line.deg = 270;
-                  // } else {
-                  //   line.deg = 225;
-                  // }
-                  line.deg = 210;
-                }
-              }
-            }
-          }
-        } else if (line.logs[0] == 3) {
-          bool i;
-          i = line.check(1);
-          bool j;
-          j = line.check(2);
-          if (i && j == false) {
-            line.deg = 30;
-          } else if (j && i == false) {
-            line.deg = 330;
-          } else if (i && j) {
-            line.deg = 0;
-          }
-        }
       } else if (line.deg == 1000 && line.outMove != 1000) {
         line.deg = line.outMove;
         line.outMove = 1000;
@@ -204,12 +197,12 @@ ISR(timer5Event) {
       line.outTimer = millis();
     } else if (line.flag && line.outMove != 1000) {
       int i;
-      if (line.logs[0] == 0 || line.logs[0] == 3) {
-        i = 800;
-      } else {
+      if (line.outMove <= 60 || line.outMove >= 300) {
         i = 400;
+      } else {
+        i = 300;
       }
-      if (millis() - line.outTimer >= 400) {
+      if (millis() - line.outTimer >= i) {
         line.flag = false;
         line.outMove = 1000;
       }
@@ -217,7 +210,7 @@ ISR(timer5Event) {
       line.flag = false;
       line.deg = 1000;
       line.outMove = 1000;
-
+      line.step = 1000;
       for (int i = 0; i <= 9; i++) {
         line.logs[i] = 5;
       }
@@ -244,5 +237,6 @@ ISR(timer5Event) {
   // }
   // if (device.mode != 2 || !device.keeper) {
   startTimer5(50);  //タイマー割り込みを有効化
+                    // }
   // }
 }

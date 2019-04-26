@@ -111,6 +111,7 @@ class _line {
   bool val[4];
   bool stop;
 
+  int step = 1000;
   int deg = 1000;
   int outMove = 1000;
   int mode = 0;
@@ -123,6 +124,9 @@ class _line {
 
   unsigned long inTimer;
   unsigned long outTimer;
+  unsigned long holdTimer;
+
+  float slow = 0.1;
 
  private:
 } line;
@@ -142,6 +146,7 @@ class _motor {
   int subVal[3] = {0, 0, 0};
 
   int deg;
+  int memory;
   int power;
   int move = 15;
 
@@ -182,7 +187,6 @@ class _usonic {
   byte data;
 
  private:
-
   unsigned long timeOut;
 
 } usonic;
@@ -381,7 +385,7 @@ void loop(void) {
       }
     } else {
       if (line.stop) {
-        if (millis() - line.inTimer <= line.stoptime * 0.2) {
+        if (millis() - line.inTimer <= line.stoptime * line.slow) {
           digitalWrite(4, LOW);
           digitalWrite(5, LOW);
           digitalWrite(6, LOW);
@@ -403,6 +407,7 @@ void loop(void) {
         LED.changeAll(0, 255, 0);
       }
     }
+    motor.memory = motor.deg;
 
     // LCD表示
     if (!device.error) {
@@ -469,7 +474,8 @@ void loop(void) {
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
 
-          lcd.print(ball.val[ball.top]);
+          lcd.setCursor(12, 1);
+          lcd.print(motor.memory);
           // lcd.setCursor(8, 1);
 
           // lcd.print(line.outMove);
@@ -491,8 +497,10 @@ void loop(void) {
         lcd.setCursor(0, 1);  //改行
 
         lcd.print(line.deg);
+        lcd.setCursor(4, 1);
         lcd.print(line.outMove);
-        lcd.print(line.flag);
+        lcd.setCursor(8, 1);
+        lcd.print(motor.memory);
         // lcd.print("ErrorCode = ");
         // lcd.print(device.errorCode);
 

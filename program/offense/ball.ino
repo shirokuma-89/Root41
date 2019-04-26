@@ -137,7 +137,7 @@ void _ball::calc(void) {
     deg = round((float)top * 22.5);
 
     if (line.near && !line.flag) {
-      if (line.inTimer + 2500 > millis()) {
+      if (line.inTimer + 1000 > millis()) {
         if (line.highPin == 0) {
           if (top_backup <= 2 || top_backup >= 14) {
             line.near = true;
@@ -262,7 +262,7 @@ void _ball::calc(void) {
     }
 
     if (line.near) {
-      if (line.inTimer + 4000 > millis()) {
+      if (line.inTimer + 3000 > millis()) {
         if (line.highPin == 2) {
           if (top <= 8) {
             line.near = true;
