@@ -481,7 +481,7 @@ void loop(void) {
 
           // lcd.print(motor.correctionVal);
           // lcd.print(" %");
-          
+
           lcd.setCursor(12, 1);
           lcd.print(motor.memory);
           // lcd.setCursor(8, 1);
