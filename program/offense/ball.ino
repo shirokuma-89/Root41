@@ -85,7 +85,7 @@ void _ball::calc(void) {
     }
   }
 
-  if (!device.keeper +  || device.attack) {
+  if (!device.keeper || device.attack) {
     //回り込み
     // if(turn){
     //   motor.power -= 30;

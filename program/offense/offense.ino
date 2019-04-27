@@ -243,6 +243,8 @@ class _LED {
   void ballShow(int deg);
   void changeAll(int red, int green, int blue);
 
+  bool white = true;
+
   int bright = 60;
   int i, j;
 
@@ -344,7 +346,11 @@ void loop(void) {
       ball.calc();
     }
 
-    LED.changeAll(0, 135, 255);
+    if (LED.white) {
+      LED.changeAll(0, 0, 0);
+    } else {
+      LED.changeAll(0, 135, 255);
+    }
 
     if (!line.flag) {
       if (ball.exist) {
@@ -402,9 +408,17 @@ void loop(void) {
         motor.drive(NULL, NULL, false, true);
       }
       if (line.near) {
-        LED.changeAll(135, 0, 255);
+        if (LED.white) {
+          LED.changeAll(255, 255, 255);
+        } else {
+          LED.changeAll(135, 0, 255);
+        }
       } else {
-        LED.changeAll(0, 255, 0);
+        if (LED.white) {
+          LED.changeAll(255, 255, 255);
+        } else {
+          LED.changeAll(0, 255, 0);
+        }
       }
     }
     motor.memory = motor.deg;
@@ -495,7 +509,9 @@ void loop(void) {
     }
 
     if (device.error) {
-      LED.changeAll(255, 0, 0);
+      if (!LED.white) {
+        LED.changeAll(255, 0, 0);
+      }
 
       if (millis() - LCD.timer >= 100) {
         lcd.clear();
@@ -519,10 +535,18 @@ void loop(void) {
   } else {
     device.mode = 1;
 
-    if (abs(device.rotary % 10) >= 5) {
-      device.keeper = true;
+    if (abs(device.rotary % 10) >= 4) {
+      if (ROBOT == 1) {
+        device.keeper = false;
+      } else {
+        device.keeper = true;
+      }
     } else {
-      device.keeper = false;
+      if (ROBOT != 1) {
+        device.keeper = false;
+      } else {
+        device.keeper = true;
+      }
     }
 
     motor.drive(NULL, NULL, true);
@@ -534,10 +558,14 @@ void loop(void) {
 
     if (!device.boot) {
       if (!device.keeper) {
-        if (ROBOT == 1) {
-          LED.changeAll(255, 135, 0);
+        if (LED.white) {
+          LED.changeAll(0, 0, 0);
         } else {
-          LED.changeAll(100, 255, 255);
+          if (ROBOT == 1) {
+            LED.changeAll(255, 135, 0);
+          } else {
+            LED.changeAll(100, 255, 255);
+          }
         }
       } else {
         LED.changeAll(255, 255, 255);
@@ -585,7 +613,11 @@ void loop(void) {
       RGBLED.begin();
       RGBLED.setBrightness(LED.bright);
 
-      LED.changeAll(255, 0, 0);
+      if (LED.white) {
+        LED.changeAll(255, 255, 255);
+      } else {
+        LED.changeAll(255, 0, 0);
+      }
 
       RGBLED.show();
 
@@ -600,17 +632,19 @@ void loop(void) {
     }
   }
 
-  if (line.stop) {
-    if (millis() - line.inTimer >= line.stoptime * 0.2) {
-      RGBLED.begin();
-      RGBLED.setBrightness(LED.bright);
+  if (LED.white) {
+    if (line.stop) {
+      if (millis() - line.inTimer >= line.stoptime * 0.2) {
+        RGBLED.begin();
+        RGBLED.setBrightness(LED.bright);
 
-      LED.changeAll(255, 160, 160);
-    } else {
-      RGBLED.begin();
-      RGBLED.setBrightness(LED.bright);
+        LED.changeAll(255, 160, 160);
+      } else {
+        RGBLED.begin();
+        RGBLED.setBrightness(LED.bright);
 
-      LED.changeAll(255, 70, 130);
+        LED.changeAll(255, 70, 130);
+      }
     }
   }
 
