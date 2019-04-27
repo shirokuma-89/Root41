@@ -85,14 +85,14 @@ void _ball::calc(void) {
     }
   }
 
-  if (!device.keeper || device.attack) {
+  if (!device.keeper +  || device.attack) {
     //回り込み
     // if(turn){
     //   motor.power -= 30;
     // }
-    if (device.keeper) {
-      motor.power -= 20;
-    }
+    // if (device.keeper) {
+    //   motor.power -= 20;
+    // }
 
     if (top > 1 + turn && top < 15 - turn) {
       if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 265 ||
@@ -192,7 +192,7 @@ void _ball::calc(void) {
     usonic.distance = usonic.getDistance();
     startTimer5(50);
 
-    if (val[top] > 520) {
+    if (val[top] > 560) {
       exist = false;
     } else {
       exist = true;
@@ -240,17 +240,18 @@ void _ball::calc(void) {
       motor.power -= 30;
     }
 
-    if (top >= 4 && top <= 12) {
+    if (top >= 6 && top <= 10) {
       exist = false;
     }
 
     if (usonic.distance <= 3) {
-      motor.power -= 20;
+      // motor.power -= 20;
       deg = 0;
+      exist = true;
     }
 
     if (usonic.distance >= 45) {
-      motor.power -= 40;
+      motor.power -= 20;
       if (top >= 5 && top <= 11 && exist) {
         if (top >= 8) {
           deg = 135;

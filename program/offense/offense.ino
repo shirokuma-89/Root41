@@ -13,10 +13,10 @@
 
 #define Gyro_X 87
 #define Gyro_Y -66
-#define Gyro_Z 70
-#define Accel_X -4775
-#define Accel_Y -2060
-#define Accel_Z 1456
+#define Gyro_Z 66
+#define Accel_X -4752
+#define Accel_Y -2002
+#define Accel_Z 1448
 
 #else  //久留君
 
@@ -216,7 +216,7 @@ class _device {
   void initialize(void);
   void monitor(void);
 
-  bool boot = true;
+  bool boot = false;
   bool monitorBegin = false;
   bool error = false;
   bool keeper = false;
