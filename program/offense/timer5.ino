@@ -66,7 +66,10 @@ ISR(timer5Event) {
       }
     } else if (line.touch) {
       line.flag = true;
+
+      //触ってるとき
       if (line.deg == 1000 && line.outMove == 1000) {
+        //初めて
         line.stop = true;
         line.near = true;
         line.inTimer = millis();
@@ -121,10 +124,10 @@ ISR(timer5Event) {
               line.deg = 210;
             }
           } else if (line.highPin == 3) {
-            if (line.deg >= 0) {
-              line.deg = 330;
+            if (ball.turn == 0) {
+              line.deg = (line.deg + line.step) / 2;
             } else {
-              line.deg = 30;
+              line.deg = 0;
             }
           }
         }
@@ -136,11 +139,24 @@ ISR(timer5Event) {
           line.step = map(line.step, 0, -180, 360, 180);
         }
       } else if (line.deg != 1000 && line.outMove == 1000) {
+        //連続
         if (line.highPin == 1 || line.highPin == 2) {
           if (millis() - line.holdTimer >= 2000) {
             if (line.logs[1] == 0) {
               line.deg = 180;
+            } else if (line.logs[1] == 3) {
+              line.deg = 0;
             }
+          }
+        }
+        if (line.highPin == 3) {
+          if (line.logs[1] == 1 && line.logs[2] == 5 && line.logs[3] == 5) {
+            line.deg = 50;
+          } else if (line.logs[1] == 2 && line.logs[2] == 5 &&
+                     line.logs[3] == 5) {
+            line.deg = 330;
+          } else {
+            line.deg = 180;
           }
         }
         for (int i = 1; i <= 9; i++) {
