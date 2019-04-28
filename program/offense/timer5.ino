@@ -74,7 +74,9 @@ ISR(timer5Event) {
         line.near = true;
         line.inTimer = millis();
         line.holdTimer = millis();
-        if (motor.memory <= 180) {
+        if (ball.exist == false) {
+          line.deg = 1000;
+        } else if (motor.memory <= 180) {
           line.deg = motor.memory + 180;
         } else if (motor.memory > 180) {
           line.deg = motor.memory - 180;
@@ -102,8 +104,10 @@ ISR(timer5Event) {
         if (line.step >= 180) {
           line.step = map(line.step, 180, 360, -180, 0);
         }
-        //一時的にline.degとline.stepを-180~180にする。
-        if (abs(line.deg - line.step) <= 40) {
+        //一時的にline.degとline.stepを-180~180にする
+        if (line.deg == 1000) {
+          line.deg = line.step;
+        } else if (abs(line.deg - line.step) <= 70) {
           line.deg = (line.deg + line.step) / 2;
         } else {
           if (line.highPin == 1 || line.highPin == 2) {
@@ -141,6 +145,36 @@ ISR(timer5Event) {
       } else if (line.deg != 1000 && line.outMove == 1000) {
         //連続
         if (line.highPin == 1 || line.highPin == 2) {
+          if (line.logs[1] == 0) {
+            if (line.logs[2] == 3) {
+              if (line.highPin == 1) {
+                line.deg = 135;
+              } else if (line.highPin == 2) {
+                line.deg = 225;
+              }
+            } else {
+              if (line.highPin == 1) {
+                line.deg = 90;
+              } else if (line.highPin == 2) {
+                line.deg = 270;
+              }
+            }
+          }
+          if (line.logs[1] == 0) {
+            if (line.logs[2] == 3) {
+              if (line.highPin == 1) {
+                line.deg = 45;
+              } else if (line.highPin == 2) {
+                line.deg = 315;
+              }
+            } else {
+              if (line.highPin == 1) {
+                line.deg = 90;
+              } else if (line.highPin == 2) {
+                line.deg = 270;
+              }
+            }
+          }
           if (millis() - line.holdTimer >= 2000) {
             if (line.logs[1] == 0) {
               line.deg = 180;
@@ -149,14 +183,21 @@ ISR(timer5Event) {
             }
           }
         }
+        if (line.highPin == 0) {
+          if (millis() - line.holdTimer >= 2000) {
+            line.deg = 180;
+          }
+        }
         if (line.highPin == 3) {
-          if (line.logs[1] == 1 && line.logs[2] == 5 && line.logs[3] == 5) {
+          if (line.logs[1] == 1 && line.logs[2] == 0) {
             line.deg = 50;
-          } else if (line.logs[1] == 2 && line.logs[2] == 5 &&
-                     line.logs[3] == 5) {
+          } else if (line.logs[1] == 2 && line.logs[2] == 0) {
             line.deg = 330;
           } else {
-            line.deg = 180;
+            line.deg = 0;
+          }
+          if (millis() - line.holdTimer >= 2000) {
+            line.deg = 0;
           }
         }
         for (int i = 1; i <= 9; i++) {
