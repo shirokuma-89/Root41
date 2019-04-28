@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1  // 1:宮里　2:久留
+#define ROBOT 2  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -126,7 +126,7 @@ class _line {
   unsigned long outTimer;
   unsigned long holdTimer;
 
-  float slow = 0.1;
+  float slow = 0.01;
 
  private:
 } line;
@@ -245,7 +245,7 @@ class _LED {
 
   bool white = true;
 
-  int bright = 60;
+  int bright = 0;
   int i, j;
 
   unsigned long timer;

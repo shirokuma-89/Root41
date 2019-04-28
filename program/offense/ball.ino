@@ -1,7 +1,7 @@
 // ino
 
 void _ball::read(int* b) {
-  *b = round((float)analogRead(BALL0) * 0.9);
+  *b = round((float)analogRead(BALL0) * 0.7);
   *(b + 1) = analogRead(BALL1);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
@@ -11,7 +11,7 @@ void _ball::read(int* b) {
   *(b + 7) = round((float)analogRead(BALL7) * 0.9);
   *(b + 8) = round((float)analogRead(BALL8) * 0.9);
   *(b + 9) = round((float)analogRead(BALL9) * 0.9);
-  *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.5;
+  *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.65;
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
@@ -25,9 +25,12 @@ void _ball::read(int* b) {
   }
 
   if (ROBOT == 2) {
+    *(b + 2) = (*(b + 1) + *(b + 3)) * 0.5;
     *(b + 4) = (*(b + 3) + *(b + 5)) * 0.5;
-    *(b + 9) = (*(b + 8) + *(b + 10)) * 0.5;
-    *(b + 12) = (*(b + 11) + *(b + 13)) * 0.5;
+    // *(b + 8) = (*(b + 7) + *(b + 10)) * 0.5 * 0.85;
+    // *(b + 9) = (*(b + 8) + *(b + 10)) * 0.5;
+    *(b + 12) = (*(b + 11) + *(b + 14)) * 0.5;
+    *(b + 13) = (*(b + 11) + *(b + 15)) * 0.5;
   }
 }
 
@@ -66,17 +69,17 @@ void _ball::calc(void) {
     }
   }
 
-  if (millis() - device.keeperTimeout >= 2000) {
+  if (millis() - device.keeperTimeout >= 1300) {
     device.attack = true;
   }
-  if (top <= 1 || top >= 15) {
+  if (top <= 2 || top >= 14) {
     if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 245) {
       device.attack = true;
     }
   }
 
   if (device.attack) {
-    if (millis() - device.attackTimeout >= 5000) {
+    if (millis() - device.attackTimeout >= 6000) {
       if (val[0] >= 240) {
         device.attack = false;
         device.keeperTimeout = millis();
@@ -94,9 +97,9 @@ void _ball::calc(void) {
     //   motor.power -= 20;
     // }
 
-    if (top > 1 + turn && top < 15 - turn) {
+    if (top > 1 && top < 15) {
       if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 265 ||
-          val[top] <= 257 || (top <= 9 && top >= 7 && val[8] <= 378)) {
+          val[top] <= 264 || (top <= 9 && top >= 7 && val[8] <= 378)) {
         // if (distance >= 8) {
         motor.move = 5;
         motor.power -= 15;
@@ -186,7 +189,7 @@ void _ball::calc(void) {
     device.attack = false;
     line.near = false;
 
-    // motor.power -= 20;
+    motor.power -= 25;
 
     pauseTimer5();
     usonic.distance = usonic.getDistance();
