@@ -175,6 +175,19 @@ ISR(timer5Event) {
               }
             }
           }
+          if (line.logs[0] == 1) {
+            if (line.logs[1] == 0) {
+              if (line.logs[2] == 2) {
+                line.deg = 180;
+              }
+            }
+          } else if (line.logs[1] == 2) {
+            if (line.logs[1] == 0) {
+              if (line.logs[2] == 1) {
+                line.deg = 180;
+              }
+            }
+          }
           if (millis() - line.holdTimer >= 2000) {
             if (line.logs[1] == 0) {
               line.deg = 180;
