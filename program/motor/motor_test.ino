@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1 // 1:宮里　2:久留
+#define ROBOT 1  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -339,88 +339,15 @@ void loop(void) {
     motor.move = 25;
     motor.power = 100;
 
-    // ボール処理
-    if (!line.flag) {
-      ball.reset();
-      ball.read(ball.val);
-      ball.calc();
-    }
-
-    if (LED.white) {
-      LED.changeAll(0, 0, 0);
+    line.read();
+    if (line.val[0]) {
+      motor.deg = 180;
     } else {
-      LED.changeAll(0, 135, 255);
+      motor.deg = 0;
     }
+    LED.ballShow(motor.deg);
+    motor.drive(motor.deg, 100);
 
-    if (!line.flag) {
-      if (ball.exist) {
-        motor.deg = ball.deg;
-      } else {
-        motor.deg = 1000;
-      }
-    } else {
-      if (line.stop) {
-        motor.deg = 1000;
-      } else if (line.deg != 1000) {
-        motor.deg = line.deg;
-      } else if (line.outMove != 1000) {
-        motor.deg = line.outMove;
-      } else {
-        device.error = true;
-        device.errorCode = 1;
-      }
-    }
-
-    if (motor.deg != 1000) {
-      if (line.flag) {
-        LED.lineShow();
-        motor.drive(motor.deg, 100);
-      } else {
-        LED.ballShow(motor.deg);
-
-        motor.correction = true;
-
-        motor.moveTimer = millis();
-        while (millis() - motor.moveTimer <= motor.move) {
-          if (!line.flag) {
-            motor.drive(motor.deg, motor.power);
-          } else {
-            break;
-          }
-        }
-      }
-    } else {
-      if (line.stop) {
-        if (millis() - line.inTimer <= line.stoptime * line.slow) {
-          digitalWrite(4, LOW);
-          digitalWrite(5, LOW);
-          digitalWrite(6, LOW);
-          digitalWrite(7, LOW);
-          digitalWrite(8, LOW);
-          digitalWrite(9, LOW);
-          digitalWrite(10, LOW);
-          digitalWrite(11, LOW);
-          digitalWrite(12, LOW);
-        } else {
-          motor.drive(NULL, NULL, true);
-        }
-      } else {
-        motor.drive(NULL, NULL, false, true);
-      }
-      if (line.near) {
-        if (LED.white) {
-          LED.changeAll(255, 255, 255);
-        } else {
-          LED.changeAll(135, 0, 255);
-        }
-      } else {
-        if (LED.white) {
-          LED.changeAll(255, 255, 255);
-        } else {
-          LED.changeAll(0, 255, 0);
-        }
-      }
-    }
     motor.memory = motor.deg;
 
     // LCD表示
