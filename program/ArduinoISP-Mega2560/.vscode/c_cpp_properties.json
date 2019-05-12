@@ -3,11 +3,13 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\AZ3166\\tools\\**",
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\AZ3166\\hardware\\stm32f4\\1.6.2\\**",
                 "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
                 "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\**"
             ],
             "forcedInclude": [
-                "C:\\Users\\Takaki_M\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\cores\\arduino\\Arduino.h"
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\AZ3166\\hardware\\stm32f4\\1.6.2\\cores\\arduino\\Arduino.h"
             ],
             "intelliSenseMode": "msvc-x64"
         }
