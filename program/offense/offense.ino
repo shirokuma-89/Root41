@@ -7,7 +7,7 @@
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 2  // 1:宮里　2:久留
+#define ROBOT 1  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -243,9 +243,9 @@ class _LED {
   void ballShow(int deg);
   void changeAll(int red, int green, int blue);
 
-  bool white = true;
+  bool white = false;
 
-  int bright = 0;
+  int bright = 60;
   int i, j;
 
   unsigned long timer;
@@ -336,8 +336,8 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 25;
-    motor.power = 100;
+    motor.move = 20;
+    motor.power = 85;
 
     // ボール処理
     if (!line.flag) {
