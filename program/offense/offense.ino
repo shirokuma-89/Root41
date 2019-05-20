@@ -336,8 +336,8 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 20;
-    motor.power = 85;
+    motor.move = 25;
+    motor.power = 95;
 
     // ボール処理
     if (!line.flag) {

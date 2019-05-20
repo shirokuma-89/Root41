@@ -1,7 +1,7 @@
 // ino
 
 void _ball::read(int* b) {
-  *b = round((float)analogRead(BALL0) * 0.95);
+  *b = round((float)analogRead(BALL0) * 0.87);
   *(b + 1) = analogRead(BALL1);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
@@ -97,9 +97,9 @@ void _ball::calc(void) {
     //   motor.power -= 20;
     // }
 
-    if (top > 1 && top < 15) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 265 ||
-          val[top] <= 269 || (top <= 9 && top >= 7 && val[8] <= 383)) {
+    if (top > 2 && top < 14) {
+      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 275 ||
+          val[top] <= 264 || (top <= 9 && top >= 7 && val[8] <= 388)) {
         // if (distance >= 8) {
         motor.move = 5;
         motor.power -= 15;
