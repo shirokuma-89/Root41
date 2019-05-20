@@ -268,8 +268,10 @@ ISR(timer5Event) {
     } else if (line.flag && line.outMove != 1000) {
       int i;
       if (line.outMove <= 60 || line.outMove >= 300) {
-        i = 400;
+        // i = 400;
+        i = 300;
       } else {
+        // i = 300;
         i = 300;
       }
       if (millis() - line.outTimer >= i) {

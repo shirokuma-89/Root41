@@ -2,12 +2,12 @@
 #include <Adafruit_NeoPixel.h>
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
-#include <Root41_Lib.h>
+#include <Pixy2I2C.h>
 #include <Rotary.h>
 #include <Timer5.h>
 #include <Wire.h>
 
-#define ROBOT 1 // 1:宮里　2:久留
+#define ROBOT 1  // 1:宮里　2:久留
 
 #if ROBOT == 1
 
@@ -69,7 +69,7 @@
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 23, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
 Rotary rotary = Rotary(ROTARY1, ROTARY2);
-Root41_Lib Root41;
+Pixy2I2C pixy;
 
 class _ball {
  public:
@@ -118,7 +118,7 @@ class _line {
   int offset = 0;
   int highPin = 5;
   int count;
-  int stoptime = 100;
+  int stoptime = 0;
 
   int logs[10] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 
@@ -216,7 +216,7 @@ class _device {
   void initialize(void);
   void monitor(void);
 
-  bool boot = false;
+  bool boot = true;
   bool monitorBegin = false;
   bool error = false;
   bool keeper = false;
@@ -265,6 +265,23 @@ class _kickoff {
   // none
 } kickoff;
 
+class _camera {
+ public:
+  void read(void);
+  void available(void);
+
+  bool exist[8];
+
+  int check;
+  int x[8];
+  int y[8];
+  int deg = 0;
+
+  unsigned long timer = 0;
+
+ private:
+} camera;
+
 void setup(void) {
   device.initialize();
   device.mode = 0;
@@ -274,29 +291,13 @@ void setup(void) {
   Wire.begin();
   TWBR = 12;  // ATtiny85との通信エラーが起きるならコメントアウトする
 
+  camera.available();
+
   LCD.init();
   lcd.print("Root41 starting");
   LCD.output = 0;
 
-  // usonic.timer = millis();
-
-  //起動イルミネーション
-  for (int i = 0; i <= 15; i++) {
-    RGBLED.begin();
-    RGBLED.setBrightness(LED.bright);
-
-    LED.changeAll(0, 0, 0);
-
-    for (int k = 0; k <= i; k++) {
-      RGBLED.setPixelColor(k, 255, 255, 255);
-    }
-
-    RGBLED.show();
-    if (digitalRead(SW_LEFT) && digitalRead(SW_RIGHT)) {
-      device.monitorBegin = true;
-    }
-    delay(5);
-  }
+  delay(200);
 
   //ジャイロセンサをセットアップ
   gyro.setting();
@@ -315,7 +316,23 @@ void loop(void) {
   // Serial.print(" ");
   // Serial.println(line.outMove);
 
-  Serial.println(ball.distance);
+  camera.read();
+
+  Serial.println(camera.x[2]);
+
+  if (camera.check == 0 && camera.exist[2] && millis() - camera.timer >= 50) {
+    if (!ball.turn) {
+      if (camera.x[2] <= -50) {
+        camera.deg++;
+      } else if (camera.x[2] >= 50) {
+        camera.deg--;
+      }
+      camera.deg = constrain(camera.deg, -2, 2);
+      camera.timer = millis();
+    }
+  } else {
+    camera.deg = 0;
+  }
 
   device.error = false;
 
@@ -444,109 +461,39 @@ void loop(void) {
           lcd.print("Root41 running");
 
           lcd.setCursor(0, 1);
-          lcd.print(ball.top);
-          lcd.setCursor(3, 1);
-          lcd.print(ball.val[ball.top]);
-          lcd.print("%");
-          lcd.setCursor(9, 1);
-          lcd.print(motor.power);
-          lcd.print("%");
-
-          // lcd.print(line.logs[0]);
-          // lcd.setCursor(2, 1);
-          // lcd.print(line.logs[1]);
-          // lcd.setCursor(4, 1);
-          // lcd.print(line.logs[2]);
-          // lcd.setCursor(6, 1);
-          // lcd.print(line.logs[3]);
-          // lcd.setCursor(8, 1);
-          // lcd.print(line.deg);
-          // lcd.setCursor(0, 1);  //改行
-          // if (line.first != 100) {
-          //   lcd.print(line.first);
-          // } else {
-          //   lcd.print("NO");
-          // }
+          if (camera.check == 0 && camera.exist[2]) {
+            if (camera.x[2] <= -40) {
+              lcd.print("LEFT");
+            } else if (camera.x[2] >= 40) {
+              lcd.print("RIGHT");
+            } else {
+              lcd.print("CENTER");
+            }
+          } else {
+            lcd.print("crash!");
+          }
+          // lcd.print(ball.top);
           // lcd.setCursor(3, 1);
-          // if (line.second != 100) {
-          //   lcd.print(line.second);
-          // } else {
-          //   lcd.print("NO");
-          // }
-          // lcd.setCursor(6, 1);
-          // if (line.third != 100) {
-          //   lcd.print(line.third);
-          // } else {
-          //   lcd.print("NO");
-          // }
-          // lcd.setCursor(9, 1);
-          // if (line.forth != 100) {
-          //   lcd.print(line.forth);
-          // } else {
-          //   lcd.print("NO");
-          // }
-          // lcd.setCursor(12, 1);
-          // lcd.print(motor.deg);
-          // lcd.print(line.val[3]);
-          // lcd.print(usonic.distance);
-
-          // lcd.print(gyro.deg);
-          // lcd.print(" deg");
-
-          // lcd.print(motor.correctionVal);
-          // lcd.print(" %");
-
-          lcd.setCursor(12, 1);
-          lcd.print(motor.memory);
-          // lcd.setCursor(8, 1);
-
-          // lcd.print(line.outMove);
+          // lcd.print(ball.val[ball.top]);
+          // lcd.print("%");
+          lcd.setCursor(9, 1);
+          lcd.print(gyro.deg);
+          // lcd.print("%");
 
           LCD.output = 2;
           LCD.timer = millis();
         }
       }
     }
-
-    if (device.error) {
-      if (!LED.white) {
-        LED.changeAll(255, 0, 0);
-      }
-
-      if (millis() - LCD.timer >= 100) {
-        lcd.clear();
-
-        lcd.print("Root41 running");
-
-        lcd.setCursor(0, 1);  //改行
-
-        lcd.print(line.deg);
-        lcd.setCursor(4, 1);
-        lcd.print(line.outMove);
-        lcd.setCursor(8, 1);
-        lcd.print(motor.memory);
-        // lcd.print("ErrorCode = ");
-        // lcd.print(device.errorCode);
-
-        LCD.output = 3;
-        LCD.timer = millis();
-      }
-    }
   } else {
     device.mode = 1;
 
+    camera.deg = 0;
+
     if (abs(device.rotary % 10) >= 4) {
-      if (ROBOT == 1) {
-        device.keeper = false;
-      } else {
-        device.keeper = true;
-      }
+      device.keeper = true;
     } else {
-      if (ROBOT != 1) {
-        device.keeper = false;
-      } else {
-        device.keeper = true;
-      }
+      device.keeper = false;
     }
 
     motor.drive(NULL, NULL, true);
@@ -583,9 +530,16 @@ void loop(void) {
 
       if (!device.boot) {
         if (device.keeper) {
-          lcd.print("Root41 keeper");
+          lcd.print("keeper ");
         } else {
-          lcd.print("Root41 waiting");
+          lcd.print("attack ");
+        }
+
+        camera.available();
+        if (camera.check == 0) {
+          lcd.print("available");
+        } else {
+          lcd.print("unusable");
         }
       } else {
         lcd.print("Root41 Boot ERR!");
@@ -593,13 +547,24 @@ void loop(void) {
 
       lcd.setCursor(0, 1);  //改行
 
-      lcd.print(gyro.deg);
-      lcd.print(" deg");
+      if (camera.check == 0 && camera.exist[2]) {
+        if (camera.x[2] <= -50) {
+          lcd.print("LEFT");
+        } else if (camera.x[2] >= 50) {
+          lcd.print("RIGHT");
+        } else {
+          lcd.print("CENTER");
+        }
+      } else {
+        lcd.print("crash!");
+      }
+      // lcd.print(gyro.deg);
+      // lcd.print(" deg");
 
-      lcd.setCursor(9, 1);  //改行
+      // lcd.setCursor(9, 1);  //改行
 
-      lcd.print(usonic.distance);
-      lcd.print(" cm");
+      // lcd.print(usonic.distance);
+      // lcd.print(" cm");
 
       // lcd.print(gyro.differentialRead());
       // lcd.print(" deg");

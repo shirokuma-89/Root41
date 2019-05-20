@@ -1,4 +1,4 @@
-// ino
+// ball.ino
 
 void _ball::read(int* b) {
   *b = round((float)analogRead(BALL0) * 0.87);
@@ -98,11 +98,10 @@ void _ball::calc(void) {
     // }
 
     if (top > 2 && top < 14) {
-      if ((val[top] + val[(top + 1) % 16] + val[(top + 15) % 16]) / 3 < 275 ||
-          val[top] <= 264 || (top <= 9 && top >= 7 && val[8] <= 388)) {
+      if (val[top] <= 264 || (top <= 9 && top >= 7 && val[8] <= 391)) {
         // if (distance >= 8) {
         motor.move = 5;
-        motor.power -= 15;
+        motor.power -= 35;
         turnTimer = millis();
         if (top > 8) {
           if (top >= 12) {
@@ -126,18 +125,33 @@ void _ball::calc(void) {
         turn = 1;
       } else {
         // turn = 0;
+        motor.power -= 20;
         if (turnTimer + 400 <= millis()) {
           turn = 0;
         }
+
+        if(top > 8){
+          top += 1;
+        } else {
+          top -= 1;
+        }
       }
     } else {
-      if (turnTimer + 400 <= millis()) {
+      if (turnTimer + 100 <= millis()) {
         turn = 0;
       }
 
-      // if (turn != 0) {
-      //   top = 0;
-      // }
+      if (val[top] <= 190) {
+        if (camera.check == 0 && camera.exist[2]) {
+          if (!ball.turn) {
+            if (camera.x[2] <= -30) {
+              top = 14;
+            } else if (camera.x[2] >= 30) {
+              top = 2;
+            }
+          }
+        }
+      }
     }
 
     deg = round((float)top * 22.5);
@@ -328,7 +342,7 @@ void _ball::reset(void) {
       }
     }
     resetTimer = millis();
-    motor.move -= 10;
+    // motor.move -= 10;
   } else {
     return;
   }
