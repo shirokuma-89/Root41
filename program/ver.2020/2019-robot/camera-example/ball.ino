@@ -1,8 +1,8 @@
 // ball.ino
 
 void _ball::read(int* b) {
-  *b = round((float)analogRead(BALL0) * 0.87);
-  *(b + 1) = analogRead(BALL1);
+  *b = round((float)analogRead(BALL0) * 0.8);
+  *(b + 1) = round((float)analogRead(BALL0) * 0.85);
   *(b + 2) = analogRead(BALL2);
   *(b + 3) = analogRead(BALL3);
   *(b + 4) = analogRead(BALL4);
@@ -11,16 +11,16 @@ void _ball::read(int* b) {
   *(b + 7) = round((float)analogRead(BALL7) * 0.9);
   *(b + 8) = round((float)analogRead(BALL8) * 0.9);
   *(b + 9) = round((float)analogRead(BALL9) * 0.9);
-  *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.65;
+  *(b + 8) = ((*(b + 7) + *(b + 9)) * 0.5 + *(b + 8)) * 0.85;
   *(b + 10) = analogRead(BALL10);
   *(b + 11) = analogRead(BALL11);
   *(b + 12) = analogRead(BALL12);
   *(b + 13) = analogRead(BALL13);
   *(b + 14) = analogRead(BALL14);
-  *(b + 15) = analogRead(BALL15);
+  *(b + 15) = round((float)analogRead(BALL0) * 0.85);
 
   if (ROBOT == 1) {
-    *(b + 1) = (*(b + 0) + *(b + 2)) * 0.5;
+    *(b + 1) = (*(b + 0) + *(b + 2)) * 0.5 * 0.85;
     *(b + 5) = (*(b + 4) + *(b + 6)) * 0.5;
   }
 
@@ -100,8 +100,8 @@ void _ball::calc(void) {
     if (top > 2 && top < 14) {
       if (val[top] <= 264 || (top <= 9 && top >= 7 && val[8] <= 391)) {
         // if (distance >= 8) {
-        motor.move = 5;
-        motor.power -= 35;
+        // motor.move = 5;
+        motor.power -= 20;
         turnTimer = millis();
         if (top > 8) {
           if (top >= 12) {
@@ -126,28 +126,37 @@ void _ball::calc(void) {
       } else {
         // turn = 0;
         motor.power -= 20;
-        if (turnTimer + 400 <= millis()) {
+        if (turnTimer + 200 <= millis()) {
           turn = 0;
         }
 
-        if(top > 8){
+        if (top > 8) {
           top += 1;
         } else {
           top -= 1;
         }
       }
+
+      // if (top >= 8) {
+      //   top -= 16;
+      // }
+      // top = float((float)top * (float)sqrt(abs((float)top)) * (float)0.67);
+      // top += 16;
+      // top %= 16;
+
+      motor.power -= val[top] * 0.05;
     } else {
-      if (turnTimer + 100 <= millis()) {
+      if (turnTimer + 400 <= millis()) {
         turn = 0;
       }
 
-      if (val[top] <= 190) {
-        if (camera.check == 0 && camera.exist[2]) {
+      if (val[top] <= 200) {
+        if (camera.check == 0 && camera.exist[2] && top == 0) {
           if (!ball.turn) {
-            if (camera.x[2] <= -30) {
-              top = 14;
-            } else if (camera.x[2] >= 30) {
-              top = 2;
+            if (camera.x[2] <= -20) {
+              top = 15;
+            } else if (camera.x[2] >= 20) {
+              top = 1;
             }
           }
         }

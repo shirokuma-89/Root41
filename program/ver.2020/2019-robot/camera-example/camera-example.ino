@@ -320,16 +320,18 @@ void loop(void) {
 
   Serial.println(camera.x[2]);
 
-  if (camera.check == 0 && camera.exist[2] && millis() - camera.timer >= 50) {
-    if (!ball.turn) {
-      if (camera.x[2] <= -50) {
+  if (camera.check == 0 && millis() - camera.timer >= 100) {
+    // if (!ball.turn) {
+      if (camera.x[2] <= -20) {
         camera.deg++;
-      } else if (camera.x[2] >= 50) {
+      } else if (camera.x[2] >= 20) {
         camera.deg--;
       }
       camera.deg = constrain(camera.deg, -2, 2);
       camera.timer = millis();
-    }
+    // } else {
+    //   camera.deg = 0;
+    // }
   } else {
     camera.deg = 0;
   }

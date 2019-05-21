@@ -18,8 +18,7 @@ void _camera::read(void) {
 
     for (int i = 0; i <= pixy.ccc.numBlocks - 1; i++) {
       x[pixy.ccc.blocks[i].m_signature] = pixy.ccc.blocks[i].m_x - 158;
-      y[pixy.ccc.blocks[i].m_signature] =
-          pixy.ccc.blocks[pixy.ccc.blocks[i].m_signature].m_y - 108;
+      y[pixy.ccc.blocks[i].m_signature] = pixy.ccc.blocks[i].m_y - 108;
       exist[pixy.ccc.blocks[i].m_signature] = true;
     }
   }
