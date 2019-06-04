@@ -14,6 +14,16 @@
             "intelliSenseMode": "msvc-x64",
             "cStandard": "c11",
             "cppStandard": "c++17"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\**"
+            ],
+            "forcedInclude": [
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\cores\\arduino\\Arduino.h"
+            ]
         }
     ],
     "version": 4

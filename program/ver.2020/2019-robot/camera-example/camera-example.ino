@@ -11,12 +11,12 @@
 
 #if ROBOT == 1
 
-#define Gyro_X 87
-#define Gyro_Y -66
-#define Gyro_Z 66
-#define Accel_X -4752
-#define Accel_Y -2002
-#define Accel_Z 1448
+#define Gyro_X 81
+#define Gyro_Y -68
+#define Gyro_Z 57
+#define Accel_X -4733
+#define Accel_Y -2034
+#define Accel_Z 1432
 
 #else  //久留君
 
@@ -320,8 +320,8 @@ void loop(void) {
 
   Serial.println(camera.x[2]);
 
-  if (camera.check == 0 && millis() - camera.timer >= 100) {
-    // if (!ball.turn) {
+  if (camera.check == 0 && !line.flag) {
+    if (millis() - camera.timer >= 100) {
       if (camera.x[2] <= -20) {
         camera.deg++;
       } else if (camera.x[2] >= 20) {
@@ -329,9 +329,9 @@ void loop(void) {
       }
       camera.deg = constrain(camera.deg, -2, 2);
       camera.timer = millis();
-    // } else {
-    //   camera.deg = 0;
-    // }
+      // } else {
+      //   camera.deg = 0;
+    }
   } else {
     camera.deg = 0;
   }
@@ -355,8 +355,8 @@ void loop(void) {
   if (digitalRead(SW_TOGGLE) && !device.boot) {
     device.mode = 2;
 
-    motor.move = 25;
-    motor.power = 95;
+    motor.move = 35;
+    motor.power = 100;
 
     // ボール処理
     if (!line.flag) {

@@ -75,7 +75,7 @@ int _gyro::read(void) {
     }
     Gyro %= 360;
   }
-  return ((Gyro + 360 + camera.deg * 25) % 360);
+  return ((Gyro + 360 + camera.deg * 15) % 360);
 }
 
 //角速度取得
