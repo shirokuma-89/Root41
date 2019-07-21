@@ -245,7 +245,7 @@ class _LED {
 
   bool white = false;
 
-  int bright = 60;
+  int bright = 10;
   int i, j;
 
   unsigned long timer;

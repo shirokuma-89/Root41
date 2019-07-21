@@ -39,7 +39,7 @@ void _device::monitor(void) {
     lcd.print("Root41 monitor");
 
     LED.timer = millis();
-    RGBLED.setBrightness(LED.bright + 30);
+    // RGBLED.setBrightness(LED.bright + 30);
 
     digitalWrite(BALL_RESET, HIGH);
     
