@@ -1,5 +1,6 @@
 {
-    "port": "COM6",
-    "board": "arduino:avr:uno",
-    "sketch": "EEPROM-read.ino"
+    "port": "COM3",
+    "board": "arduino:avr:mega",
+    "sketch": "EEPROM-read.ino",
+    "configuration": "cpu=atmega2560"
 }

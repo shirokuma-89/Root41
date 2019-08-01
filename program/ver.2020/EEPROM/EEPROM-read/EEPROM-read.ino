@@ -5,13 +5,9 @@ void setup() {
 
   Serial.print("I'm ");
 
-  int val = EEPROM.read(0);
+  int val = EEPROM[0];
 
-  if (val == 1) {
-    Serial.println("Hogehoge.");
-  } else if (val == 2) {
-    Serial.println("Fugafuga.");
-  }
+  Serial.println(val);
 }
 
 void loop() {}

@@ -1,5 +1,6 @@
 {
-    "board": "arduino:avr:uno",
-    "port": "COM6",
-    "sketch": "EEPROM-write.ino"
+    "board": "arduino:avr:mega",
+    "port": "COM3",
+    "sketch": "EEPROM-write.ino",
+    "configuration": "cpu=atmega2560"
 }

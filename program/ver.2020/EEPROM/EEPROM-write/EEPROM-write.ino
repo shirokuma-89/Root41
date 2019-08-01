@@ -2,19 +2,10 @@
 
 void setup() {
   Serial.begin(115200);
+  int val = 50;
+  EEPROM[0] = val;      // address「0」の保存値は50に
+  int num = EEPROM[0];  // 変数numの値は50に
+  Serial.println(num);
 }
 
-void loop() {
-  Serial.println("Please enter a number:");
-
-  while (!Serial.available()) {
-  }
-
-  int val = Serial.read() - 48;
-
-  EEPROM.write(0, val);
-  
-  Serial.print("Completed!:");
-  Serial.println(val);
-  Serial.println("");
-}
+void loop() {}
