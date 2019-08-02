@@ -1,6 +1,0 @@
-エラーコード
-
-000 正常
-
-001 line.flagが異常にtrueになっている
-    line.deg,line.outMoveが指定されていない

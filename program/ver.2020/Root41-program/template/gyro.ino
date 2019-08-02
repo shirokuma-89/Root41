@@ -36,12 +36,13 @@ RESTART:
   if (devStatus != 0) {
     goto RESTART;  //初期化失敗
   }
-  mpu.setXGyroOffset(Gyro_X);
-  mpu.setYGyroOffset(Gyro_Y);
-  mpu.setZGyroOffset(Gyro_Z);
-  mpu.setXAccelOffset(Accel_X);
-  mpu.setYAccelOffset(Accel_Y);
-  mpu.setZAccelOffset(Accel_Z);
+
+  mpu.setXGyroOffset(gyro.eeprom[0]);
+  mpu.setYGyroOffset(gyro.eeprom[1]);
+  mpu.setZGyroOffset(gyro.eeprom[2]);
+  mpu.setXAccelOffset(gyro.eeprom[3]);
+  mpu.setYAccelOffset(gyro.eeprom[4]);
+  mpu.setZAccelOffset(gyro.eeprom[5]);
   mpu.setDMPEnabled(true);
 
   attachInterrupt(0, dmpDataReady, RISING);
@@ -69,17 +70,17 @@ int _gyro::read(void) {
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
     Gyro_Now = degrees(ypr[0]);  // + 180;
-    Gyro = Gyro_Now - gyro.offset;
+    Gyro = Gyro_Now - offset;
     while (Gyro <= 0) {
       Gyro += 360;
     }
     Gyro %= 360;
   }
-  return ((Gyro + 360 + camera.deg * 15) % 360);
+  return (360 - Gyro) % 360;
 }
 
 //角速度取得
-int _gyro::differentialRead(void) {
+float _gyro::differentialRead(void) {
   if (!dmpReady)
     return;
 
@@ -106,5 +107,5 @@ int _gyro::differentialRead(void) {
 
   mpu.dmpGetGyro(&dmpgyro, fifoBuffer);
 
-  return dmpgyro.z;
+  return dmpgyro.z * -1;
 }
