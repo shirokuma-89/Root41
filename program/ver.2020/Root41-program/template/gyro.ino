@@ -80,7 +80,7 @@ int _gyro::read(void) {
 }
 
 //角速度取得
-float _gyro::differentialRead(void) {
+int _gyro::differentialRead(void) {
   if (!dmpReady)
     return;
 
@@ -107,5 +107,5 @@ float _gyro::differentialRead(void) {
 
   mpu.dmpGetGyro(&dmpgyro, fifoBuffer);
 
-  return dmpgyro.z * -1;
+  return dmpgyro.z;
 }

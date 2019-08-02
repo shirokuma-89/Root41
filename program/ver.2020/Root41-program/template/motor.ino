@@ -32,177 +32,46 @@ void _motor::drive(int _deg, int _power) {
   gyro.deg = gyro.read();
 
   //姿勢制御
-  float Kp;
-  float Ki;
-  float Kd;
+  Kp = 0.75;  // 0.747
+  Ki = 0.006;  // 0.008
+  Kd = 0.55;   // 0.1
 
-  Kp = 0.747;
-  Ki = 0.008;
-  Kd = 0.1;
+  static int correctionMinimum = 10;
 
   front = gyro.deg;
-  front = front + 360;
-  front = front >= 360 ? front - 360 : front;
-
   front = front > 180 ? front - 360 : front;
 
   integral += front;
-  front *= Kp;             //比例制御
-  front += integral * Ki;  //積分制御
-  front = front - (gyro.differentialRead() * Kd);  //微分制御
+  front *= Kp;                           //比例制御
+  front += integral * Ki;                //積分制御
+  _front = front;
+  _front += (gyro.differentialDeg * Kd);  //微分制御
+  
+  if((gyro.deg > 180 ? gyro.deg - 360 : gyro.deg) > 0){
+    _front = max(correctionMinimum, _front);
+  } else {
+    _front = min(-correctionMinimum, _front);
+  }
 
-  // if (integralTimer + 3000 <= millis()) {
-  //   integralTimer = millis();
-  //   integral = 0;
-  // }
-
-  if (gyro.deg <= 5 && gyro.deg >= 355) {
+  if (gyro.deg <= 7 && gyro.deg >= 353) {
     integral = 0;
   }
 
-  correctionVal = round(front);
+  correctionVal = round(_front);
   correctionVal = constrain(correctionVal, -75, 75);
 
   Serial.println(front);
 
-  float s;
-  if (_deg == 0) {
-    val[0] = 97;
-    val[1] = -100;
-    val[2] = 0;
-  } else if (_deg == 23 || _deg == 22) {
-    val[0] = 100;
-    val[1] = -36;
-    val[2] = -23;
-  } else if (_deg == 45) {
-    val[0] = 100;
-    val[1] = -15;
-    val[2] = -60;
-  } else if (_deg == 68 || _deg == 67) {
-    val[0] = 100;
-    val[1] = 13;
-    val[2] = -90;
-  } else if (_deg == 90) {
-    val[0] = 40;  // 34
-    val[1] = 40;
-    val[2] = -100;
-  } else if (_deg == 113 || _deg == 112) {
-    val[0] = 13;
-    val[1] = 100;
-    val[2] = -90;
-  } else if (_deg == 135) {
-    val[0] = -20;
-    val[1] = 100;
-    val[2] = -48;
-  } else if (_deg == 158 || _deg == 157) {
-    val[0] = -34;
-    val[1] = 100;
-    val[2] = -27;
-  } else if (_deg == 180) {
-    val[0] = -90;
-    val[1] = 100;
-    val[2] = 0;
-  } else if (_deg == 203 || _deg == 202) {
-    val[0] = -100;
-    val[1] = 34;
-    val[2] = 27;
-  } else if (_deg == 225) {
-    val[0] = -100;
-    val[1] = 20;
-    val[2] = 48;
-  } else if (_deg == 248 || _deg == 247) {
-    val[0] = -100;
-    val[1] = -13;
-    val[2] = 90;
-  } else if (_deg == 270) {
-    val[0] = -40;  //-34
-    val[1] = -40;  //-34
-    val[2] = 100;
-  } else if (_deg == 293 || _deg == 292) {
-    val[0] = -13;
-    val[1] = -100;
-    val[2] = 90;
-  } else if (_deg == 315) {
-    val[0] = 15;
-    val[1] = -100;
-    val[2] = 60;
-  } else if (_deg == 338 || _deg == 337) {
-    val[0] = 34;
-    val[1] = -100;
-    val[2] = 23;
-  } else {
-    val[0] = int(sin(radians(_deg - 300)) * 100.0);
-    val[1] = int(sin(radians(_deg - 60)) * 100.0);
-    val[2] = int(sin(radians(_deg - 180)) * 100.0);
-
-    if (abs(val[0]) < abs(val[1])) {
-      if (abs(val[1]) < abs(val[2])) {
-        s = 100.0 / (float)abs(val[2]);
-      } else {
-        s = 100.0 / (float)abs(val[1]);
-      }
-    } else {
-      if (abs(val[0]) < abs(val[2])) {
-        s = 100.0 / (float)abs(val[2]);
-      } else {
-        s = 100.0 / (float)abs(val[0]);
-      }
-    }
-    val[0] = round((float)val[0] * s);
-    val[1] = round((float)val[1] * s);
-    val[2] = round((float)val[2] * s);
-  }
-
-  for (int i = 0; i <= 2; i++) {
-    val[i] += correctionVal;
-  }
-
-  if (abs(val[0]) < abs(val[1])) {
-    if (abs(val[1]) < abs(val[2])) {
-      s = 100.0 / (float)abs(val[2]);
-    } else {
-      s = 100.0 / (float)abs(val[1]);
-    }
-  } else {
-    if (abs(val[0]) < abs(val[2])) {
-      s = 100.0 / (float)abs(val[2]);
-    } else {
-      s = 100.0 / (float)abs(val[0]);
-    }
-  }
-  val[0] = round((float)val[0] * s);
-  val[1] = round((float)val[1] * s);
-  val[2] = round((float)val[2] * s);
-
-  for (int i = 0; i <= 2; i++) {
-    val[i] = map(val[i], -100, 100, -_power, _power);
-    val[i] = constrain(val[i], -100, 100);
-  }
-
-  if (gyro.deg >= 60 && gyro.deg <= 300) {
-    for (int i = 0; i <= 2; i++) {
-      if (correctionVal <= 30 && correctionVal >= -30) {
-        if (correctionVal >= 0) {
-          val[i] = 35;
-        } else {
-          val[i] = -35;
-        }
-      } else {
-        val[i] = correctionVal;
-      }
-    }
-  }
-  gyro.deg = gyro.read();
   if (_deg == NULL && _power == NULL) {
     for (int i = 0; i <= 2; i++) {
-      if (gyro.deg <= 5 || gyro.deg >= 355) {
+      if (gyro.deg <= 7 || gyro.deg >= 353) {
         val[i] = 0;
       } else {
-        if (abs(correctionVal) <= 15) {
+        if (abs(correctionVal) <= correctionMinimum) {
           if (correctionVal >= 0) {
-            val[i] = 15;
+            val[i] = correctionMinimum;
           } else {
-            val[i] = -15;
+            val[i] = -correctionMinimum;
           }
         } else {
           val[i] = correctionVal;

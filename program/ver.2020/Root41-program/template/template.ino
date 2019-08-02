@@ -44,23 +44,21 @@ class _motor {
 
   int val[3];
 
-  int deg;
-  int power;
-
  private:
+  int front = 0;
+  int _front;
+  float Kp;
+  float Ki;
+  float Kd;
+
   int correctionVal = 0;
   int integral = 0;
-
-  float front;
-
-  unsigned long integralTimer = 0;
-
 } motor;
 
 class _gyro {
  public:
   int read(void);
-  float differentialRead(void);
+  int differentialRead(void);
   void setting(void);
 
   int deg;

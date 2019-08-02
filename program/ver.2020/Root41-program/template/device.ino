@@ -1,4 +1,11 @@
 void _device::initialize(void) {
+  RGBLED.begin();
+  RGBLED.show();
+  RGBLED.begin();
+  RGBLED.setBrightness(LED.bright);
+  LED.changeAll(0, 255, 0);
+  RGBLED.show();
+
   for (int i = 0; i <= 15; i++) {
     pinMode(BALL[i], INPUT);
   }
@@ -37,4 +44,6 @@ void _device::check(void) {
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
   }
+
+  gyro.differentialDeg = gyro.differentialRead();
 }
