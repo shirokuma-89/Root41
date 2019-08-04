@@ -40,8 +40,8 @@ RESTART:
   mpu.setXGyroOffset(gyro.eeprom[0]);
   mpu.setYGyroOffset(gyro.eeprom[1]);
   mpu.setZGyroOffset(gyro.eeprom[2]);
-  mpu.setXAccelOffset(gyro.eeprom[3]);
-  mpu.setYAccelOffset(gyro.eeprom[4]);
+  // mpu.setXAccelOffset(gyro.eeprom[3]);
+  // mpu.setYAccelOffset(gyro.eeprom[4]);
   mpu.setZAccelOffset(gyro.eeprom[5]);
   mpu.setDMPEnabled(true);
 

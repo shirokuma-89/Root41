@@ -90,7 +90,7 @@ class _LED {
 
   bool white = false;
 
-  int bright = 30;
+  int bright = 100;
   int i, j;
 
   unsigned long timer;
@@ -124,9 +124,7 @@ void setup(void) {
     delay(15);
   }
 
-  delay(300);
-
-  // gyro.offset = gyro.read();
+  delay(500);
 }
 
 void loop(void) {
