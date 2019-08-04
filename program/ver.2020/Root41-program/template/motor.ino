@@ -32,7 +32,7 @@ void _motor::drive(int _deg, int _power) {
   gyro.deg = gyro.read();
 
   //姿勢制御
-  Kp = 0.75;  // 0.747
+  Kp = 0.75;   // 0.747
   Ki = 0.006;  // 0.008
   Kd = 0.55;   // 0.1
 
@@ -42,12 +42,12 @@ void _motor::drive(int _deg, int _power) {
   front = front > 180 ? front - 360 : front;
 
   integral += front;
-  front *= Kp;                           //比例制御
-  front += integral * Ki;                //積分制御
+  front *= Kp;             //比例制御
+  front += integral * Ki;  //積分制御
   _front = front;
   _front += (gyro.differentialDeg * Kd);  //微分制御
-  
-  if((gyro.deg > 180 ? gyro.deg - 360 : gyro.deg) > 0){
+
+  if ((gyro.deg > 180 ? gyro.deg - 360 : gyro.deg) > 0) {
     _front = max(correctionMinimum, _front);
   } else {
     _front = min(-correctionMinimum, _front);
@@ -59,10 +59,56 @@ void _motor::drive(int _deg, int _power) {
 
   correctionVal = round(_front);
   correctionVal = constrain(correctionVal, -75, 75);
+  correctionVal *= -1;
 
   Serial.println(front);
 
-  if (_deg == NULL && _power == NULL) {
+  if (!(_deg == NULL && _power == NULL)) {
+    float s;
+    val[0] = 100;
+    val[1] = -100;
+    val[2] = 0;
+
+    for (int i = 0; i <= 2; i++) {
+      val[i] += correctionVal;
+    }
+
+    if (abs(val[0]) < abs(val[1])) {
+      if (abs(val[1]) < abs(val[2])) {
+        s = 100.0 / (float)abs(val[2]);
+      } else {
+        s = 100.0 / (float)abs(val[1]);
+      }
+    } else {
+      if (abs(val[0]) < abs(val[2])) {
+        s = 100.0 / (float)abs(val[2]);
+      } else {
+        s = 100.0 / (float)abs(val[0]);
+      }
+    }
+    val[0] = round((float)val[0] * s);
+    val[1] = round((float)val[1] * s);
+    val[2] = round((float)val[2] * s);
+
+    for (int i = 0; i <= 2; i++) {
+      val[i] = map(val[i], -100, 100, -_power, _power);
+      val[i] = constrain(val[i], -100, 100);
+    }
+    
+    for (int i = 0; i <= 2; i++) {
+      if (gyro.deg >= 30 && gyro.deg <= 330) {
+        if (abs(correctionVal) <= correctionMinimum) {
+          if (correctionVal >= 0) {
+            val[i] = correctionMinimum;
+          } else {
+            val[i] = -correctionMinimum;
+          }
+        } else {
+          val[i] = correctionVal;
+        }
+      }
+    }
+  } else {
     for (int i = 0; i <= 2; i++) {
       if (gyro.deg <= 7 || gyro.deg >= 353) {
         val[i] = 0;
@@ -84,28 +130,28 @@ void _motor::drive(int _deg, int _power) {
 }
 
 void _motor::directDrive(int* p) {
-  if (*p == 0) {
+  if (*(p + 2) == 0) {
     PORTG |= _BV(5);
     PORTE |= _BV(3);
 
     digitalWrite(6, HIGH);
-  } else if (*p >= 1) {
+  } else if (*(p + 2) < 0) {
     PORTG |= _BV(5);
     PORTE &= ~(_BV(3));
 
-    if (*p >= 100) {
+    if (*(p + 2) >= 100) {
       digitalWrite(6, HIGH);
     } else {
-      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
+      analogWrite(6, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
     }
-  } else if (*p <= -1) {
+  } else if (*(p + 2) > 0) {
     PORTG &= ~(_BV(5));
     PORTE |= _BV(3);
 
-    if (*p <= -100) {
+    if (*(p + 2) <= -100) {
       digitalWrite(6, HIGH);
     } else {
-      analogWrite(6, constrain(abs(round((float)*p * 2.55)), 0, 255));
+      analogWrite(6, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
     }
   }
 
@@ -113,7 +159,7 @@ void _motor::directDrive(int* p) {
     PORTH |= _BV(4) | _BV(5);
 
     digitalWrite(9, HIGH);
-  } else if (*(p + 1) >= 1) {
+  } else if (*(p + 1) < 0) {
     PORTH |= _BV(4);
     PORTH &= ~(_BV(5));
 
@@ -122,7 +168,7 @@ void _motor::directDrive(int* p) {
     } else {
       analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
     }
-  } else if (*(p + 1) <= -1) {
+  } else if (*(p + 1) > 0) {
     PORTH &= ~(_BV(4));
     PORTH |= _BV(5);
 
@@ -133,27 +179,27 @@ void _motor::directDrive(int* p) {
     }
   }
 
-  if (*(p + 2) == 0) {
+  if (*p == 0) {
     PORTB |= _BV(4) | _BV(5);
 
     digitalWrite(12, HIGH);
-  } else if (*(p + 2) >= 1) {
+  } else if (*p < 0) {
     PORTB |= _BV(4);
     PORTB &= ~(_BV(5));
 
-    if (*(p + 2) >= 100) {
+    if (*p >= 100) {
       digitalWrite(12, HIGH);
     } else {
-      analogWrite(12, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
+      analogWrite(12, constrain(abs(round((float)*p * 2.55)), 0, 255));
     }
-  } else if (*(p + 2) <= -1) {
+  } else if (*p > 0) {
     PORTB &= ~(_BV(4));
     PORTB |= _BV(5);
 
-    if (*(p + 2) <= -100) {
+    if (*p <= -100) {
       digitalWrite(12, HIGH);
     } else {
-      analogWrite(12, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
+      analogWrite(12, constrain(abs(round((float)*p * 2.55)), 0, 255));
     }
   }
 }

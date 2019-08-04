@@ -140,6 +140,6 @@ void loop(void) {
     Serial.println(gyro.deg);
   } else if (device.mode == 1) {
     LED.changeAll(0, 0, 255);
-    motor.drive(NULL, NULL);
+    motor.drive(0, 100);
   }
 }
