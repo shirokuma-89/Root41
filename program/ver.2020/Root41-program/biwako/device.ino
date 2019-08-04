@@ -1,6 +1,9 @@
 void _device::initialize(void) {
+  Wire.begin();
+  
   RGBLED.begin();
   RGBLED.show();
+  
   RGBLED.begin();
   RGBLED.setBrightness(LED.bright);
   LED.changeAll(0, 255, 0);

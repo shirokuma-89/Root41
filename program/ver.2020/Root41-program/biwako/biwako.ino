@@ -1,9 +1,10 @@
 //ライブラリのインクルード
-#include <Adafruit_NeoPixel.h>
+#include <Wire.h>
 #include <EEPROM.h>
+#include <Timer5.h>
+#include <Adafruit_NeoPixel.h>
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
-#include <Timer5.h>
 
 //ピン番号定義
 int BALL[16] = {A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
@@ -23,6 +24,7 @@ FaBoLCDmini_AQM0802A lcd;
 
 class _ball {
  public:
+  void read(int* b);
   int val[16];
 
  private:
@@ -90,7 +92,7 @@ class _LED {
 
   bool white = false;
 
-  int bright = 100;
+  int bright = 60;
   int i, j;
 
   unsigned long timer;
