@@ -1,15 +1,16 @@
 //ライブラリのインクルード
-#include <Wire.h>
-#include <EEPROM.h>
-#include <Timer5.h>
 #include <Adafruit_NeoPixel.h>
+#include <EEPROM.h>
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
+#include <Timer5.h>
+#include <Wire.h>
 
 //ピン番号定義
 int BALL[16] = {A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
                 A8, A9, A10, A11, A12, A13, A14, A15};
 #define BALL_RESET 26
+#define BALL_HOLD 29
 
 int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
                 40, 41, 42, 43, 44, 45, 46, 47, 48, 49};
@@ -42,7 +43,7 @@ class _motor {
   _motor(void);
 
   void directDrive(int* p);
-  void drive(int _deg, int _power);
+  void drive(int _deg, int _power, bool _stop = false);
 
   int val[3];
 
@@ -87,13 +88,22 @@ class _device {
 
 class _LED {
  public:
-  void gyroShow(void);
+  void gyroShow(unsigned long _color = 'hogehoge');
   void changeAll(int red, int green, int blue);
+  void changeAll(unsigned long _color);
 
   bool white = false;
 
-  int bright = 60;
+  int bright = 150;
   int i, j;
+
+  unsigned long defaltColor;
+  unsigned long subColor;
+  unsigned long RED;
+  unsigned long BLUE;
+  unsigned long GREEN;
+  unsigned long YELLOW;
+  unsigned long WHITE;
 
   unsigned long timer;
 
@@ -108,7 +118,9 @@ void setup(void) {
   Serial.begin(115200);
 
   Wire.begin();
+
   gyro.setting();
+  gyro.read();
 
   //起動イルミネーション
   for (int i = 0; i <= 15; i++) {
@@ -118,15 +130,18 @@ void setup(void) {
     LED.changeAll(0, 0, 0);
 
     for (int k = 0; k <= i; k++) {
-      RGBLED.setPixelColor(k, 255, 255, 255);
+      RGBLED.setPixelColor(k, LED.WHITE);
     }
 
     RGBLED.show();
 
     delay(15);
   }
+  gyro.read();
 
   delay(500);
+
+  gyro.read();
 }
 
 void loop(void) {
@@ -137,9 +152,11 @@ void loop(void) {
 
     LED.gyroShow();
 
+    motor.drive(NULL, NULL, true);
+
     Serial.println(gyro.deg);
   } else if (device.mode == 1) {
-    LED.changeAll(0, 0, 255);
+    LED.gyroShow(LED.subColor);
     motor.drive(0, 100);
   }
 }

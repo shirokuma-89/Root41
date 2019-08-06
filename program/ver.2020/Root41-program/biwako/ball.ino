@@ -6,5 +6,5 @@ void _ball::read(int *b){
     *(b + i) = analogRead(BALL[i]);
   }
 
-  digitalWrite(BALL_RESET, HIGH);
+  digitalWrite(BALL_RESET, LOW);
 }
