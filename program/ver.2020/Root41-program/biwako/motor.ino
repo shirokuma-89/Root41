@@ -62,8 +62,6 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     correctionVal = constrain(correctionVal, -75, 75);
     correctionVal *= -1;
 
-    Serial.println(front);
-
     if (!(_deg == NULL && _power == NULL)) {
       float s;
       val[0] = 100;

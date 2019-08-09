@@ -1,4 +1,10 @@
 void _device::initialize(void) {
+  LED.RED = RGBLED.Color(255, 0, 0);
+  LED.BLUE = RGBLED.Color(0, 0, 255);
+  LED.GREEN = RGBLED.Color(0, 255, 0);
+  LED.YELLOW = RGBLED.Color(255, 255, 0);
+  LED.WHITE = RGBLED.Color(255, 255, 255);
+  
   Wire.begin();
 
   RGBLED.begin();
@@ -39,12 +45,6 @@ void _device::initialize(void) {
   gyro.eeprom[3] = (EEPROM[7] * 256) + EEPROM[8];
   gyro.eeprom[4] = (EEPROM[9] * 256) + EEPROM[10];
   gyro.eeprom[5] = (EEPROM[11] * 256) + EEPROM[12];
-
-  LED.RED = RGBLED.Color(255, 0, 0);
-  LED.BLUE = RGBLED.Color(0, 0, 255);
-  LED.GREEN = RGBLED.Color(0, 255, 0);
-  LED.YELLOW = RGBLED.Color(255, 255, 0);
-  LED.WHITE = RGBLED.Color(255, 255, 255);
 }
 
 void _device::check(void) {

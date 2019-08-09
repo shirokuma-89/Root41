@@ -26,7 +26,10 @@ FaBoLCDmini_AQM0802A lcd;
 class _ball {
  public:
   void read(int* b);
+  void calc(void);
+  
   int val[16];
+  int top;
 
  private:
 } ball;
@@ -157,6 +160,10 @@ void loop(void) {
     Serial.println(gyro.deg);
   } else if (device.mode == 1) {
     LED.gyroShow(LED.subColor);
-    motor.drive(0, 100);
+    ball.read(ball.val);
+    ball.calc();
+    motor.drive(NULL, NULL);
+
+    delay(50);
   }
 }
