@@ -4,7 +4,7 @@ void _device::initialize(void) {
   LED.GREEN = RGBLED.Color(0, 255, 0);
   LED.YELLOW = RGBLED.Color(255, 255, 0);
   LED.WHITE = RGBLED.Color(255, 255, 255);
-  
+
   Wire.begin();
 
   RGBLED.begin();
@@ -54,9 +54,10 @@ void _device::check(void) {
 
   if (!digitalRead(SW_RESET)) {
     device.mode = 0;
-    // asm volatile("  jmp 0");
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
+  } else if (!digitalRead(SW_2)) {
+    asm volatile("  jmp 0");
   }
 
   gyro.differentialDeg = gyro.differentialRead();

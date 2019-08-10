@@ -27,18 +27,35 @@ class _ball {
  public:
   void read(int* b);
   void calc(void);
-  
+
   int val[16];
   int top;
+  int deg;
+  int dist;
 
  private:
+  int _top;
 } ball;
 
 class _line {
  public:
+  _line(void);
+  void read(void);
+  void process(void);
+  bool flag;
   bool val[20];
+  bool logs[20];
+
+  int num = 0;
+  int space = 0;
+  int number = 0;
+
+  int count = 0;
+
+  float deg = 1000;
 
  private:
+  bool _flag;
 } line;
 
 class _motor {
@@ -49,6 +66,8 @@ class _motor {
   void drive(int _deg, int _power, bool _stop = false);
 
   int val[3];
+
+  unsigned long moveTimer = 0;
 
  private:
   int front = 0;
@@ -145,6 +164,8 @@ void setup(void) {
   delay(500);
 
   gyro.read();
+
+  // startTimer5(50);
 }
 
 void loop(void) {
@@ -159,11 +180,45 @@ void loop(void) {
 
     Serial.println(gyro.deg);
   } else if (device.mode == 1) {
-    LED.gyroShow(LED.subColor);
-    ball.read(ball.val);
-    ball.calc();
-    motor.drive(NULL, NULL);
+    if (!line.flag) {
+      LED.gyroShow(LED.subColor);
+      ball.read(ball.val);
+      ball.calc();
 
-    delay(50);
+      if (ball.val[ball.top] <= 570) {
+        motor.moveTimer = millis();
+        while (millis() - motor.moveTimer <= 20) {
+          if (!line.flag) {
+            line.process();
+            motor.drive(ball.deg, 100);
+            if (millis() - motor.moveTimer >= 10) {
+              digitalWrite(BALL_RESET, HIGH);
+            }
+          } else {
+            break;
+          }
+        }
+      } else {
+        LED.changeAll(LED.GREEN);
+        while (millis() - motor.moveTimer <= 60) {
+          if (!line.flag) {
+            line.process();
+            motor.drive(NULL, NULL);
+            if (millis() - motor.moveTimer >= 10) {
+              digitalWrite(BALL_RESET, HIGH);
+            }
+          } else {
+            break;
+          }
+        }
+      }
+    } else {
+      LED.changeAll(LED.YELLOW);
+      motor.drive(line.deg, 100);
+      Serial.print(line.logs[0]);
+      Serial.print("\t");
+      Serial.println(line.num);
+      line.process();
+    }
   }
 }
