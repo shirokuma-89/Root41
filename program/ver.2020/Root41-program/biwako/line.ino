@@ -47,8 +47,9 @@ void _line::process(void) {
     count = 0;
   }
 
-  if (count >= 5) {
+  if (count >= 1) {
     flag = true;
+    deg = (ball.deg + 180) % 360;
   }
 
   if (flag) {

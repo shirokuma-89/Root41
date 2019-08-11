@@ -57,7 +57,9 @@ void _device::check(void) {
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
   } else if (!digitalRead(SW_2)) {
-    asm volatile("  jmp 0");
+    // asm volatile("  jmp 0");
+    device.mode = 1;
+    LED.bright = 0;
   }
 
   gyro.differentialDeg = gyro.differentialRead();
