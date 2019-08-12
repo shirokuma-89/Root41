@@ -1,9 +1,9 @@
 void _ball::read(int* b) {
-  // delay(5);
-
   for (int i = 0; i <= 15; i++) {
     *(b + i) = analogRead(BALL[i]);
   }
+
+  speed = 100;
 
   if (device.robot) {
     val[6] = (val[5] * 2 + val[8]) / 3;

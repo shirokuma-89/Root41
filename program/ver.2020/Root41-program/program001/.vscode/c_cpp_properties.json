@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "C:\\\\Users\\\\Takaki\\\\AppData\\\\Local\\\\Arduino15\\\\packages\\\\arduino\\\\tools\\\\**",
-                "C:\\\\Users\\\\Takaki\\\\AppData\\\\Local\\\\Arduino15\\\\packages\\\\arduino\\\\hardware\\\\avr\\\\1.6.21\\\\**"
+                "C:\\\\Users\\\\Takaki\\\\AppData\\\\Local\\\\Arduino15\\\\packages\\\\arduino\\\\hardware\\\\avr\\\\1.6.21\\\\**",
+                "C:\\\\Users\\\\Takaki\\\\Documents\\\\code\\\\Arduino\\\\**"
             ],
             "forcedInclude": [
                 "C:\\\\Users\\\\Takaki\\\\AppData\\\\Local\\\\Arduino15\\\\packages\\\\arduino\\\\hardware\\\\avr\\\\1.6.21\\\\cores\\\\arduino\\\\Arduino.h"
