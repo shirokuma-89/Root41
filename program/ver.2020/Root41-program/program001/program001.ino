@@ -165,7 +165,7 @@ void setup(void) {
 void loop(void) {
   device.check();
 
-  if (device.mode == 0) {  //大気中
+  if (device.mode == 0) {  //待機中
     gyro.deg = gyro.read();
 
     LED.gyroShow();
