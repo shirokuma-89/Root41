@@ -40,8 +40,8 @@ RESTART:
   mpu.setXGyroOffset(gyro.eeprom[0]);
   mpu.setYGyroOffset(gyro.eeprom[1]);
   mpu.setZGyroOffset(gyro.eeprom[2]);
-  mpu.setXAccelOffset(gyro.eeprom[3]);
-  mpu.setYAccelOffset(gyro.eeprom[4]);
+  // mpu.setXAccelOffset(gyro.eeprom[3]);
+  // mpu.setYAccelOffset(gyro.eeprom[4]);
   mpu.setZAccelOffset(gyro.eeprom[5]);
   mpu.setDMPEnabled(true);
 
@@ -108,42 +108,4 @@ int _gyro::differentialRead(void) {
   mpu.dmpGetGyro(&dmpgyro, fifoBuffer);
 
   return dmpgyro.z;
-}
-
-bool _gyro::pickUp(void) {
-  bool foo;
-
-  if (true) {
-    foo = false;
-    mpuIntStatus = false;
-    mpuIntStatus = mpu.getIntStatus();
-    fifoCount = mpu.getFIFOCount();
-    if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
-      mpu.resetFIFO();
-    } else if (mpuIntStatus & 0x02) {
-      while (fifoCount < packetSize) {
-        fifoCount = mpu.getFIFOCount();
-      }
-      mpu.getFIFOBytes(fifoBuffer, packetSize);
-      fifoCount -= packetSize;
-      mpu.dmpGetQuaternion(&q, fifoBuffer);
-      mpu.dmpGetGravity(&gravity, &q);
-      mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      if (abs(degrees(ypr[1])) >= 20 || abs(degrees(ypr[2])) >= 20){
-        foo = true;
-      }
-    }
-  } else {
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetAccel(&aa, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-
-    if (aa.z >= 9500) {
-      foo = true;
-    } else {
-      foo = false;
-    }
-  }
-  return foo;
 }

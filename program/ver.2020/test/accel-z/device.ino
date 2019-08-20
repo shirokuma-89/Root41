@@ -63,5 +63,4 @@ void _device::check(void) {
   }
 
   gyro.differentialDeg = gyro.differentialRead();
-  gyro.pickUpAns = gyro.pickUp();
 }

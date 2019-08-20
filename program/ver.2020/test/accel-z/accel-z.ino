@@ -23,36 +23,6 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
 
-class _ball {
- public:
-  void read(int* b);
-  void calc(void);
-
-  int val[16];
-  int speed = 100;
-  int top;
-  int deg;
-  int dist;
-
- private:
-  int _top;
-} ball;
-
-class _line {
- public:
-  _line(void);
-  void read(void);
-  void process(void);
-
-  bool flag;
-  bool val[20];
-
-  float deg = 1000;
-
- private:
-  bool _flag;
-} line;
-
 class _motor {
  public:
   _motor(void);
@@ -81,7 +51,6 @@ class _gyro {
  public:
   int read(void);
   int differentialRead(void);
-  bool pickUp(void);
   void setting(void);
 
   int deg;
@@ -89,11 +58,8 @@ class _gyro {
   int eeprom[6];
   int offset;
 
-  bool pickUpAns = false;
-
  private:
-  unsigned long pickUpTimer;
-  bool p_az;
+  // none
 } gyro;
 
 class _device {
@@ -139,6 +105,8 @@ void setup(void) {
 
   Serial.begin(115200);
 
+  Wire.begin();
+
   gyro.setting();
   gyro.read();
 
@@ -173,8 +141,7 @@ void loop(void) {
     LED.gyroShow();
 
     motor.drive(NULL, NULL, true);
-
-    Serial.println(gyro.deg);
   } else if (device.mode == 1) {
+    
   }
 }
