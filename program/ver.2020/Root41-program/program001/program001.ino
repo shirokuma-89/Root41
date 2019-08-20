@@ -81,6 +81,7 @@ class _gyro {
  public:
   int read(void);
   int differentialRead(void);
+  bool pickUp(void);
   void setting(void);
 
   int deg;
@@ -88,8 +89,11 @@ class _gyro {
   int eeprom[6];
   int offset;
 
+  bool pickUpAns = false;
+
  private:
-  // none
+  unsigned long pickUpTimer;
+  bool p_az;
 } gyro;
 
 class _device {
@@ -135,8 +139,6 @@ void setup(void) {
 
   Serial.begin(115200);
 
-  Wire.begin();
-
   gyro.setting();
   gyro.read();
 
@@ -174,32 +176,5 @@ void loop(void) {
 
     Serial.println(gyro.deg);
   } else if (device.mode == 1) {
-    if (!line.flag) {
-      LED.gyroShow(LED.subColor);
-      ball.read(ball.val);
-      ball.calc();
-
-      if (ball.val[ball.top] <= 570) {
-        motor.moveTimer = millis();
-        while (millis() - motor.moveTimer <= motor.move && !line.flag) {
-          motor.drive(ball.deg, ball.speed);
-          if (millis() - motor.moveTimer >= 10) {
-            digitalWrite(BALL_RESET, HIGH);
-          }
-        }
-      } else {
-        LED.changeAll(LED.GREEN);
-        while (millis() - motor.moveTimer <= motor.move && !line.flag) {
-          motor.drive(NULL, NULL);
-          if (millis() - motor.moveTimer >= 10) {
-            digitalWrite(BALL_RESET, HIGH);
-          }
-        }
-      }
-    } else {
-      LED.changeAll(LED.YELLOW);
-
-      motor.drive(line.deg, 100);
-    }
   }
 }
