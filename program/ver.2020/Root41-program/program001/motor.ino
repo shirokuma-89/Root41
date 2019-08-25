@@ -45,7 +45,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     front *= Kp;             //比例制御
     front += integral * Ki;  //積分制御
     _front = front;
-    _front += (gyro.differentialDeg * Kd);  //微分制御
+    _front += (gyro.differentialRead() * Kd);  //微分制御
 
     //角度補正の最小絶対値をcorrectionMinimumに設定
     if ((gyro.deg > 180 ? gyro.deg - 360 : gyro.deg) > 0) {

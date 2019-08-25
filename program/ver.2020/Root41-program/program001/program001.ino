@@ -36,6 +36,9 @@ class _ball {
 
  private:
   int _top;
+
+  float x;
+  float y;
 } ball;
 
 class _line {
@@ -133,9 +136,26 @@ class _LED {
   // none
 } LED;
 
+class _LCD {
+ public:
+  int output = 0;
+
+  int data = NULL;
+  String unit = "NULL";
+
+  unsigned long timer;
+
+ private:
+} LCD;
+
 void setup(void) {
   device.initialize();
   device.mode = 0;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("STARTING...");
+  lcd.setCursor(0, 1);
 
   Serial.begin(115200);
 
@@ -174,7 +194,61 @@ void loop(void) {
 
     motor.drive(NULL, NULL, true);
 
-    Serial.println(gyro.deg);
+    if (millis() - LCD.timer >= 200) {
+      lcd.clear();
+      lcd.print("WAITING...");
+
+      lcd.setCursor(0, 1);
+      lcd.print("DEG:");
+      lcd.print(gyro.deg);
+      lcd.write(B11011111);
+
+      LCD.timer = millis();
+      LCD.output = 1;
+    }
   } else if (device.mode == 1) {
+    ball.read(ball.val);
+    ball.calc();
+
+    if (ball.val[ball.top] <= 650) {
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 20) {
+        motor.drive(ball.deg, 100);
+        if (millis() - motor.moveTimer >= 10) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    } else {
+      LED.changeAll(LED.GREEN);
+      while (millis() - motor.moveTimer <= 40) {
+        motor.drive(NULL, NULL);
+        if (millis() - motor.moveTimer >= 30) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    }
+
+    if (device.process == LOW) {
+      if (millis() - LCD.timer >= 200) {
+        lcd.clear();
+        lcd.print("RUNNING! Offence");
+
+        lcd.setCursor(0, 1);
+        if (LCD.unit != "NULL") {
+          lcd.print("INFO:");
+          lcd.print(LCD.data);
+          lcd.print(LCD.unit);
+        }
+
+        LCD.timer = millis();
+        LCD.output = 1;
+      }
+    } else {
+      if (LCD.output != 1) {
+        lcd.clear();
+        lcd.print("RUNNING!");
+        LCD.output = 1;
+      }
+    }
   }
 }

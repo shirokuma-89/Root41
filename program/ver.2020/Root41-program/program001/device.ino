@@ -45,6 +45,17 @@ void _device::initialize(void) {
   gyro.eeprom[3] = (EEPROM[7] * 256) + EEPROM[8];
   gyro.eeprom[4] = (EEPROM[9] * 256) + EEPROM[10];
   gyro.eeprom[5] = (EEPROM[11] * 256) + EEPROM[12];
+  
+  lcd.begin();
+  lcd.command(0x38);
+  lcd.command(0x39);
+  lcd.command(0x14);
+  lcd.command(0x73);
+  lcd.command(0x51);
+  lcd.command(0x6c);
+  lcd.command(0x38);
+  lcd.command(0x01);
+  lcd.command(0x0c);
 }
 
 void _device::check(void) {

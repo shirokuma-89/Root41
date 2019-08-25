@@ -17,35 +17,26 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
-  top = 0;
-
+  x = 0;
+  y = 0;
   for (int i = 0; i <= 15; i++) {
-    if (val[top] >= val[i]) {
-      top = i;
-    }
+    x += sin(radians(22.5 * i)) * val[i];
+    y += cos(radians(22.5 * i)) * val[i];
   }
+  deg = degrees(atan2(x, y));
+  deg += 180;
+  deg %= 360;
 
-  dist = 0;
+  int hoge = 0;
   for (int i = 0; i <= 15; i++) {
-    if (val[i] <= 420) {
-      dist++;
+    if (deg <= (i + 1) * 22.5) {
+      hoge = i;
+      break;
     }
   }
 
-  _top = top;
+  deg = hoge * 22.5;
 
-  // Serial.println(dist);
-
-  if (top > 1 && top < 15) {
-    if (val[top] <= 280 || (top <= 9 && top >= 7 && val[8] <= 310)) {
-      if (top <= 8) {
-        _top += 4;
-      } else {
-        _top -= 4;
-      }
-    }
-  }
-
-  deg = _top * 22.5;
-  Serial.println(top);
+  LCD.data = deg;
+  LCD.unit = "DEG";
 }
