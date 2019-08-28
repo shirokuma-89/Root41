@@ -34,7 +34,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     //姿勢制御
     Kp = 0.74;   //比例定数
     Ki = 0.015;  //積分定数
-    Kd = 0.08;   //微分定数
+    Kd = 0.11;   //微分定数
 
     static int correctionMinimum = 10;  //角度補正の最小絶対値
 

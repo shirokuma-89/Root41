@@ -34,8 +34,11 @@ class _ball {
   int deg;
   int dist;
 
+  bool exist;
+
  private:
   int _top;
+  int exCount = 0;
 
   float x;
   float y;
@@ -117,6 +120,7 @@ class _LED {
   void gyroShow(unsigned long _color = 'hogehoge');
   void changeAll(int red, int green, int blue);
   void changeAll(unsigned long _color);
+  void degShow(int d, unsigned long _color = 'hogehoge');
 
   bool white = false;
 
@@ -210,24 +214,28 @@ void loop(void) {
     ball.read(ball.val);
     ball.calc();
 
-    if (ball.val[ball.top] <= 650) {
+    //駆動
+    if (ball.exist) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
+        LED.degShow(ball.deg);
         motor.drive(ball.deg, 100);
-        if (millis() - motor.moveTimer >= 10) {
+        if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }
     } else {
       LED.changeAll(LED.GREEN);
-      while (millis() - motor.moveTimer <= 40) {
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 20) {
         motor.drive(NULL, NULL);
-        if (millis() - motor.moveTimer >= 30) {
+        if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }
     }
 
+    // LCD
     if (device.process == LOW) {
       if (millis() - LCD.timer >= 200) {
         lcd.clear();
