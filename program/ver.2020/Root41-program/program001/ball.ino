@@ -24,13 +24,6 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
-  x = 0;
-  y = 0;
-  for (int i = 0; i <= 15; i++) {
-    x += sin(radians(22.5 * i)) * val[i];
-    y += cos(radians(22.5 * i)) * val[i];
-  }
-
   top = 0;
   for (int i = 0; i <= 15; i++) {
     if (val[i] <= val[top]) {
@@ -38,20 +31,23 @@ void _ball::calc(void) {
     }
   }
 
-  deg = degrees(atan2(x, y));
-  deg += 180;
-  deg %= 360;
-
-  int hoge = 0;
-  for (int i = 0; i <= 15; i++) {
-    if (deg <= (i + 1) * 22.5) {
-      hoge = i;
-      break;
-    }
-  }
-
-  deg = hoge * 22.5;
   deg = top * 22.5;
+  if (top > 1 || top < 15) {
+    if (deg >= 180) {
+      deg -= 360;
+    }
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.115);
+    deg += 720;
+    deg %= 360;
+    
+    // if(top >= 6 && top <= 10 && val[top] <= 300){
+    //   if (deg >= 180){
+    //     deg += -90;
+    //   } else {
+    //     deg += 90;
+    //   }
+    // }
+  }
 
   LCD.data = deg;
   LCD.unit = "DEG";

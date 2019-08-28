@@ -4,6 +4,8 @@ void _device::initialize(void) {
   LED.GREEN = RGBLED.Color(0, 255, 0);
   LED.YELLOW = RGBLED.Color(255, 255, 0);
   LED.WHITE = RGBLED.Color(255, 255, 255);
+  LED.PURPLE = RGBLED.Color(255, 0, 200);
+  LED.LIME = RGBLED.Color(170, 255, 14);
 
   Wire.begin();
 
@@ -45,7 +47,7 @@ void _device::initialize(void) {
   gyro.eeprom[3] = (EEPROM[7] * 256) + EEPROM[8];
   gyro.eeprom[4] = (EEPROM[9] * 256) + EEPROM[10];
   gyro.eeprom[5] = (EEPROM[11] * 256) + EEPROM[12];
-  
+
   lcd.begin();
   lcd.command(0x38);
   lcd.command(0x39);
@@ -64,13 +66,26 @@ void _device::check(void) {
   RGBLED.clear();
 
   if (!digitalRead(SW_RESET)) {
-    device.mode = 0;
+    if ((!digitalRead(SW_1) || !digitalRead(SW_2)) && device.mode == 0) {
+      RGBLED.begin();
+      LED.changeAll(LED.LIME);
+      RGBLED.show();
+      lcd.clear();
+      lcd.print("GYRO SENSER");
+      lcd.setCursor(0, 1);
+      lcd.print("RESETTING...");
+      gyro.setting();
+      delay(200);
+    } else {
+      device.mode = 0;
+    }
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
+    LED.white = false;
   } else if (!digitalRead(SW_2)) {
     // asm volatile("  jmp 0");
     device.mode = 1;
-    LED.bright = 0;
+    LED.white = true;
   }
 
   gyro.differentialDeg = gyro.differentialRead();

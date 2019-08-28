@@ -82,13 +82,25 @@ void _LED::degShow(int d, unsigned long _color = 'hogehoge') {
 }
 
 void _LED::changeAll(int red, int green, int blue) {
-  for (int i = 0; i <= 15; i++) {
-    RGBLED.setPixelColor(i, red, green, blue);
+  if (!LED.white) {
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, red, green, blue);
+    }
+  } else {
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, 0, 0, 0);
+    }
   }
 }
 
 void _LED::changeAll(unsigned long _color) {
-  for (int i = 0; i <= 15; i++) {
-    RGBLED.setPixelColor(i, _color);
+  if (!LED.white) {
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, _color);
+    }
+  } else {
+    for (int i = 0; i <= 15; i++) {
+      RGBLED.setPixelColor(i, 0, 0, 0);
+    }
   }
 }

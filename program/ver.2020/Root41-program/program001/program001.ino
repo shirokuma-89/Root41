@@ -133,6 +133,8 @@ class _LED {
   unsigned long GREEN;
   unsigned long YELLOW;
   unsigned long WHITE;
+  unsigned long PURPLE;
+  unsigned long LIME;
 
   unsigned long timer;
 
@@ -225,7 +227,7 @@ void loop(void) {
         }
       }
     } else {
-      LED.changeAll(LED.GREEN);
+      LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
         motor.drive(NULL, NULL);
