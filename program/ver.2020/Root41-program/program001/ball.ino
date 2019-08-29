@@ -37,22 +37,27 @@ void _ball::calc(void) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.109);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.108);
     deg += 720;
     deg %= 360;
   }
 
-  if (top > 6 && top < 10) {
-    if (val[top] <= 350) {
+  if (top > 1 && top < 15) {
+    if (val[top] <= 320) {
       if (deg >= 180) {
-        deg += -22.5;
+        deg += -35;
       } else {
-        deg += 22.5;
+        deg += 35;
       }
     }
   }
-  
-  // if (top > 1 &&  top < 15) {
+
+  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
+    deg = 0;
+    hold = true;
+  } else {
+    hold = false;
+  }
 
   LCD.data = deg;
   LCD.unit = "DEG";

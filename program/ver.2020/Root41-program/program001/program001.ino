@@ -221,9 +221,14 @@ void loop(void) {
     if (ball.exist) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 15) {
-        LED.degShow(ball.deg);
         if (ball.hold) {
           LED.changeAll(LED.GREEN);
+        } else {
+          if (ball.val[ball.top] <= 320) {
+            LED.degShow(ball.deg, LED.YELLOW);
+          } else {
+            LED.degShow(ball.deg);
+          }
         }
         motor.drive(ball.deg, 100);
         if (millis() - motor.moveTimer >= 2) {
