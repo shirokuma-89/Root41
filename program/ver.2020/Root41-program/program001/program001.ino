@@ -34,8 +34,17 @@ class _ball {
   int deg;
   int dist;
 
+  bool exist;
+  bool hold = false;
+  bool turn;
+  bool emg;
+
  private:
   int _top;
+  int exCount = true;
+
+  float x;
+  float y;
 } ball;
 
 class _line {
@@ -114,6 +123,7 @@ class _LED {
   void gyroShow(unsigned long _color = 'hogehoge');
   void changeAll(int red, int green, int blue);
   void changeAll(unsigned long _color);
+  void degShow(int d, unsigned long _color = 'hogehoge');
 
   bool white = false;
 
@@ -126,6 +136,8 @@ class _LED {
   unsigned long GREEN;
   unsigned long YELLOW;
   unsigned long WHITE;
+  unsigned long PURPLE;
+  unsigned long LIME;
 
   unsigned long timer;
 
@@ -133,9 +145,26 @@ class _LED {
   // none
 } LED;
 
+class _LCD {
+ public:
+  int output = 0;
+
+  int data = NULL;
+  String unit = "NULL";
+
+  unsigned long timer;
+
+ private:
+} LCD;
+
 void setup(void) {
   device.initialize();
   device.mode = 0;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("STARTING...");
+  lcd.setCursor(0, 1);
 
   Serial.begin(115200);
 
@@ -174,7 +203,75 @@ void loop(void) {
 
     motor.drive(NULL, NULL, true);
 
-    Serial.println(gyro.deg);
+    if (millis() - LCD.timer >= 200) {
+      lcd.clear();
+      lcd.print("WAITING...");
+
+      lcd.setCursor(0, 1);
+      lcd.print("DEG:");
+      lcd.print(gyro.deg);
+      lcd.write(B11011111);
+
+      LCD.timer = millis();
+      LCD.output = 1;
+    }
   } else if (device.mode == 1) {
+    ball.read(ball.val);
+    ball.calc();
+
+    //駆動
+    if (ball.exist) {
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 15) {
+        if (ball.hold) {
+          LED.changeAll(LED.subColor);
+        } else {
+          if (ball.emg) {
+            LED.degShow(ball.deg, LED.LIME);
+          } else if (ball.turn) {
+            LED.degShow(ball.deg, LED.GREEN);
+          } else {
+            LED.degShow(ball.deg);
+          }
+        }
+        motor.drive(ball.deg, ball.speed);
+        if (millis() - motor.moveTimer >= 2) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    } else {
+      LED.changeAll(LED.PURPLE);
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 20) {
+        motor.drive(NULL, NULL);
+        if (millis() - motor.moveTimer >= 5) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    }
+
+    // LCD
+    if (device.process == LOW) {
+      if (millis() - LCD.timer >= 200) {
+        lcd.clear();
+        lcd.print("RUNNING! Offence");
+
+        lcd.setCursor(0, 1);
+        if (LCD.unit != "NULL") {
+          lcd.print("INFO:");
+          lcd.print(LCD.data);
+          lcd.print(LCD.unit);
+        }
+
+        LCD.timer = millis();
+        LCD.output = 1;
+      }
+    } else {
+      if (LCD.output != 1) {
+        lcd.clear();
+        lcd.print("RUNNING!");
+        LCD.output = 1;
+      }
+    }
   }
 }
