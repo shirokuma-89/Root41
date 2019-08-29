@@ -36,6 +36,8 @@ class _ball {
 
   bool exist;
   bool hold = false;
+  bool turn;
+  bool emg;
 
  private:
   int _top;
@@ -222,15 +224,17 @@ void loop(void) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 15) {
         if (ball.hold) {
-          LED.changeAll(LED.GREEN);
+          LED.changeAll(LED.subColor);
         } else {
-          if (ball.val[ball.top] <= 320) {
-            LED.degShow(ball.deg, LED.YELLOW);
+          if (ball.emg) {
+            LED.degShow(ball.deg, LED.LIME);
+          } else if (ball.turn) {
+            LED.degShow(ball.deg, LED.GREEN);
           } else {
             LED.degShow(ball.deg);
           }
         }
-        motor.drive(ball.deg, 100);
+        motor.drive(ball.deg, ball.speed);
         if (millis() - motor.moveTimer >= 2) {
           digitalWrite(BALL_RESET, HIGH);
         }

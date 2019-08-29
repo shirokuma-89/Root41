@@ -24,6 +24,7 @@ void _ball::read(int* b) {
 }
 
 void _ball::calc(void) {
+  speed = 100;
   top = 0;
   for (int i = 0; i <= 15; i++) {
     if (val[i] <= val[top]) {
@@ -37,17 +38,41 @@ void _ball::calc(void) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.108);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.104);
     deg += 720;
     deg %= 360;
   }
 
+  turn = false;
   if (top > 1 && top < 15) {
-    if (val[top] <= 320) {
+    if (val[top] <= 290) {
+      turn = true;
       if (deg >= 180) {
-        deg += -35;
+        if (top >= 14) {
+          deg += -15;
+          speed = 50;
+        } else {
+          deg += -37;
+        }
       } else {
-        deg += 35;
+        if (top <= 2) {
+          speed = 50;
+          deg += 15;
+        } else {
+          deg += 37;
+        }
+      }
+    }
+  }
+
+  emg = false;
+  if (top > 6 && top < 10) {
+    if (val[top] <= 240) {
+      emg = true;
+      if (top >= 8) {
+        deg = 113;
+      } else {
+        deg = 248;
       }
     }
   }

@@ -39,7 +39,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     int correctionMinimum = 5;  //角度補正の最小絶対値
 
     if (_deg == NULL && _power == NULL) {
-      correctionMinimum = 15;
+      correctionMinimum = 20;
     }
 
     front = gyro.deg;
