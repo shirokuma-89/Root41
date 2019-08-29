@@ -8,7 +8,7 @@ _motor::_motor(void) {
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-  
+
   //モーターを開放
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
@@ -32,11 +32,15 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.93;   //比例定数
+    Kp = 0.72;   //比例定数
     Ki = 0.015;  //積分定数
     Kd = 0.1;   //微分定数
 
-    static int correctionMinimum = 8;  //角度補正の最小絶対値
+    int correctionMinimum = 5;  //角度補正の最小絶対値
+
+    if (_deg == NULL && _power == NULL) {
+      correctionMinimum = 15;
+    }
 
     front = gyro.deg;
     front = front > 180 ? front - 360 : front;
@@ -61,6 +65,9 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     correctionVal = _front;
     correctionVal = constrain(correctionVal, -75, 75);
+    if (gyro.deg <= 5 && gyro.deg >= 355) {
+      correctionVal = 0;
+    }
 
     if (!(_deg == NULL && _power == NULL)) {
       float s;
@@ -153,7 +160,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
       for (int i = 0; i <= 2; i++) {
         val[i] *= -1;
-        val[i] += correctionVal * 0.75;
+        val[i] += correctionVal;
       }
 
       if (abs(val[0]) < abs(val[1])) {
@@ -179,7 +186,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        if (gyro.deg >= 50 && gyro.deg <= 310) {
+        if (gyro.deg >= 40 && gyro.deg <= 340) {
           if (abs(correctionVal) <= correctionMinimum) {
             if (correctionVal >= 0) {
               val[i] = correctionMinimum;

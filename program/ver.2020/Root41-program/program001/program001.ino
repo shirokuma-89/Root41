@@ -35,10 +35,11 @@ class _ball {
   int dist;
 
   bool exist;
+  bool hold = false;
 
  private:
   int _top;
-  int exCount = 0;
+  int exCount = true;
 
   float x;
   float y;
@@ -219,10 +220,13 @@ void loop(void) {
     //駆動
     if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
+      while (millis() - motor.moveTimer <= 15) {
         LED.degShow(ball.deg);
+        if (ball.hold) {
+          LED.changeAll(LED.GREEN);
+        }
         motor.drive(ball.deg, 100);
-        if (millis() - motor.moveTimer >= 5) {
+        if (millis() - motor.moveTimer >= 2) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }

@@ -32,28 +32,33 @@ void _ball::calc(void) {
   }
 
   deg = top * 22.5;
+
   if (top > 1 || top < 15) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.115);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.109);
     deg += 720;
     deg %= 360;
-    
-    // if(top >= 6 && top <= 10 && val[top] <= 300){
-    //   if (deg >= 180){
-    //     deg += -90;
-    //   } else {
-    //     deg += 90;
-    //   }
-    // }
   }
+
+  if (top > 6 && top < 10) {
+    if (val[top] <= 350) {
+      if (deg >= 180) {
+        deg += -22.5;
+      } else {
+        deg += 22.5;
+      }
+    }
+  }
+  
+  // if (top > 1 &&  top < 15) {
 
   LCD.data = deg;
   LCD.unit = "DEG";
 
   exist = true;
-  if (val[top] <= 640) {
+  if (val[top] <= 620) {
     exCount = 0;
   } else {
     exCount++;
