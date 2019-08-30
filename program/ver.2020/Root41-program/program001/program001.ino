@@ -204,8 +204,8 @@ void setup(void) {
   gyro.read();
 
   for (int i = 0; i <= 19; i++) {
-    plus[i][0] = sin(i * 18 * 0.0174533);
-    plus[i][1] = cos(i * 18 * 0.0174533);
+    line.plus[i][0] = sin(i * 18 * 0.0174533);
+    line.plus[i][1] = cos(i * 18 * 0.0174533);
   }
 
   delay(500);
@@ -238,9 +238,17 @@ void loop(void) {
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
+    line.read();
+    line.process();
 
     //駆動
-    if (ball.exist) {
+    if (line.flag) {
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 15) {
+        LED.degShow(line.deg, LED.GREEN);
+        motor.drive(line.deg, 100);
+      }
+    } else if (ball.exist) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 15) {
         if (ball.hold) {
