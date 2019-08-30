@@ -63,6 +63,7 @@ class _line {
   int whited;
   int mode;
   int newv;
+  int last;
   int order[20] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
                    100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
@@ -206,6 +207,16 @@ void setup(void) {
   for (int i = 0; i <= 19; i++) {
     line.plus[i][0] = sin(i * 18 * 0.0174533);
     line.plus[i][1] = cos(i * 18 * 0.0174533);
+    if (i <= 3) {
+      line.plus[i][0] *= 1.7;
+      line.plus[i][1] *= 1.7;
+    } else if (i >= 5 && i <= 13) {
+      line.plus[i][0] *= 1.7;
+      line.plus[i][1] *= 1.7;
+    } else if (i >= 15) {
+      line.plus[i][0] *= 1.7;
+      line.plus[i][1] *= 1.7;
+    }
   }
 
   delay(500);
@@ -246,7 +257,11 @@ void loop(void) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 15) {
         LED.degShow(line.deg, LED.GREEN);
-        motor.drive(line.deg, 100);
+        if (line.deg == 1000) {
+          motor.drive(NULL, NULL, true);
+        } else {
+          motor.drive(line.deg, 100);
+        }
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
@@ -302,4 +317,14 @@ void loop(void) {
       }
     }
   }
+  Serial.print(line.deg);
+  Serial.print(" ");
+  Serial.print(line.overTimer);
+  Serial.print(" ");
+  Serial.print(line.stopTimer);
+  Serial.print(" ");
+  Serial.print(line.x);
+  Serial.print(" ");
+  Serial.print(line.y);
+  Serial.println(" ");
 }

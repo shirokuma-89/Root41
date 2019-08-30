@@ -15,10 +15,10 @@ void _ball::read(int* b) {
   }
 
   for (int i = 0; i <= 15; i++) {
-    Serial.print(val[i]);
-    Serial.print("\t");
+    // Serial.print(val[i]);
+    // Serial.print("\t");
   }
-  Serial.println("");
+  // Serial.println("");
 
   digitalWrite(BALL_RESET, LOW);
 }
