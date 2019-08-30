@@ -42,32 +42,38 @@ void _ball::calc(void) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.108);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
     deg += 720;
     deg %= 360;
   }
 
   turn = false;
   if (top > 0 && top < 16) {
-    if (val[top] <= 270) {
+    if (val[top] <= 264) {
       turn = true;
       if (deg >= 180) {
+        deg -= 40;
         if (top >= 14) {
-          speed = 45;
-          deg += -27;
+          if (millis() - holdTimer <= 300) {
+            deg += 45;  //打消し
+            turn = false;
+          } else {
+            speed = 35;
+          }
         } else if (top >= 10) {
-          deg += -26;
-        } else {
-          deg += -32;
+          speed = 50;
         }
       } else {
+        deg += 40;
         if (top <= 2) {
-          speed = 45;
-          deg += 27;
+          if (millis() - holdTimer <= 300) {
+            deg += 45;  //打消し
+            turn = false;
+          } else {
+            speed = 35;
+          }
         } else if (top <= 6) {
-          deg += 26;
-        } else {
-          deg += 32;
+          speed = 50;
         }
       }
     }
@@ -75,7 +81,7 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 245) {
+    if (val[top] <= 260) {
       emg = true;
       if (top >= 8) {
         deg -= 50;
@@ -88,15 +94,20 @@ void _ball::calc(void) {
   if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
     deg = 0;
     hold = true;
+    holdTimer = millis();
   } else {
     hold = false;
   }
+
+  // if (top == 0) {
+  //   holdTimer = millis();
+  // }
 
   LCD.data = deg;
   LCD.unit = "DEG";
 
   exist = true;
-  if (val[top] <= 620) {
+  if (val[top] <= 600) {
     exCount = 0;
   } else {
     exCount++;
