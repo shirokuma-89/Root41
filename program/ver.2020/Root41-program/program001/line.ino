@@ -2,7 +2,13 @@ void _line::process(void) {
   if (flag) {
     if (mode == 1 && touch) {
       //通常
-
+      line.deg = atan2(line.x, line.y);
+      line.deg = line.deg / 0.0174533;
+      if (line.deg < 180) {
+        line.deg += 180;
+      } else {
+        line.deg -= 180;
+      }
     } else if (mode == 1 && !touch) {
       //離脱時
       mode = 2;

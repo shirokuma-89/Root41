@@ -255,9 +255,17 @@ void loop(void) {
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
+    line.read();
+    line.process();
 
     //駆動
-    if (ball.exist) {
+    if (line.flag) {
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 15) {
+        LED.degShow(line.deg, LED.GREEN);
+        motor.drive(line.deg, 100);
+      }
+    } else if (ball.exist) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 30) {
         if (ball.hold) {
