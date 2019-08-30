@@ -58,39 +58,37 @@ void _line::read(void) {
           y += plus[i][1];
         }
       }
+      if (!flag) {
+        stopTimer = millis();
+      }
+      val[i] = true;
+      touch = true;
+      flag = true;
+      mode = 1;
+    } else {
+      val[i] = false;
     }
-    if (!flag) {
-      stopTimer = millis();
-    }
-    val[i] = true;
-    touch = true;
-    flag = true;
-    mode = 1;
   }
-  else {
-    val[i] = false;
-  }
-}
-for (int i = 0; i <= 19; i++) {
-  if (val[i]) {
-    for (int j = 0; j <= 19; j++) {
-      if (order[j] != i) {
-        if (j == 19) {
-          newv = i;
-          for (int k = 18; k >= 0; k--) {
-            order[k] = order[k + 1];
+  for (int i = 0; i <= 19; i++) {
+    if (val[i]) {
+      for (int j = 0; j <= 19; j++) {
+        if (order[j] != i) {
+          if (j == 19) {
+            newv = i;
+            for (int k = 18; k >= 0; k--) {
+              order[k] = order[k + 1];
+            }
+            order[0] = newv;
           }
-          order[0] = newv;
+        } else {
+          break;
         }
-      } else {
-        break;
       }
     }
   }
-}
-for (int i = 0; i <= 19; i++) {
-  if (val[i]) {
-    logs[i] = true;
+  for (int i = 0; i <= 19; i++) {
+    if (val[i]) {
+      logs[i] = true;
+    }
   }
-}
 }
