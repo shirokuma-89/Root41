@@ -77,6 +77,7 @@ class _line {
 
   unsigned long stopTimer;
   unsigned long overTimer;
+  unsigned long _millis;
 
  private:
   bool _flag;
@@ -235,6 +236,8 @@ void setup(void) {
   delay(500);
 
   gyro.read();
+
+  startTimer5(300);
 }
 
 void loop(void) {
