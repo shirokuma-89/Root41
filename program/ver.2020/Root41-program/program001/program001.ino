@@ -59,8 +59,23 @@ class _line {
 
   bool flag;
   bool val[20];
+  bool logs[20];
+  bool touch;
 
   float deg = 1000;
+
+  int whited;
+  int mode;
+  int newv;
+  int order[20] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+                   100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+
+  float plus[20][2];
+  float x;
+  float y;
+
+  unsigned long stopTimer;
+  unsigned long overTimer;
 
  private:
   bool _flag;
@@ -200,6 +215,11 @@ void setup(void) {
     delay(15);
   }
   gyro.read();
+
+  for (int i = 0; i <= 19; i++) {
+    plus[i][0] = sin(i * 18 * 0.0174533);
+    plus[i][1] = cos(i * 18 * 0.0174533);
+  }
 
   delay(500);
 
