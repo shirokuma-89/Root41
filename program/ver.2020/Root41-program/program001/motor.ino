@@ -33,7 +33,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     //姿勢制御
     Kp = 0.72;   //比例定数
-    Ki = 0.015;  //積分定数
+    Ki = 0.02;  //積分定数
     Kd = 0.1;   //微分定数
 
     int correctionMinimum = 5;  //角度補正の最小絶対値
@@ -59,7 +59,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     }
 
     //機体が前を向いたら積分していたものをクリアする
-    if (gyro.deg <= 7 && gyro.deg >= 353) {
+    if (gyro.deg <= 4 && gyro.deg >= 356) {
       integral = 0;
     }
 

@@ -47,6 +47,8 @@ class _ball {
 
   float x;
   float y;
+
+  unsigned long holdTimer;
 } ball;
 
 class _line {
@@ -237,7 +239,7 @@ void loop(void) {
     //駆動
     if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 30) {
         if (ball.hold) {
           LED.changeAll(LED.subColor);
         } else {
@@ -250,7 +252,7 @@ void loop(void) {
           }
         }
         motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 2) {
+        if (millis() - motor.moveTimer >= 15) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }
