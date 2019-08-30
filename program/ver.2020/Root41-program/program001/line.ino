@@ -1,10 +1,3 @@
-ISR(timer5Event) {
-  enableMillis();
-  line.read();
-  line.process();
-  startTimer5(1000);
-}
-
 void _line::process(void) {
   if (line.flag) {
     if (line.mode == 1 && line.touch) {
