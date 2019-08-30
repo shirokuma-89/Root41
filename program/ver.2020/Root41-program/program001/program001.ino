@@ -273,7 +273,7 @@ void loop(void) {
     if (line.flag) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 15) {
-        LED.degShow(line.deg, LED.GREEN);
+        LED.degShow(line.deg, LED.PURPLE);
         if (line.deg == 1000) {
           motor.drive(NULL, NULL, true);
         } else {
