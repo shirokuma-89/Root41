@@ -9,9 +9,16 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
+      if (millis() - stopTimer <= 100) {
+        line.deg = 1000;
+      }
     } else if (mode == 1 && !touch) {
       //離脱時
-      mode = 2;
+      if (abs(line.deg - last * 18) <= 30 || abs(line.deg - last * 18) >= 340) {
+        mode = 3;
+      } else {
+        mode = 2;
+      }
       overTimer = millis();
     } else if (mode == 2) {
       //マージン
@@ -22,7 +29,7 @@ void _line::process(void) {
       }
     } else if (mode == 3) {
       //オーバー
-      if (millis() - overTimer >= 500) {
+      if (millis() - overTimer >= 3000) {
         flag = false;
         deg = 1000;
         mode = 0;
@@ -58,8 +65,9 @@ void _line::read(void) {
   for (int i = 0; i <= 19; i++) {
     if (!digitalRead(LINE[i])) {
       if (!logs[i]) {
+        logs[i] = true;
         whited++;
-        if (whited <= 8) {
+        if (whited <= 10) {
           x += plus[i][0];
           y += plus[i][1];
         }
@@ -68,6 +76,7 @@ void _line::read(void) {
         stopTimer = millis();
       }
       val[i] = true;
+      last = i;
       touch = true;
       flag = true;
       mode = 1;
@@ -90,11 +99,6 @@ void _line::read(void) {
           break;
         }
       }
-    }
-  }
-  for (int i = 0; i <= 19; i++) {
-    if (val[i]) {
-      logs[i] = true;
     }
   }
 }
