@@ -14,6 +14,10 @@ void _ball::read(int* b) {
     val[8] = (val[7] + val[9]) / 2;
   }
 
+  // val[14] *= 0.9;
+  // val[2] *= 0.9;
+  val[0] *= 0.95;
+
   for (int i = 0; i <= 15; i++) {
     // Serial.print(val[i]);
     // Serial.print("\t");
@@ -34,32 +38,42 @@ void _ball::calc(void) {
 
   deg = top * 22.5;
 
-  if (top > 1 || top < 15) {
+  if (top > 1 && top < 15) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.104);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
     deg += 720;
     deg %= 360;
   }
 
   turn = false;
-  if (top > 1 && top < 15) {
-    if (val[top] <= 290) {
+  if (top > 0 && top < 16) {
+    if (val[top] <= 264) {
       turn = true;
       if (deg >= 180) {
+        deg -= 40;
         if (top >= 14) {
-          deg += -15;
+          if (millis() - holdTimer <= 300) {
+            deg += 45;  //打消し
+            turn = false;
+          } else {
+            speed = 35;
+          }
+        } else if (top >= 10) {
           speed = 50;
-        } else {
-          deg += -37;
         }
       } else {
+        deg += 40;
         if (top <= 2) {
+          if (millis() - holdTimer <= 300) {
+            deg += 45;  //打消し
+            turn = false;
+          } else {
+            speed = 35;
+          }
+        } else if (top <= 6) {
           speed = 50;
-          deg += 15;
-        } else {
-          deg += 37;
         }
       }
     }
@@ -67,12 +81,12 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 240) {
+    if (val[top] <= 260) {
       emg = true;
       if (top >= 8) {
-        deg = 113;
+        deg -= 50;
       } else {
-        deg = 248;
+        deg += 50;
       }
     }
   }
@@ -80,15 +94,20 @@ void _ball::calc(void) {
   if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
     deg = 0;
     hold = true;
+    holdTimer = millis();
   } else {
     hold = false;
   }
+
+  // if (top == 0) {
+  //   holdTimer = millis();
+  // }
 
   LCD.data = deg;
   LCD.unit = "DEG";
 
   exist = true;
-  if (val[top] <= 620) {
+  if (val[top] <= 600) {
     exCount = 0;
   } else {
     exCount++;
