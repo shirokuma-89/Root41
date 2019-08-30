@@ -204,8 +204,8 @@ void setup(void) {
   gyro.read();
 
   for (int i = 0; i <= 19; i++) {
-    line.plus[i][0] = sin(i * 18 * 0.0174533);
-    line.plus[i][1] = cos(i * 18 * 0.0174533);
+    plus[i][0] = sin(i * 18 * 0.0174533);
+    plus[i][1] = cos(i * 18 * 0.0174533);
   }
 
   delay(500);
