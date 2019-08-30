@@ -39,7 +39,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     int correctionMinimum = 5;  //角度補正の最小絶対値
 
     if (_deg == NULL && _power == NULL) {
-      correctionMinimum = 20;
+      correctionMinimum = 30;
     }
 
     front = gyro.deg;
@@ -194,7 +194,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
               val[i] = -correctionMinimum;
             }
           } else {
-            val[i] = correctionVal * 0.9;
+            val[i] = correctionVal;
           }
 
           LED.changeAll(LED.BLUE);

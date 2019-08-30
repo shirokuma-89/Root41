@@ -14,6 +14,10 @@ void _ball::read(int* b) {
     val[8] = (val[7] + val[9]) / 2;
   }
 
+  // val[14] *= 0.9;
+  // val[2] *= 0.9;
+  val[0] *= 0.95;
+
   for (int i = 0; i <= 15; i++) {
     Serial.print(val[i]);
     Serial.print("\t");
@@ -34,32 +38,36 @@ void _ball::calc(void) {
 
   deg = top * 22.5;
 
-  if (top > 1 || top < 15) {
+  if (top > 1 && top < 15) {
     if (deg >= 180) {
       deg -= 360;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.104);
+    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.108);
     deg += 720;
     deg %= 360;
   }
 
   turn = false;
-  if (top > 1 && top < 15) {
-    if (val[top] <= 290) {
+  if (top > 0 && top < 16) {
+    if (val[top] <= 270) {
       turn = true;
       if (deg >= 180) {
         if (top >= 14) {
-          deg += -15;
-          speed = 50;
+          speed = 45;
+          deg += -27;
+        } else if (top >= 10) {
+          deg += -26;
         } else {
-          deg += -37;
+          deg += -32;
         }
       } else {
         if (top <= 2) {
-          speed = 50;
-          deg += 15;
+          speed = 45;
+          deg += 27;
+        } else if (top <= 6) {
+          deg += 26;
         } else {
-          deg += 37;
+          deg += 32;
         }
       }
     }
@@ -67,12 +75,12 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 240) {
+    if (val[top] <= 245) {
       emg = true;
       if (top >= 8) {
-        deg = 113;
+        deg -= 50;
       } else {
-        deg = 248;
+        deg += 50;
       }
     }
   }
