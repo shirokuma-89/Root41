@@ -9,6 +9,13 @@ void _device::initialize(void) {
 
   Wire.begin();
 
+  TOF.init();
+  TOF.setTimeout(1);
+  TOF.setMeasurementTimingBudget(10);
+  // TOF.setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 12);
+  // TOF.setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange, 8);
+  TOF.startContinuous(0);
+
   RGBLED.begin();
   RGBLED.show();
 
@@ -81,11 +88,14 @@ void _device::check(void) {
     }
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
+    keeper = false;
     LED.white = false;
   } else if (!digitalRead(SW_2)) {
     // asm volatile("  jmp 0");
-    device.mode = 1;
     LED.white = true;
+    device.mode = 1;
+    keeper = true;
+    LED.white = false;
   }
 
   gyro.differentialDeg = gyro.differentialRead();

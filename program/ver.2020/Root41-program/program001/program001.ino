@@ -4,6 +4,7 @@
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <Timer5.h>
+#include <VL53L0X.h>
 #include <Wire.h>
 
 //ピン番号定義
@@ -22,6 +23,7 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 //インスタンス作成
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
+VL53L0X TOF;
 
 class _ball {
  public:
@@ -45,6 +47,8 @@ class _ball {
 
   float x;
   float y;
+
+  unsigned long holdTimer;
 } ball;
 
 class _line {
@@ -120,12 +124,21 @@ class _gyro {
   bool p_az;
 } gyro;
 
+class _tof {
+ public:
+  int read(void);
+  int dist;
+
+ private:
+} tof;
+
 class _device {
  public:
   void initialize(void);
   void check(void);
 
   bool robot;
+  bool keeper;
 
   int process = LOW;
   int mode = 0;
@@ -218,6 +231,7 @@ void loop(void) {
 
   if (device.mode == 0) {  //待機中
     gyro.deg = gyro.read();
+    tof.dist = tof.read();
 
     LED.gyroShow();
 
@@ -231,6 +245,9 @@ void loop(void) {
       lcd.print("DEG:");
       lcd.print(gyro.deg);
       lcd.write(B11011111);
+      lcd.setCursor(9, 1);
+      lcd.print(tof.dist);
+      lcd.print("mm");
 
       LCD.timer = millis();
       LCD.output = 1;
@@ -250,7 +267,7 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 30) {
         if (ball.hold) {
           LED.changeAll(LED.subColor);
         } else {
@@ -263,7 +280,7 @@ void loop(void) {
           }
         }
         motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 2) {
+        if (millis() - motor.moveTimer >= 15) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }
@@ -282,7 +299,11 @@ void loop(void) {
     if (device.process == LOW) {
       if (millis() - LCD.timer >= 200) {
         lcd.clear();
-        lcd.print("RUNNING! Offence");
+        if (!device.keeper) {
+          lcd.print("RUNNING! OFFENCE");
+        } else {
+          lcd.print("RUNNING! KEEPER");
+        }
 
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
