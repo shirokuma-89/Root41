@@ -71,12 +71,13 @@ class _line {
   int order[20] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
                    100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
-  float plus[20][2];
+  float plus[21][2];
   float x;
   float y;
 
   unsigned long stopTimer;
   unsigned long overTimer;
+  unsigned long _millis;
 
  private:
   bool _flag;
@@ -235,6 +236,8 @@ void setup(void) {
   delay(500);
 
   gyro.read();
+
+  startTimer5(300);
 }
 
 void loop(void) {
@@ -272,17 +275,15 @@ void loop(void) {
     //駆動
     if (line.flag) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 15) {
-        LED.degShow(line.deg, LED.PURPLE);
-        if (line.deg == 1000) {
-          motor.drive(NULL, NULL, true);
-        } else {
-          motor.drive(line.deg, 100);
-        }
+      LED.degShow(line.deg, LED.PURPLE);
+      if (line.deg == 1000) {
+        motor.drive(NULL, NULL, true);
+      } else {
+        motor.drive(line.deg, 100);
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 30) {
+      while (millis() - motor.moveTimer <= 20) {
         line.read();
         line.process();
         if (line.flag) {
@@ -300,7 +301,7 @@ void loop(void) {
           }
         }
         motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 15) {
+        if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }
