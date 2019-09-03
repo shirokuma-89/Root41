@@ -1,3 +1,7 @@
+ISR(timer5Event) {
+  line.read();
+}
+
 void _line::process(void) {
   if (flag) {
     if (mode == 1 && touch) {
