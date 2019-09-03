@@ -32,7 +32,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.72;   //比例定数
+    Kp = 0.72;  //比例定数
     Ki = 0.02;  //積分定数
     Kd = 0.1;   //微分定数
 
@@ -186,7 +186,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        if (gyro.deg >= 40 && gyro.deg <= 340) {
+        if (gyro.deg >= 40 && gyro.deg <= 340 && !line.flag) {
           if (abs(correctionVal) <= correctionMinimum) {
             if (correctionVal >= 0) {
               val[i] = correctionMinimum;

@@ -4,7 +4,6 @@
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <Timer5.h>
-#include <VL53L0X.h>
 #include <Wire.h>
 
 //ピン番号定義
@@ -23,7 +22,7 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 //インスタンス作成
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
-VL53L0X TOF;
+// VL53L0X TOF;
 
 class _ball {
  public:
@@ -67,6 +66,7 @@ class _line {
   int whited;
   int mode;
   int newv;
+  int old;
   int last;
   int order[20] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
                    100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
@@ -74,6 +74,8 @@ class _line {
   float plus[20][2];
   float x;
   float y;
+  float karix;
+  float kariy;
 
   unsigned long stopTimer;
   unsigned long overTimer;
@@ -125,13 +127,13 @@ class _gyro {
   bool p_az;
 } gyro;
 
-class _tof {
- public:
-  int read(void);
-  int dist;
+// class _tof {
+//  public:
+//   int read(void);
+//   int dist;
 
- private:
-} tof;
+//  private:
+// } tof;
 
 class _device {
  public:
@@ -218,8 +220,8 @@ void setup(void) {
   gyro.read();
 
   for (int i = 0; i <= 19; i++) {
-    line.plus[i][0] = sin(i * 18 * 0.0174533);
-    line.plus[i][1] = cos(i * 18 * 0.0174533);
+    line.plus[i][0] = sin(degrees(i * 18));
+    line.plus[i][1] = cos(degrees(i * 18));
     if (i <= 3) {
       line.plus[i][0] *= 1.7;
       line.plus[i][1] *= 1.7;
@@ -242,7 +244,7 @@ void loop(void) {
 
   if (device.mode == 0) {  //待機中
     gyro.deg = gyro.read();
-    tof.dist = tof.read();
+    // tof.dist = tof.read();
 
     LED.gyroShow();
 
@@ -257,7 +259,7 @@ void loop(void) {
       lcd.print(gyro.deg);
       lcd.write(B11011111);
       lcd.setCursor(9, 1);
-      lcd.print(tof.dist);
+      // lcd.print(tof.dist);
       lcd.print("mm");
 
       LCD.timer = millis();
@@ -266,19 +268,17 @@ void loop(void) {
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
-    line.read();
-    line.process();
+    // line.read();
+    // line.process();
 
     //駆動
     if (line.flag) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 15) {
-        LED.degShow(line.deg, LED.GREEN);
-        if (line.deg == 1000) {
-          motor.drive(NULL, NULL, true);
-        } else {
-          motor.drive(line.deg, 100);
-        }
+      LED.degShow(line.deg, LED.RED);
+      if (line.deg == 1000) {
+        motor.drive(NULL, NULL, true);
+      } else {
+        motor.drive(line.deg, 100);
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
@@ -338,11 +338,11 @@ void loop(void) {
       }
     }
   }
+  Serial.print(line.mode);
+  Serial.print(" ");
   Serial.print(line.deg);
   Serial.print(" ");
-  Serial.print(line.overTimer);
-  Serial.print(" ");
-  Serial.print(line.stopTimer);
+  Serial.print(line.old);
   Serial.print(" ");
   Serial.print(line.x);
   Serial.print(" ");
