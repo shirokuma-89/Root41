@@ -90,7 +90,6 @@ void _ball::calc(void) {
       }
     }
   }
-
   if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
     deg = 0;
     hold = true;

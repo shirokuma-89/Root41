@@ -7,7 +7,7 @@ void _line::process(void) {
     if (mode == 1 && touch) {
       //通常
       line.deg = atan2(line.x, line.y);
-      line.deg = line.deg / 0.0174533;
+      line.deg = radians(line.deg);
       if (line.deg < 180) {
         line.deg += 180;
       } else {
@@ -33,6 +33,13 @@ void _line::process(void) {
       }
     } else if (mode == 3) {
       //オーバー
+      line.deg = atan2(line.x, line.y);
+      line.deg = line.deg / 0.0174533;
+      if (line.deg < 180) {
+        line.deg += 180;
+      } else {
+        line.deg -= 180;
+      }
       if (millis() - overTimer >= 3000) {
         flag = false;
         deg = 1000;
@@ -46,6 +53,7 @@ void _line::process(void) {
     y = 0;
     mode = 0;
     whited = 0;
+    last = 100;
     for (int i = 0; i <= 19; i++) {
       logs[i] = false;
     }
@@ -77,6 +85,7 @@ void _line::read(void) {
         }
       }
       if (!flag) {
+        old = i;
         stopTimer = millis();
       }
       val[i] = true;

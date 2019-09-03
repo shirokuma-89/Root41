@@ -186,7 +186,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        if (gyro.deg >= 40 && gyro.deg <= 320) {
+        if (gyro.deg >= 40 && gyro.deg <= 340 && !line.flag) {
           if (abs(correctionVal) <= correctionMinimum) {
             if (correctionVal >= 0) {
               val[i] = correctionMinimum;
