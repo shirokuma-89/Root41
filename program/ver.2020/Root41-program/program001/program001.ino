@@ -283,6 +283,11 @@ void loop(void) {
     } else if (ball.exist) {
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 30) {
+        line.read();
+        line.process();
+        if (line.flag) {
+          break;
+        }
         if (ball.hold) {
           LED.changeAll(LED.subColor);
         } else {
@@ -303,6 +308,11 @@ void loop(void) {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
+        line.read();
+        line.process();
+        if (line.flag) {
+          break;
+        }
         motor.drive(NULL, NULL);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
