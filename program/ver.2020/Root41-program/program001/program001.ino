@@ -58,24 +58,20 @@ class _line {
 
   bool flag;
   bool val[20];
-  bool logs[20];
   bool touch;
 
   float deg = 1000;
 
   int whited;
-  int mode;
-  int newv;
-  int old;
+  int logs[20];
   int last;
-  int order[20] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
-                   100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+  int mode;
 
-  float plus[20][2];
+  float vector[20][2];
   float x;
   float y;
-  float karix;
-  float kariy;
+  float offsetX = 1;
+  float offsetY = 1;
 
   unsigned long stopTimer;
   unsigned long overTimer;
@@ -220,23 +216,14 @@ void setup(void) {
   gyro.read();
 
   for (int i = 0; i <= 19; i++) {
-    line.plus[i][0] = sin(degrees(i * 18));
-    line.plus[i][1] = cos(degrees(i * 18));
-    if (i <= 3) {
-      line.plus[i][0] *= 1.7;
-      line.plus[i][1] *= 1.7;
-    } else if (i >= 5 && i <= 13) {
-      line.plus[i][0] *= 1.7;
-      line.plus[i][1] *= 1.7;
-    } else if (i >= 15) {
-      line.plus[i][0] *= 1.7;
-      line.plus[i][1] *= 1.7;
-    }
+    line.vector[i][0] = sin(radians(i * 18)) * line.offsetX;
+    line.vector[i][1] = cos(radians(i * 18)) * line.offsetY;
   }
 
   delay(500);
 
   gyro.read();
+  // startTimer5(50);
 }
 
 void loop(void) {
@@ -244,8 +231,6 @@ void loop(void) {
 
   if (device.mode == 0) {  //待機中
     gyro.deg = gyro.read();
-    // tof.dist = tof.read();
-
     LED.gyroShow();
 
     motor.drive(NULL, NULL, true);
@@ -259,7 +244,6 @@ void loop(void) {
       lcd.print(gyro.deg);
       lcd.write(B11011111);
       lcd.setCursor(9, 1);
-      // lcd.print(tof.dist);
       lcd.print("mm");
 
       LCD.timer = millis();
@@ -268,8 +252,8 @@ void loop(void) {
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
-    // line.read();
-    // line.process();
+    line.read();
+    line.process();
 
     //駆動
     if (line.flag) {
@@ -348,14 +332,10 @@ void loop(void) {
       }
     }
   }
-  Serial.print(line.mode);
-  Serial.print(" ");
   Serial.print(line.deg);
   Serial.print(" ");
-  Serial.print(line.old);
+  Serial.print(line.last);
   Serial.print(" ");
-  Serial.print(line.x);
-  Serial.print(" ");
-  Serial.print(line.y);
-  Serial.println(" ");
+  Serial.print(line.mode);
+  Serial.println("");
 }

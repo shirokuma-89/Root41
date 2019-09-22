@@ -1,64 +1,71 @@
 void _line::process(void) {
-  if (flag) {
-    if (mode == 1 && touch) {
+  // ISR(timer5Event) {
+  //   pauseTimer5();   //割り込みを無効化
+  //   enableMillis();  // millis()関数を有効化
+  // line.read();
+  if (line.flag) {
+    if (line.mode == 1 && line.touch) {
       //通常
+      for (int i = 0; i <= 19; i++) {
+        if (line.logs[i] == 1 && line.whited <= 8) {
+          line.x += line.vector[i][0];
+          line.y += line.vector[i][1];
+          line.logs[i] = 2;
+        }
+      }
       line.deg = atan2(line.x, line.y);
-      line.deg = radians(line.deg);
+      line.deg = degrees(line.deg);
       if (line.deg < 180) {
         line.deg += 180;
       } else {
         line.deg -= 180;
       }
-      if (millis() - stopTimer <= 100) {
+      if (millis() - line.stopTimer <= 100) {
         line.deg = 1000;
       }
-    } else if (mode == 1 && !touch) {
-      //離脱時
-      if (abs(line.deg - last * 18) <= 30 || abs(line.deg - last * 18) >= 340) {
-        mode = 3;
+    } else if (line.mode == 1 && !line.touch) {
+      line.overTimer = millis();
+      if (line.deg == 1000) {
+        line.deg = atan2(line.x, line.y);
+        line.deg = degrees(line.deg);
+        if (line.deg < 180) {
+          line.deg += 180;
+        } else {
+          line.deg -= 180;
+        }
+      }
+      if (abs(line.last * 18 - line.deg) <= 40 ||
+          abs(line.last * 18 - line.deg >= 320)) {
+        line.mode = 3;
       } else {
-        mode = 2;
+        line.mode = 2;
       }
-      overTimer = millis();
-    } else if (mode == 2) {
-      //マージン
-      if (millis() - overTimer >= 500) {
-        flag = false;
-        deg = 1000;
-        mode = 0;
+    } else if (line.mode == 2) {
+      if (millis() - line.overTimer >= 500) {
+        line.flag = false;
+        line.mode = 0;
       }
-    } else if (mode == 3) {
-      //オーバー
-      line.deg = atan2(line.x, line.y);
-      line.deg = line.deg / 0.0174533;
-      if (line.deg < 180) {
-        line.deg += 180;
-      } else {
-        line.deg -= 180;
-      }
-      if (millis() - overTimer >= 3000) {
-        flag = false;
-        deg = 1000;
-        mode = 0;
+    } else if (line.mode == 3) {
+      if (millis() - line.overTimer >= 4000) {
+        line.flag = false;
+        line.mode = 0;
       }
     }
   } else {
-    flag = false;
-    deg = 1000;
-    x = 0;
-    y = 0;
-    mode = 0;
-    whited = 0;
-    last = 100;
+    line.flag = false;
+    line.deg = 1000;
+    line.x = 0;
+    line.y = 0;
+    line.mode = 0;
+    line.whited = 0;
     for (int i = 0; i <= 19; i++) {
-      logs[i] = false;
+      line.logs[i] = 0;
     }
-    for (int i = 0; i <= 19; i++) {
-      order[i] = 100;
-    }
-    stopTimer = 0;
-    overTimer = 0;
+    line.stopTimer = 0;
+    line.overTimer = 0;
   }
+  //   startTimer5(50);  //タイマー割り込みを有効化
+  // }
 }
 
 _line::_line(void) {
@@ -69,45 +76,24 @@ _line::_line(void) {
 
 void _line::read(void) {
   touch = false;
-
   for (int i = 0; i <= 19; i++) {
     if (!digitalRead(LINE[i])) {
-      if (!logs[i]) {
-        logs[i] = true;
+      if (logs[i] == 0) {
         whited++;
-        if (whited <= 10) {
-          x += plus[i][0];
-          y += plus[i][1];
-        }
+        logs[i] = 1;
       }
       if (!flag) {
-        old = i;
         stopTimer = millis();
       }
+      if (!val[i]) {
+        last = i;
+      }
       val[i] = true;
-      last = i;
-      touch = true;
       flag = true;
+      touch = true;
       mode = 1;
     } else {
       val[i] = false;
-    }
-  }
-  for (int i = 0; i <= 19; i++) {
-    if (val[i]) {
-      for (int j = 0; j <= 19; j++) {
-        if (order[j] != i) {
-          if (j == 19) {
-            newv = i;
-            for (int k = 18; k >= 0; k--) {
-              order[k] = order[k + 1];
-            }
-            order[0] = newv;
-          }
-        } else {
-          break;
-        }
-      }
     }
   }
 }
