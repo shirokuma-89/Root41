@@ -75,6 +75,7 @@ class _line {
 
   unsigned long stopTimer;
   unsigned long overTimer;
+  unsigned long _millis;
 
  private:
   bool _flag;
@@ -258,7 +259,7 @@ void loop(void) {
     //駆動
     if (line.flag) {
       motor.moveTimer = millis();
-      LED.degShow(line.deg, LED.RED);
+      LED.degShow(line.deg, LED.PURPLE);
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
       } else {
@@ -266,7 +267,7 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 30) {
+      while (millis() - motor.moveTimer <= 20) {
         line.read();
         line.process();
         if (line.flag) {
@@ -284,7 +285,7 @@ void loop(void) {
           }
         }
         motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 15) {
+        if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }

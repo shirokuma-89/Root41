@@ -1,3 +1,7 @@
+ISR(timer5Event) {
+  line.read();
+}
+
 void _line::process(void) {
   // ISR(timer5Event) {
   //   pauseTimer5();   //割り込みを無効化
