@@ -32,9 +32,9 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.71;   //比例定数
-    Ki = 0.01;  //積分定数
-    Kd = 0.11;   //微分定数
+    Kp = 0.718;  //比例定数
+    Ki = 0.009;  //積分定数
+    Kd = 0.165;  //微分定数
 
     int correctionMinimum = 2;  //角度補正の最小絶対値
 
@@ -186,7 +186,11 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        if (gyro.deg >= 30 && gyro.deg <= 330 && !line.flag) {
+        int error = 25;
+        if (ball.turn || ball.emg) {
+          error = 45;
+        }
+        if (gyro.deg >= error && gyro.deg <= 360 - error && !line.flag) {
           if (abs(correctionVal) <= correctionMinimum) {
             if (correctionVal >= 0) {
               val[i] = correctionMinimum;
@@ -194,7 +198,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
               val[i] = -correctionMinimum;
             }
           } else {
-            val[i] = correctionVal;
+            val[i] = correctionVal * 0.8;
           }
 
           LED.changeAll(LED.BLUE);

@@ -38,42 +38,53 @@ void _ball::calc(void) {
 
   deg = top * 22.5;
 
-  if (top > 1 && top < 15) {
-    if (deg >= 180) {
-      deg -= 360;
+  dist = 0;
+  for (int i = 0; i < 16; i++) {
+    if (val[i] <= 400) {
+      dist++;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
-    deg += 720;
-    deg %= 360;
   }
+  dist = constrain(dist, 3, 5);
+
+  // if (top > 1 && top < 15) {
+  if (deg >= 180) {
+    deg -= 360;
+  }
+  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.1085);
+  deg += 720;
+  deg %= 360;
+  // }
 
   turn = false;
-  if (top > 0 && top < 16) {
-    if (val[top] <= 264) {
+  int turnVal = 40;
+  if (top > 1 && top < 15) {
+    if (val[top] <= 269) {
       turn = true;
       if (deg >= 180) {
-        deg -= 40;
-        if (top >= 14) {
+        deg -= turnVal;
+        if (top >= 13) {
           if (millis() - holdTimer <= 300) {
-            deg += 45;  //打消し
+            deg += turnVal;  //打消し
             turn = false;
           } else {
-            speed = 35;
+            speed = 45;
+            deg -= 35;
           }
         } else if (top >= 10) {
-          speed = 50;
+          speed = 60;
         }
       } else {
-        deg += 40;
-        if (top <= 2) {
+        deg += turnVal;
+        if (top <= 3) {
           if (millis() - holdTimer <= 300) {
-            deg += 45;  //打消し
+            deg -= turnVal;  //打消し
             turn = false;
           } else {
-            speed = 35;
+            speed = 45;
+            deg += 35;
           }
         } else if (top <= 6) {
-          speed = 50;
+          speed = 60;
         }
       }
     }
@@ -81,12 +92,12 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 260) {
+    if (val[top] <= 257) {
       emg = true;
       if (top >= 8) {
-        deg -= 50;
+        deg -= 40;
       } else {
-        deg += 50;
+        deg += 40;
       }
     }
   }
@@ -102,8 +113,8 @@ void _ball::calc(void) {
   //   holdTimer = millis();
   // }
 
-  LCD.data = deg;
-  LCD.unit = "DEG";
+  LCD.data = dist;
+  LCD.unit = "dist";
 
   exist = true;
   if (val[top] <= 600) {
