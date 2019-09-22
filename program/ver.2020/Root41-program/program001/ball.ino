@@ -14,15 +14,7 @@ void _ball::read(int* b) {
     val[8] = (val[7] + val[9]) / 2;
   }
 
-  // val[14] *= 0.9;
-  // val[2] *= 0.9;
   val[0] *= 0.95;
-
-  for (int i = 0; i <= 15; i++) {
-    // Serial.print(val[i]);
-    // Serial.print("\t");
-  }
-  // Serial.println("");
 
   digitalWrite(BALL_RESET, LOW);
 }
@@ -113,8 +105,8 @@ void _ball::calc(void) {
   //   holdTimer = millis();
   // }
 
-  LCD.data = dist;
-  LCD.unit = "dist";
+  LCD.data = line.deg;
+  LCD.unit = "DEG";
 
   exist = true;
   if (val[top] <= 600) {
