@@ -42,38 +42,55 @@ void _ball::calc(void) {
   if (deg >= 180) {
     deg -= 360;
   }
-  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.1085);
+  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
   deg += 720;
   deg %= 360;
   // }
 
   turn = false;
-  int turnVal = 40;
-  if (top > 1 && top < 15) {
-    if (val[top] <= 269) {
+  int turnVal = 45;
+  if (top == 1) {
+    if (val[2] >= val[0]) {
+      goto TURN_PROCESS;
+    }
+  }
+  if (top == 15) {
+    if (val[14] >= val[0]) {
+      goto TURN_PROCESS;
+    }
+  }
+  if (top != 0) {
+  TURN_PROCESS:
+    if (val[top] <= 262) {
       turn = true;
       if (deg >= 180) {
+        if (val[top] <= 247) {
+          deg -= turnVal * 0.7;
+        }
         deg -= turnVal;
         if (top >= 13) {
-          if (millis() - holdTimer <= 300) {
+          if (millis() - holdTimer <= 200) {
             deg += turnVal;  //打消し
             turn = false;
           } else {
-            speed = 45;
-            deg -= 35;
+            speed = 35;
+            deg -= 25;
           }
         } else if (top >= 10) {
           speed = 60;
         }
       } else {
+        if (val[top] <= 247) {
+          deg += turnVal * 0.7;
+        }
         deg += turnVal;
         if (top <= 3) {
-          if (millis() - holdTimer <= 300) {
+          if (millis() - holdTimer <= 200) {
             deg -= turnVal;  //打消し
             turn = false;
           } else {
-            speed = 45;
-            deg += 35;
+            speed = 35;
+            deg += 25;
           }
         } else if (top <= 6) {
           speed = 60;
@@ -84,12 +101,12 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 257) {
+    if (val[top] <= 255) {
       emg = true;
       if (top >= 8) {
-        deg -= 40;
+        deg -= 50;
       } else {
-        deg += 40;
+        deg += 50;
       }
     }
   }
@@ -101,9 +118,9 @@ void _ball::calc(void) {
     hold = false;
   }
 
-  // if (top == 0) {
-  //   holdTimer = millis();
-  // }
+  if (top == 0) {
+    holdTimer = millis();
+  }
 
   LCD.data = line.deg;
   LCD.unit = "DEG";
