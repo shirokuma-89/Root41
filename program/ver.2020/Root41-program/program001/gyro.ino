@@ -129,7 +129,7 @@ bool _gyro::pickUp(void) {
       mpu.dmpGetQuaternion(&q, fifoBuffer);
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-      if (abs(degrees(ypr[1])) >= 20 || abs(degrees(ypr[2])) >= 20){
+      if (abs(degrees(ypr[1])) >= 20 || abs(degrees(ypr[2])) >= 20) {
         foo = true;
       }
     }

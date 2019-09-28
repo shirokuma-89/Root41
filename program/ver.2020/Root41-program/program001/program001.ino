@@ -5,6 +5,7 @@
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <Timer5.h>
 #include <Wire.h>
+#include <VL53L0X.h>
 
 //ピン番号定義
 int BALL[16] = {A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
@@ -22,7 +23,7 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 //インスタンス作成
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
-// VL53L0X TOF;
+VL53L0X TOF;
 
 class _ball {
  public:
@@ -64,13 +65,16 @@ class _line {
 
   int whited;
   int logs[20];
+  int first;
   int last;
   int mode;
+  int weight = 10;
+  int sigdeg;
 
   float vector[20][2];
   float x;
   float y;
-  float offsetX = 1;
+  float offsetX = 1.3;
   float offsetY = 1;
 
   unsigned long stopTimer;
@@ -93,6 +97,7 @@ class _motor {
   const int move = 60;
 
   unsigned long moveTimer = 0;
+  int integral = 0;
 
  private:
   int front = 0;
@@ -102,7 +107,7 @@ class _motor {
   float Kd;
 
   int correctionVal = 0;
-  int integral = 0;
+
 } motor;
 
 class _gyro {
@@ -124,13 +129,13 @@ class _gyro {
   bool p_az;
 } gyro;
 
-// class _tof {
-//  public:
-//   int read(void);
-//   int dist;
+class _tof {
+ public:
+  int read(void);
+  int dist;
 
-//  private:
-// } tof;
+ private:
+} tof;
 
 class _device {
  public:
@@ -255,6 +260,7 @@ void loop(void) {
     ball.calc();
     line.read();
     line.process();
+    tof.dist = tof.read();
 
     //駆動
     if (line.flag) {
@@ -283,10 +289,15 @@ void loop(void) {
           } else {
             LED.degShow(ball.deg);
           }
+          if (ball.speed == 70) {
+            LED.degShow(ball.deg, LED.YELLOW);
+          }
         }
         motor.drive(ball.deg, ball.speed);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
+          line.read();
+          line.process();
         }
       }
     } else {
@@ -299,6 +310,7 @@ void loop(void) {
           break;
         }
         motor.drive(NULL, NULL);
+        // motor.drive(90, ball.speed);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
@@ -318,8 +330,9 @@ void loop(void) {
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
           lcd.print("INFO:");
-          lcd.print(LCD.data);
-          lcd.print(LCD.unit);
+          lcd.print(line.x);
+          lcd.print(line.y);
+          // lcd.print(LCD.unit);
         }
 
         LCD.timer = millis();
@@ -333,10 +346,9 @@ void loop(void) {
       }
     }
   }
-  Serial.print(line.deg);
+  Serial.print(ball.top);
   Serial.print(" ");
-  Serial.print(line.last);
+  Serial.print(ball.val[ball.top]);
   Serial.print(" ");
-  Serial.print(line.mode);
   Serial.println("");
 }

@@ -22,6 +22,7 @@ void _ball::read(int* b) {
 void _ball::calc(void) {
   speed = 100;
   top = 0;
+  val[6] = 1000;
   for (int i = 0; i <= 15; i++) {
     if (val[i] <= val[top]) {
       top = i;
@@ -90,12 +91,18 @@ void _ball::calc(void) {
     hold = false;
   }
 
+  if (ball.top >= 2 && ball.top <= 5) {
+    ball.speed = 70;
+  } else if (ball.top >= 14 && ball.top <= 11) {
+    ball.speed = 70;
+  }
+
   // if (top == 0) {
   //   holdTimer = millis();
   // }
 
-  LCD.data = line.deg;
-  LCD.unit = "DEG";
+  LCD.data = ball.top;
+  LCD.unit = "deg";
 
   exist = true;
   if (val[top] <= 600) {
@@ -106,5 +113,8 @@ void _ball::calc(void) {
 
   if (exCount >= 3) {
     exist = false;
+  }
+  if (ball.val[ball.top] >= 400) {
+    ball.deg = ball.top * 22.5;
   }
 }
