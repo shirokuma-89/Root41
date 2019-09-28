@@ -31,42 +31,70 @@ void _ball::calc(void) {
 
   deg = top * 22.5;
 
-  if (top > 1 && top < 15) {
-    if (deg >= 180) {
-      deg -= 360;
+  dist = 0;
+  for (int i = 0; i < 16; i++) {
+    if (val[i] <= 400) {
+      dist++;
     }
-    deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
-    deg += 720;
-    deg %= 360;
   }
+  dist = constrain(dist, 3, 5);
+
+  // if (top > 1 && top < 15) {
+  if (deg >= 180) {
+    deg -= 360;
+  }
+  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
+  deg += 720;
+  deg %= 360;
+  // }
 
   turn = false;
-  if (top > 0 && top < 16) {
-    if (val[top] <= 264) {
+  int turnVal = 45;
+  if (top == 1) {
+    if (val[2] >= val[0]) {
+      goto TURN_PROCESS;
+    }
+  }
+  if (top == 15) {
+    if (val[14] >= val[0]) {
+      goto TURN_PROCESS;
+    }
+  }
+  if (top != 0) {
+  TURN_PROCESS:
+    if (val[top] <= 262) {
       turn = true;
       if (deg >= 180) {
-        deg -= 40;
-        if (top >= 14) {
-          if (millis() - holdTimer <= 300) {
-            deg += 45;  //打消し
+        if (val[top] <= 247) {
+          deg -= turnVal * 0.7;
+        }
+        deg -= turnVal;
+        if (top >= 13) {
+          if (millis() - holdTimer <= 200) {
+            deg += turnVal;  //打消し
             turn = false;
           } else {
             speed = 35;
+            deg -= 25;
           }
         } else if (top >= 10) {
-          speed = 50;
+          speed = 60;
         }
       } else {
-        deg += 40;
-        if (top <= 2) {
-          if (millis() - holdTimer <= 300) {
-            deg += 45;  //打消し
+        if (val[top] <= 247) {
+          deg += turnVal * 0.7;
+        }
+        deg += turnVal;
+        if (top <= 3) {
+          if (millis() - holdTimer <= 200) {
+            deg -= turnVal;  //打消し
             turn = false;
           } else {
             speed = 35;
+            deg += 25;
           }
         } else if (top <= 6) {
-          speed = 50;
+          speed = 60;
         }
       }
     }
@@ -74,7 +102,7 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 260) {
+    if (val[top] <= 255) {
       emg = true;
       if (top >= 8) {
         deg -= 50;
