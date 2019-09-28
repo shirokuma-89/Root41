@@ -3,15 +3,11 @@ ISR(timer5Event) {
 }
 
 void _line::process(void) {
-  // ISR(timer5Event) {
-  //   pauseTimer5();   //割り込みを無効化
-  //   enableMillis();  // millis()関数を有効化
-  // line.read();
   if (line.flag) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 8) {
+        if (line.logs[i] == 1 && line.whited <= 12) {
           line.x += line.vector[i][0];
           line.y += line.vector[i][1];
           line.logs[i] = 2;
@@ -26,6 +22,14 @@ void _line::process(void) {
       }
       if (millis() - line.stopTimer <= 100) {
         line.deg = 1000;
+      } else if (millis() - line.stopTimer >= 2000) {
+        if (line.touch) {
+          if (line.deg <= 180) {
+            line.deg = 145;
+          } else {
+            line.deg = 215;
+          }
+        }
       }
     } else if (line.mode == 1 && !line.touch) {
       line.overTimer = millis();
@@ -38,26 +42,32 @@ void _line::process(void) {
           line.deg -= 180;
         }
       }
-      if (abs(line.last * 18 - line.deg) <= 40 ||
-          abs(line.last * 18 - line.deg >= 320)) {
+      if (abs(line.last * 18 - line.deg) <= 80 ||
+          abs(line.last * 18 - line.deg >= 280)) {
+        line.mode = 3;
+      } else if (abs(line.last - line.first) >= 7 &&
+                 abs(line.last - line.first) <= 13) {
         line.mode = 3;
       } else {
         line.mode = 2;
       }
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= 500) {
+      if (millis() - line.overTimer >= 100) {
         line.flag = false;
         line.mode = 0;
       }
     } else if (line.mode == 3) {
-      if (millis() - line.overTimer >= 4000) {
+      if (millis() - line.overTimer >= 2000) {
         line.flag = false;
         line.mode = 0;
       }
     }
   } else {
+    gyro.offset = 0;
     line.flag = false;
     line.deg = 1000;
+    line.first = 100;
+    line.last = 100;
     line.x = 0;
     line.y = 0;
     line.mode = 0;
@@ -68,8 +78,6 @@ void _line::process(void) {
     line.stopTimer = 0;
     line.overTimer = 0;
   }
-  //   startTimer5(50);  //タイマー割り込みを有効化
-  // }
 }
 
 _line::_line(void) {
@@ -87,6 +95,10 @@ void _line::read(void) {
         logs[i] = 1;
       }
       if (!flag) {
+        sigdeg = gyro.deg;
+        first = i;
+        motor.integral = 0;
+        gyro.offset = -(line.sigdeg);
         stopTimer = millis();
       }
       if (!val[i]) {
