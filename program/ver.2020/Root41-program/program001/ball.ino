@@ -49,19 +49,9 @@ void _ball::calc(void) {
 
   turn = false;
   int turnVal = 45;
-  if (top == 1) {
-    if (val[2] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
-  if (top == 15) {
-    if (val[14] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
-  if (top != 0) {
+  if (top > 1 && top < 15) {
   TURN_PROCESS:
-    if (val[top] <= 262) {
+    if (val[top] <= 264) {
       turn = true;
       if (deg >= 180) {
         if (val[top] <= 247) {
