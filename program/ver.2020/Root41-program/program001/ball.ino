@@ -49,9 +49,9 @@ void _ball::calc(void) {
 
   turn = false;
   int turnVal = 40;
-  if (top > 0 && top < 16) {
+  if (top > 1 && top < 15) {
   TURN_PROCESS:
-    if (val[top] <= 257) {
+    if (val[top] <= 255) {
       turn = true;
       if (deg >= 180) {
         if (val[top] <= 245) {
@@ -67,7 +67,7 @@ void _ball::calc(void) {
             deg -= 25;
           }
         } else if (top >= 10) {
-          // speed = 60;
+          speed = 80;
         }
       } else {
         if (val[top] <= 245) {
@@ -83,7 +83,7 @@ void _ball::calc(void) {
             deg += 25;
           }
         } else if (top <= 6) {
-          // speed = 60;
+          speed = 80;
         }
       }
     }
