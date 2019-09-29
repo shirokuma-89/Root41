@@ -158,7 +158,7 @@ class _LED {
   void changeAll(unsigned long _color);
   void degShow(int d, unsigned long _color = 'hogehoge');
 
-  bool white = false;
+  bool white = true;
 
   int bright = 150;
 

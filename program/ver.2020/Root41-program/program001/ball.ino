@@ -50,17 +50,17 @@ void _ball::calc(void) {
 
   turn = false;
   int turnVal = 45;
-  if (top == 1) {
-    if (val[2] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
-  if (top == 15) {
-    if (val[14] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
-  if (top != 0) {
+  // if (top == 1) {
+  //   if (val[2] >= val[0]) {
+  //     goto TURN_PROCESS;
+  //   }
+  // }
+  // if (top == 15) {
+  //   if (val[14] >= val[0]) {
+  //     goto TURN_PROCESS;
+  //   }
+  // }
+  if (top >= 1 && top < 15) {
   TURN_PROCESS:
     if (val[top] <= 262) {
       turn = true;
@@ -74,11 +74,11 @@ void _ball::calc(void) {
             deg += turnVal;  //打消し
             turn = false;
           } else {
-            speed = 35;
+            // speed = 35;
             deg -= 25;
           }
         } else if (top >= 10) {
-          speed = 60;
+          // speed = 60;
         }
       } else {
         if (val[top] <= 247) {
@@ -90,11 +90,11 @@ void _ball::calc(void) {
             deg -= turnVal;  //打消し
             turn = false;
           } else {
-            speed = 35;
+            // speed = 35;
             deg += 25;
           }
         } else if (top <= 6) {
-          speed = 60;
+          // speed = 60;
         }
       }
     }

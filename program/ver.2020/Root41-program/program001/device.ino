@@ -89,10 +89,10 @@ void _device::check(void) {
   } else if (!digitalRead(SW_1)) {
     device.mode = 1;
     keeper = false;
-    LED.white = false;
+    LED.white = true;
   } else if (!digitalRead(SW_2)) {
     // asm volatile("  jmp 0");
-    LED.white = true;
+    // LED.white = true;
     device.mode = 1;
     keeper = true;
     LED.white = false;
