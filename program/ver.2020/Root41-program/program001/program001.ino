@@ -153,9 +153,9 @@ class _LED {
   void changeAll(unsigned long _color);
   void degShow(int d, unsigned long _color = 'hogehoge');
 
-  bool white = false;
+  bool white = true;
 
-  int bright = 150;
+  int bright = 100;
 
   unsigned long defaltColor;
   unsigned long subColor;
@@ -224,7 +224,7 @@ void setup(void) {
   delay(500);
 
   gyro.read();
-  // startTimer5(50);
+  startTimer5(50);
 }
 
 void loop(void) {
@@ -267,7 +267,7 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
+      while (millis() - motor.moveTimer <= 15) {
         line.read();
         line.process();
         if (line.flag) {

@@ -45,7 +45,7 @@ void _line::process(void) {
         line.mode = 2;
       }
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= 500) {
+      if (millis() - line.overTimer >= 300) {
         line.flag = false;
         line.mode = 0;
       }
