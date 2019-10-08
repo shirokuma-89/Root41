@@ -32,14 +32,14 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.72;  //比例定数
-    Ki = 0.01;  //積分定数
-    Kd = 0.18;  //微分定数
+    Kp = 0.67;  //比例定数
+    // Ki = 0.07;  //積分定数
+    Kd = 0.02;  //微分定数
 
     int correctionMinimum = 2;  //角度補正の最小絶対値
 
     if (_deg == NULL && _power == NULL) {
-      correctionMinimum = 30;
+      correctionMinimum = 0;
     }
 
     front = gyro.deg;
@@ -59,104 +59,35 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     }
 
     //機体が前を向いたら積分していたものをクリアする
-    if (gyro.deg <= 2 && gyro.deg >= 358) {
+    if (gyro.deg <= 5 && gyro.deg >= 355 && abs(gyro.differentialRead()) <= 2) {
       integral = 0;
     }
 
     correctionVal = _front;
-    correctionVal = constrain(correctionVal, -75, 75);
-    if (gyro.deg <= 5 && gyro.deg >= 355) {
-      correctionVal = 0;
-    }
+    correctionVal = constrain(correctionVal, -100, 100);
 
     if (!(_deg == NULL && _power == NULL)) {
       float s;
-      if (_deg == 0) {
-        val[0] = 97;
-        val[1] = -100;
-        val[2] = 0;
-      } else if (_deg == 23 || _deg == 22) {
-        val[0] = 100;
-        val[1] = -36;
-        val[2] = -23;
-      } else if (_deg == 45) {
-        val[0] = 100;
-        val[1] = -15;
-        val[2] = -60;
-      } else if (_deg == 68 || _deg == 67) {
-        val[0] = 100;
-        val[1] = 13;
-        val[2] = -90;
-      } else if (_deg == 90) {
-        val[0] = 40;  // 34
-        val[1] = 40;
-        val[2] = -100;
-      } else if (_deg == 113 || _deg == 112) {
-        val[0] = 13;
-        val[1] = 100;
-        val[2] = -90;
-      } else if (_deg == 135) {
-        val[0] = -20;
-        val[1] = 100;
-        val[2] = -48;
-      } else if (_deg == 158 || _deg == 157) {
-        val[0] = -34;
-        val[1] = 100;
-        val[2] = -27;
-      } else if (_deg == 180) {
-        val[0] = -90;
-        val[1] = 100;
-        val[2] = 0;
-      } else if (_deg == 203 || _deg == 202) {
-        val[0] = -100;
-        val[1] = 34;
-        val[2] = 27;
-      } else if (_deg == 225) {
-        val[0] = -100;
-        val[1] = 20;
-        val[2] = 48;
-      } else if (_deg == 248 || _deg == 247) {
-        val[0] = -100;
-        val[1] = -13;
-        val[2] = 90;
-      } else if (_deg == 270) {
-        val[0] = -40;  //-34
-        val[1] = -40;  //-34
-        val[2] = 100;
-      } else if (_deg == 293 || _deg == 292) {
-        val[0] = -13;
-        val[1] = -100;
-        val[2] = 90;
-      } else if (_deg == 315) {
-        val[0] = 15;
-        val[1] = -100;
-        val[2] = 60;
-      } else if (_deg == 338 || _deg == 337) {
-        val[0] = 34;
-        val[1] = -100;
-        val[2] = 23;
-      } else {
-        val[0] = int(sin(radians(_deg - 300)) * 100.0);
-        val[1] = int(sin(radians(_deg - 60)) * 100.0);
-        val[2] = int(sin(radians(_deg - 180)) * 100.0);
+      val[0] = int(sin(radians(_deg - 300)) * 100.0);
+      val[1] = int(sin(radians(_deg - 60)) * 100.0);
+      val[2] = int(sin(radians(_deg - 180)) * 100.0);
 
-        if (abs(val[0]) < abs(val[1])) {
-          if (abs(val[1]) < abs(val[2])) {
-            s = 100.0 / (float)abs(val[2]);
-          } else {
-            s = 100.0 / (float)abs(val[1]);
-          }
+      if (abs(val[0]) < abs(val[1])) {
+        if (abs(val[1]) < abs(val[2])) {
+          s = 100.0 / (float)abs(val[2]);
         } else {
-          if (abs(val[0]) < abs(val[2])) {
-            s = 100.0 / (float)abs(val[2]);
-          } else {
-            s = 100.0 / (float)abs(val[0]);
-          }
+          s = 100.0 / (float)abs(val[1]);
         }
-        val[0] = round((float)val[0] * s);
-        val[1] = round((float)val[1] * s);
-        val[2] = round((float)val[2] * s);
+      } else {
+        if (abs(val[0]) < abs(val[2])) {
+          s = 100.0 / (float)abs(val[2]);
+        } else {
+          s = 100.0 / (float)abs(val[0]);
+        }
       }
+      val[0] = round((float)val[0] * s);
+      val[1] = round((float)val[1] * s);
+      val[2] = round((float)val[2] * s);
 
       for (int i = 0; i <= 2; i++) {
         val[i] *= -1;
@@ -187,26 +118,15 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
       for (int i = 0; i <= 2; i++) {
         int error = 25;
-        if (ball.turn || ball.emg) {
-          error = 45;
-        }
-        if (gyro.deg >= error && gyro.deg <= 360 - error && !line.flag) {
-          if (abs(correctionVal) <= correctionMinimum) {
-            if (correctionVal >= 0) {
-              val[i] = correctionMinimum;
-            } else {
-              val[i] = -correctionMinimum;
-            }
-          } else {
-            val[i] = correctionVal * 0.8;
-          }
-
+        if (gyro.deg >= error && gyro.deg <= 360 - error) {
           LED.changeAll(LED.BLUE);
+          goto ERROR;
         }
       }
     } else {
+    ERROR:
       for (int i = 0; i <= 2; i++) {
-        if (gyro.deg <= 7 || gyro.deg >= 353) {
+        if (gyro.deg <= 3 || gyro.deg >= 358) {
           val[i] = 0;
         } else {
           if (abs(correctionVal) <= correctionMinimum) {

@@ -9,13 +9,6 @@ void _device::initialize(void) {
 
   Wire.begin();
 
-  TOF.init();
-  TOF.setTimeout(1);
-  TOF.setMeasurementTimingBudget(10);
-  // TOF.setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 12);
-  // TOF.setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange, 8);
-  TOF.startContinuous(0);
-
   RGBLED.begin();
   RGBLED.show();
 
@@ -97,8 +90,4 @@ void _device::check(void) {
     keeper = true;
     LED.white = false;
   }
-  line._millis = millis();
-
-  gyro.differentialDeg = gyro.differentialRead();
-  // gyro.pickUpAns = gyro.pickUp();
 }
