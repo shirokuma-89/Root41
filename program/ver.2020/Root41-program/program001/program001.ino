@@ -4,8 +4,8 @@
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <Timer5.h>
-#include <Wire.h>
 #include <VL53L0X.h>
+#include <Wire.h>
 
 //ピン番号定義
 int BALL[16] = {A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
@@ -105,8 +105,10 @@ class _motor {
   float Kp;
   float Ki;
   float Kd;
+  float Km;
 
   int correctionVal = 0;
+  int error;
 
 } motor;
 
@@ -229,7 +231,7 @@ void setup(void) {
   delay(500);
 
   gyro.read();
-  // startTimer5(50);
+  startTimer5(50);
 }
 
 void loop(void) {
@@ -273,31 +275,26 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
+      if (ball.hold) {
+        LED.changeAll(LED.subColor);
+      } else {
+        if (ball.emg) {
+          LED.degShow(ball.deg, LED.LIME);
+        } else if (ball.turn) {
+          LED.degShow(ball.deg, LED.GREEN);
+        } else {
+          LED.degShow(ball.deg);
+        }
+      }
+      while (millis() - motor.moveTimer <= 25) {
         line.read();
         line.process();
         if (line.flag) {
           break;
         }
-        if (ball.hold) {
-          LED.changeAll(LED.subColor);
-        } else {
-          if (ball.emg) {
-            LED.degShow(ball.deg, LED.LIME);
-          } else if (ball.turn) {
-            LED.degShow(ball.deg, LED.GREEN);
-          } else {
-            LED.degShow(ball.deg);
-          }
-          if (ball.speed == 70) {
-            LED.degShow(ball.deg, LED.YELLOW);
-          }
-        }
         motor.drive(ball.deg, ball.speed);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
-          line.read();
-          line.process();
         }
       }
     } else {
