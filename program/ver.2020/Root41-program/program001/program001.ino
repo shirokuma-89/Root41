@@ -158,6 +158,9 @@ class _device {
   int process = LOW;
   int mode = 0;
 
+  unsigned long buzTimer1 = 0;
+  unsigned long buzTimer2 = 0;
+
  private:
 } device;
 
@@ -209,13 +212,13 @@ void setup(void) {
   lcd.setCursor(0, 0);
   lcd.print("STARTING...");
   lcd.setCursor(0, 1);
+  delay(7);
+  device.mute();
 
   Serial.begin(115200);
 
   gyro.setting();
   gyro.read();
-
-  device.mute();
 
   //起動イルミネーション
   for (int i = 0; i <= 15; i++) {
@@ -249,7 +252,11 @@ void loop(void) {
   device.check();
 
   if (device.mode == 0) {  //待機中
-    device.mute();
+    if (millis() - device.buzTimer2 <= 20) {
+      device.buz();
+    } else {
+      device.mute();
+    }
     gyro.deg = gyro.read();
     LED.gyroShow();
 
@@ -269,6 +276,7 @@ void loop(void) {
       LCD.timer = millis();
       LCD.output = 1;
     }
+    device.buzTimer1 = millis();
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
@@ -276,6 +284,11 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
+    if (millis() - device.buzTimer1 <= 20) {
+      device.buz();
+    } else {
+      device.mute();
+    }
     //駆動
     if (line.flag) {
       device.buz();
@@ -301,6 +314,11 @@ void loop(void) {
         }
       }
       while (millis() - motor.moveTimer <= 15) {
+        if (millis() - device.buzTimer1 <= 20) {
+          device.buz();
+        } else {
+          device.mute();
+        }
         line.read();
         line.process();
         if (line.flag) {
@@ -312,10 +330,14 @@ void loop(void) {
         }
       }
     } else {
-      device.mute();
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
+        if (millis() - device.buzTimer1 <=20) {
+          device.buz();
+        } else {
+          device.mute();
+        }
         line.read();
         line.process();
         if (line.flag) {
@@ -357,6 +379,7 @@ void loop(void) {
         LCD.output = 1;
       }
     }
+    device.buzTimer2 = millis();
   }
   Serial.print(ball.top);
   Serial.print(" ");
