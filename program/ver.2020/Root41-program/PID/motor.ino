@@ -32,24 +32,22 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.67;  //比例定数
-    // Ki = 0.07;  //積分定数
-    Kd = 0.02;  //微分定数
+    Kp = 0.55;  //比例定数
+    Ki = 0.00;  //積分定数
+    // Kd = 0.058;  //微分定数
+    Kd = 0.15;  //微分定数
 
-    int correctionMinimum = 2;  //角度補正の最小絶対値
-
-    if (_deg == NULL && _power == NULL) {
-      correctionMinimum = 0;
-    }
-
+    int correctionMinimum;  //角度補正の最小絶対値
     front = gyro.deg;
     front = front > 180 ? front - 360 : front;
-
-    integral += front;
+    correctionMinimum = front * 0.5;
+    if (abs(front) <= 30)
+      integral += front;
     front *= Kp;             //比例制御
     front += integral * Ki;  //積分制御
-    _front = front;
-    _front += (gyro.differentialRead() * Kd);  //微分制御
+    front *= 2.5;
+    _front = (gyro.differentialRead() * Kd);
+    _front += front;  //微分制御
 
     //角度補正の最小絶対値をcorrectionMinimumに設定
     if ((gyro.deg > 180 ? gyro.deg - 360 : gyro.deg) > 0) {

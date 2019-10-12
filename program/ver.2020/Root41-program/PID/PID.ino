@@ -179,7 +179,7 @@ void loop(void) {
       LCD.output = 1;
     }
   } else if (device.mode == 1) {
-    LED.gyroShow();
+    LED.gyroShow(LED.subColor);
     motor.drive(NULL, NULL);
 
     if (millis() - LCD.timer >= 200) {
