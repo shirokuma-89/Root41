@@ -7,10 +7,37 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 12) {
+        if (line.logs[i] == 1 && line.whited <= 8) {
           line.x += line.vector[i][0];
           line.y += line.vector[i][1];
           line.logs[i] = 2;
+        }
+      }
+      if (line.whited == 8) {
+        if (line.logs[0] != 0 || line.logs[19] != 0) {
+          if (line.logs[4] != 0 || line.logs[5] != 0) {
+            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[14] == 0 &&
+                line.logs[15] == 0) {
+              line.autodeg = 225;
+            }
+          } else if (line.logs[14] != 0 || line.logs[15] != 0) {
+            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[4] == 0 &&
+                line.logs[5] == 0) {
+              line.autodeg = 135;
+            }
+          }
+        } else if (line.logs[9] != 0 || line.logs[10] != 0) {
+          if (line.logs[4] != 0 || line.logs[5] != 0) {
+            if (line.logs[0] == 0 && line.logs[19] == 0 && line.logs[14] == 0 &&
+                line.logs[15] == 0) {
+              line.autodeg = 315;
+            }
+          } else if (line.logs[14] != 0 || line.logs[15] != 0) {
+            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[4] == 0 &&
+                line.logs[5] == 0) {
+              line.autodeg = 45;
+            }
+          }
         }
       }
       line.deg = atan2(line.x, line.y);
@@ -19,6 +46,9 @@ void _line::process(void) {
         line.deg += 180;
       } else {
         line.deg -= 180;
+      }
+      if (line.autodeg != 1000) {
+        line.deg = line.autodeg;
       }
       if (millis() - line.stopTimer <= 100) {
         line.deg = 1000;
@@ -66,6 +96,7 @@ void _line::process(void) {
     gyro.offset = 0;
     line.flag = false;
     line.deg = 1000;
+    line.autodeg = 1000;
     line.first = 100;
     line.last = 100;
     line.x = 0;
@@ -90,6 +121,9 @@ void _line::read(void) {
   touch = false;
   for (int i = 0; i <= 19; i++) {
     if (!digitalRead(LINE[i])) {
+      if (logs[i] != 1) {
+        now = i;
+      }
       if (logs[i] == 0) {
         whited++;
         logs[i] = 1;
@@ -97,6 +131,7 @@ void _line::read(void) {
       if (!flag) {
         sigdeg = gyro.deg;
         first = i;
+        logs2[i] = 1;
         motor.integral = 0;
         gyro.offset = -(line.sigdeg);
         stopTimer = millis();
