@@ -62,6 +62,7 @@ void _line::process(void) {
         line.mode = 0;
       }
     }
+    line._deg = (round(line.deg) + 180) % 360;
   } else {
     gyro.offset = 0;
     line.flag = false;

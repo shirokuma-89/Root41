@@ -8,6 +8,7 @@ void _ball::read(int* b) {
     val[6] = (val[5] * 2 + val[8]) / 3;
     val[7] = (val[8] * 2 + val[5]) / 3;
     val[14] = (val[13] + val[15]) / 2;
+    val[7] *= 1.2;
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
@@ -30,6 +31,7 @@ void _ball::calc(void) {
   }
 
   deg = top * 22.5;
+  _deg = deg;
 
   dist = 0;
   for (int i = 0; i < 16; i++) {
@@ -49,7 +51,7 @@ void _ball::calc(void) {
   // }
 
   turn = false;
-  int turnVal = 45;
+  int turnVal = 48;
   if (top == 1) {
     if (val[2] >= val[0]) {
       goto TURN_PROCESS;
@@ -60,49 +62,23 @@ void _ball::calc(void) {
       goto TURN_PROCESS;
     }
   }
-  if (top != 0) {
+  if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
   TURN_PROCESS:
-    if (val[top] <= 262) {
+    if (val[top] <= 263) {
       turn = true;
       if (deg >= 180) {
-        if (val[top] <= 247) {
-          deg -= turnVal * 0.7;
-        }
         deg -= turnVal;
-        if (top >= 13) {
-          if (millis() - holdTimer <= 200) {
-            deg += turnVal;  //打消し
-            turn = false;
-          } else {
-            speed = 35;
-            deg -= 25;
-          }
-        } else if (top >= 10) {
-          speed = 60;
-        }
+        speed = 80;
       } else {
-        if (val[top] <= 247) {
-          deg += turnVal * 0.7;
-        }
         deg += turnVal;
-        if (top <= 3) {
-          if (millis() - holdTimer <= 200) {
-            deg -= turnVal;  //打消し
-            turn = false;
-          } else {
-            speed = 35;
-            deg += 25;
-          }
-        } else if (top <= 6) {
-          speed = 60;
-        }
+        speed = 80;
       }
     }
   }
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 255) {
+    if (val[top] <= 250) {
       emg = true;
       if (top >= 8) {
         deg -= 50;
@@ -119,15 +95,15 @@ void _ball::calc(void) {
     hold = false;
   }
 
-  if (ball.top >= 2 && ball.top <= 5) {
-    ball.speed = 70;
-  } else if (ball.top >= 14 && ball.top <= 11) {
-    ball.speed = 70;
+  if (top == 0) {
+    holdTimer = millis() + 50;
   }
 
-  // if (top == 0) {
-  //   holdTimer = millis();
-  // }
+  if (ball.top >= 2 && ball.top <= 5) {
+    ball.speed -= 20;
+  } else if (ball.top <= 14 && ball.top >= 11) {
+    ball.speed -= 20;
+  }
 
   LCD.data = ball.top;
   LCD.unit = "deg";
@@ -144,5 +120,13 @@ void _ball::calc(void) {
   }
   if (ball.val[ball.top] >= 400) {
     ball.deg = ball.top * 22.5;
+  }
+
+  if (line._deg != 1000) {
+    if (abs(line._deg - _deg) >= 270 || abs(line._deg - _deg) <= 90) {
+      exist = false;
+    } else {
+      line._deg = 1000;
+    }
   }
 }

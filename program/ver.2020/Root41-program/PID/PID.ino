@@ -4,8 +4,8 @@
 #include <FaBoLCDmini_AQM0802A.h>
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <Timer5.h>
-#include <Wire.h>
 #include <VL53L0X.h>
+#include <Wire.h>
 
 //ピン番号定義
 int BALL[16] = {A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
@@ -24,66 +24,6 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
 VL53L0X TOF;
-
-class _ball {
- public:
-  void read(int* b);
-  void calc(void);
-
-  int val[16];
-  int speed = 100;
-  int top;
-  int deg;
-  int dist;
-
-  bool exist;
-  bool hold = false;
-  bool turn;
-  bool emg;
-
- private:
-  int _top;
-  int exCount = true;
-
-  float x;
-  float y;
-
-  unsigned long holdTimer;
-} ball;
-
-class _line {
- public:
-  _line(void);
-  void read(void);
-  void process(void);
-
-  bool flag;
-  bool val[20];
-  bool touch;
-
-  float deg = 1000;
-
-  int whited;
-  int logs[20];
-  int first;
-  int last;
-  int mode;
-  int weight = 10;
-  int sigdeg;
-
-  float vector[20][2];
-  float x;
-  float y;
-  float offsetX = 1.3;
-  float offsetY = 1;
-
-  unsigned long stopTimer;
-  unsigned long overTimer;
-  unsigned long _millis;
-
- private:
-  bool _flag;
-} line;
 
 class _motor {
  public:
@@ -105,8 +45,10 @@ class _motor {
   float Kp;
   float Ki;
   float Kd;
+  float Km;
 
   int correctionVal = 0;
+  int error;
 
 } motor;
 
@@ -128,14 +70,6 @@ class _gyro {
   unsigned long pickUpTimer;
   bool p_az;
 } gyro;
-
-class _tof {
- public:
-  int read(void);
-  int dist;
-
- private:
-} tof;
 
 class _device {
  public:
@@ -221,15 +155,9 @@ void setup(void) {
   }
   gyro.read();
 
-  for (int i = 0; i <= 19; i++) {
-    line.vector[i][0] = sin(radians(i * 18)) * line.offsetX;
-    line.vector[i][1] = cos(radians(i * 18)) * line.offsetY;
-  }
-
   delay(500);
 
   gyro.read();
-  // startTimer5(50);
 }
 
 void loop(void) {
@@ -248,107 +176,28 @@ void loop(void) {
       lcd.setCursor(0, 1);
       lcd.print("DEG:");
       lcd.print(gyro.deg);
-      lcd.write(B11011111);
-      lcd.setCursor(9, 1);
-      lcd.print("mm");
 
       LCD.timer = millis();
       LCD.output = 1;
     }
   } else if (device.mode == 1) {
-    ball.read(ball.val);
-    ball.calc();
-    line.read();
-    line.process();
-    tof.dist = tof.read();
+    LED.gyroShow(LED.subColor);
+    motor.drive(0, 100);
 
-    //駆動
-    if (line.flag) {
-      motor.moveTimer = millis();
-      LED.degShow(line.deg, LED.PURPLE);
-      if (line.deg == 1000) {
-        motor.drive(NULL, NULL, true);
-      } else {
-        motor.drive(line.deg, 100);
-      }
-    } else if (ball.exist) {
-      motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
-        line.read();
-        line.process();
-        if (line.flag) {
-          break;
-        }
-        if (ball.hold) {
-          LED.changeAll(LED.subColor);
-        } else {
-          if (ball.emg) {
-            LED.degShow(ball.deg, LED.LIME);
-          } else if (ball.turn) {
-            LED.degShow(ball.deg, LED.GREEN);
-          } else {
-            LED.degShow(ball.deg);
-          }
-          if (ball.speed == 70) {
-            LED.degShow(ball.deg, LED.YELLOW);
-          }
-        }
-        motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 5) {
-          digitalWrite(BALL_RESET, HIGH);
-          line.read();
-          line.process();
-        }
-      }
-    } else {
-      LED.changeAll(LED.PURPLE);
-      motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
-        line.read();
-        line.process();
-        if (line.flag) {
-          break;
-        }
-        motor.drive(NULL, NULL);
-        // motor.drive(90, ball.speed);
-        if (millis() - motor.moveTimer >= 5) {
-          digitalWrite(BALL_RESET, HIGH);
-        }
-      }
-    }
+    if (millis() - LCD.timer >= 200) {
+      lcd.clear();
+      lcd.print("PID-TEST");
 
-    // LCD
-    if (device.process == LOW) {
-      if (millis() - LCD.timer >= 200) {
-        lcd.clear();
-        if (!device.keeper) {
-          lcd.print("RUNNING! OFFENCE");
-        } else {
-          lcd.print("RUNNING! KEEPER");
-        }
+      lcd.setCursor(0, 1);
 
-        lcd.setCursor(0, 1);
-        if (LCD.unit != "NULL") {
-          lcd.print("INFO:");
-          lcd.print(line.x);
-          lcd.print(line.y);
-          // lcd.print(LCD.unit);
-        }
+      lcd.print(gyro.deg);
+      lcd.print("deg");
+      lcd.setCursor(7, 1);
+      lcd.print(motor.val[0]);
+      lcd.print("%");
 
-        LCD.timer = millis();
-        LCD.output = 1;
-      }
-    } else {
-      if (LCD.output != 1) {
-        lcd.clear();
-        lcd.print("RUNNING!");
-        LCD.output = 1;
-      }
+      LCD.timer = millis();
+      LCD.output = 1;
     }
   }
-  Serial.print(ball.top);
-  Serial.print(" ");
-  Serial.print(ball.val[ball.top]);
-  Serial.print(" ");
-  Serial.println("");
 }
