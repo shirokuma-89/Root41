@@ -32,20 +32,27 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    Kp = 0.55;  //比例定数
-    Ki = 0.00;  //積分定数
-    // Kd = 0.058;  //微分定数
-    Kd = 0.15;  //微分定数
+    if (false) {  //タイルカーペット
+      Kp = 0.55;  //比例定数
+      Ki = 0.02;  //積分定数
+      Kd = 0.1;   //微分定数
+      Km = 0.5;
+    } else {       //パンチカーペット
+      Kp = 0.45;   //比例定数
+      Ki = 0.007;  //積分定数
+      Kd = 0.12;   //微分定数
+      Km = 0.4;
+    }
 
     int correctionMinimum;  //角度補正の最小絶対値
     front = gyro.deg;
     front = front > 180 ? front - 360 : front;
-    correctionMinimum = front * 0.5;
+    correctionMinimum = front * Km;
     if (abs(front) <= 30)
       integral += front;
     front *= Kp;             //比例制御
     front += integral * Ki;  //積分制御
-    front *= 2.5;
+    front *= 2.3;
     _front = (gyro.differentialRead() * Kd);
     _front += front;  //微分制御
 
@@ -57,7 +64,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     }
 
     //機体が前を向いたら積分していたものをクリアする
-    if (gyro.deg <= 5 && gyro.deg >= 355 && abs(gyro.differentialRead()) <= 2) {
+    if (gyro.deg <= 5 || gyro.deg >= 355) {
       integral = 0;
     }
 
@@ -115,7 +122,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        int error = 25;
+        error = 25;
         if (gyro.deg >= error && gyro.deg <= 360 - error) {
           LED.changeAll(LED.BLUE);
           goto ERROR;
@@ -136,6 +143,12 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
           } else {
             val[i] = correctionVal;
           }
+        }
+      }
+
+      if (gyro.deg >= error && gyro.deg <= 360 - error) {
+        for (int i = 0; i <= 2; i++) {
+          val[i] *= 0.7;
         }
       }
     }

@@ -45,8 +45,10 @@ class _motor {
   float Kp;
   float Ki;
   float Kd;
+  float Km;
 
   int correctionVal = 0;
+  int error;
 
 } motor;
 
@@ -180,7 +182,7 @@ void loop(void) {
     }
   } else if (device.mode == 1) {
     LED.gyroShow(LED.subColor);
-    motor.drive(NULL, NULL);
+    motor.drive(0, 100);
 
     if (millis() - LCD.timer >= 200) {
       lcd.clear();
