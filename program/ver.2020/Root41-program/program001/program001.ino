@@ -286,14 +286,14 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 25) {
+      while (millis() - motor.moveTimer <= 15) {
         line.read();
         line.process();
         if (line.flag) {
           break;
         }
         motor.drive(ball.deg, ball.speed);
-        if (millis() - motor.moveTimer >= 5) {
+        if (millis() - motor.moveTimer >= 3) {
           digitalWrite(BALL_RESET, HIGH);
         }
       }

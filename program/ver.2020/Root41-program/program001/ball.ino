@@ -60,16 +60,16 @@ void _ball::calc(void) {
       goto TURN_PROCESS;
     }
   }
-  if (top > 0 && top < 16) {
+  if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
   TURN_PROCESS:
     if (val[top] <= 263) {
       turn = true;
       if (deg >= 180) {
         deg -= turnVal;
-        speed = 50;
+        speed = 80;
       } else {
         deg += turnVal;
-        speed = 50;
+        speed = 80;
       }
     }
   }
@@ -98,9 +98,9 @@ void _ball::calc(void) {
   }
 
   if (ball.top >= 2 && ball.top <= 5) {
-    ball.speed -= 15;
+    ball.speed -= 20;
   } else if (ball.top >= 14 && ball.top <= 11) {
-    ball.speed -= 15;
+    ball.speed -= 20;
   }
 
   LCD.data = ball.top;
