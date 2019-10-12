@@ -101,7 +101,7 @@ void _ball::calc(void) {
 
   if (ball.top >= 2 && ball.top <= 5) {
     ball.speed -= 20;
-  } else if (ball.top >= 14 && ball.top <= 11) {
+  } else if (ball.top <= 14 && ball.top >= 11) {
     ball.speed -= 20;
   }
 
