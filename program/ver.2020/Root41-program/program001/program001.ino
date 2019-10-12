@@ -20,6 +20,10 @@ int LINE[20] = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 #define SW_1 23
 #define SW_RESET 25
 
+#define BUZ_1 14
+#define BUZ_2 15
+#define BUZ_3 16
+
 //インスタンス作成
 Adafruit_NeoPixel RGBLED = Adafruit_NeoPixel(16, 28, NEO_GRB + NEO_KHZ800);
 FaBoLCDmini_AQM0802A lcd;
@@ -145,6 +149,8 @@ class _device {
  public:
   void initialize(void);
   void check(void);
+  void buz(void);
+  void mute(void);
 
   bool robot;
   bool keeper;
@@ -196,6 +202,7 @@ class _LCD {
 
 void setup(void) {
   device.initialize();
+  device.buz();
   device.mode = 0;
 
   lcd.clear();
@@ -207,6 +214,8 @@ void setup(void) {
 
   gyro.setting();
   gyro.read();
+
+  device.mute();
 
   //起動イルミネーション
   for (int i = 0; i <= 15; i++) {
@@ -240,6 +249,7 @@ void loop(void) {
   device.check();
 
   if (device.mode == 0) {  //待機中
+    device.mute();
     gyro.deg = gyro.read();
     LED.gyroShow();
 
@@ -268,6 +278,7 @@ void loop(void) {
 
     //駆動
     if (line.flag) {
+      device.buz();
       motor.moveTimer = millis();
       LED.degShow(line.deg, LED.PURPLE);
       if (line.deg == 1000) {
@@ -276,6 +287,7 @@ void loop(void) {
         motor.drive(line.deg, 100);
       }
     } else if (ball.exist) {
+      device.mute();
       motor.moveTimer = millis();
       if (ball.hold) {
         LED.changeAll(LED.subColor);
@@ -300,6 +312,7 @@ void loop(void) {
         }
       }
     } else {
+      device.mute();
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {

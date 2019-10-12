@@ -24,6 +24,10 @@ void _device::initialize(void) {
   LED.changeAll(LED.GREEN);
   RGBLED.show();
 
+  pinMode(BUZ_1, OUTPUT);
+  pinMode(BUZ_2, OUTPUT);
+  pinMode(BUZ_3, OUTPUT);
+
   for (int i = 0; i <= 15; i++) {
     pinMode(BALL[i], INPUT);
   }
@@ -98,4 +102,22 @@ void _device::check(void) {
   }
   line._millis = millis();
   gyro.pickUpAns = gyro.pickUp();
+}
+
+void _device::buz(void) {
+  if (true) {
+    digitalWrite(BUZ_1, HIGH);
+    digitalWrite(BUZ_2, HIGH);
+    digitalWrite(BUZ_3, HIGH);
+  } else {
+    digitalWrite(BUZ_1, LOW);
+    digitalWrite(BUZ_2, LOW);
+    digitalWrite(BUZ_3, LOW);
+  }
+}
+
+void _device::mute(void) {
+  digitalWrite(BUZ_1, LOW);
+  digitalWrite(BUZ_2, LOW);
+  digitalWrite(BUZ_3, LOW);
 }
