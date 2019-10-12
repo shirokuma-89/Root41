@@ -132,7 +132,6 @@ void _line::read(void) {
       if (!flag) {
         sigdeg = gyro.deg;
         first = i;
-        logs2[i] = 1;
         motor.integral = 0;
         gyro.offset = -(line.sigdeg);
         stopTimer = millis();
