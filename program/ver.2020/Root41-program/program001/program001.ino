@@ -70,8 +70,16 @@ class _line {
 
   int whited;
   int logs[20];
-  int first;
+  int root1 = 100;
+  int root2 = 100;
+  int height1;
+  int height2;
+  int first = 100;
+  int second = 100;
   int last;
+  int now;
+  int way;
+  int autodeg;
   int mode;
   int weight = 10;
   int sigdeg;
@@ -364,8 +372,9 @@ void loop(void) {
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
           lcd.print("INFO:");
-          lcd.print(line.x);
-          lcd.print(line.y);
+          lcd.print(line.way);
+          lcd.print("  ");
+          lcd.print(line.first);
           // lcd.print(LCD.unit);
         }
 
