@@ -43,6 +43,7 @@ class _ball {
 
  private:
   int _top;
+  int _deg;
   int exCount = true;
 
   float x;
@@ -70,6 +71,7 @@ class _line {
   int mode;
   int weight = 10;
   int sigdeg;
+  int _deg;
 
   float vector[20][2];
   float x;
@@ -279,7 +281,7 @@ void loop(void) {
         LED.changeAll(LED.subColor);
       } else {
         if (ball.emg) {
-          LED.degShow(ball.deg, LED.LIME);
+          LED.degShow(ball.deg, LED.YELLOW);
         } else if (ball.turn) {
           LED.degShow(ball.deg, LED.GREEN);
         } else {

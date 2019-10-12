@@ -95,7 +95,6 @@ void _device::check(void) {
     LED.white = true;
     device.mode = 1;
     keeper = true;
-    LED.white = false;
   }
   line._millis = millis();
   gyro.pickUpAns = gyro.pickUp();

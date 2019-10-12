@@ -8,6 +8,7 @@ void _ball::read(int* b) {
     val[6] = (val[5] * 2 + val[8]) / 3;
     val[7] = (val[8] * 2 + val[5]) / 3;
     val[14] = (val[13] + val[15]) / 2;
+    val[7] *= 1.2;
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
@@ -30,6 +31,7 @@ void _ball::calc(void) {
   }
 
   deg = top * 22.5;
+  _deg = deg;
 
   dist = 0;
   for (int i = 0; i < 16; i++) {
@@ -118,5 +120,13 @@ void _ball::calc(void) {
   }
   if (ball.val[ball.top] >= 400) {
     ball.deg = ball.top * 22.5;
+  }
+
+  if (line._deg != 1000) {
+    if (abs(line._deg - _deg) >= 270 || abs(line._deg - _deg) <= 90) {
+      exist = false;
+    } else {
+      line._deg = 1000;
+    }
   }
 }
