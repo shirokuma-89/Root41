@@ -12,10 +12,11 @@ void _ball::read(int* b) {
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
-    val[8] = (val[7] + val[9]) / 2;
+    val[8] = (val[6] + val[9]) / 2;
+    val[7] = val[8];
   }
 
-  val[0] *= 0.95;
+  // val[0] *= 0.95;
 
   digitalWrite(BALL_RESET, LOW);
 }
@@ -78,7 +79,7 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 250) {
+    if (val[top] <= 245) {
       emg = true;
       if (top >= 8) {
         deg -= 50;
@@ -122,11 +123,11 @@ void _ball::calc(void) {
     ball.deg = ball.top * 22.5;
   }
 
-  if (line._deg != 1000) {
-    if (abs(line._deg - _deg) >= 270 || abs(line._deg - _deg) <= 90) {
-      exist = false;
-    } else {
-      line._deg = 1000;
-    }
-  }
+  // if (line._deg != 1000) {
+  //   if (abs(line._deg - _deg) >= 270 || abs(line._deg - _deg) <= 90) {
+  //     exist = false;
+  //   } else {
+  //     line._deg = 1000;
+  //   }
+  // }
 }
