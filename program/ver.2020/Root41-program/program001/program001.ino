@@ -37,7 +37,7 @@ class _ball {
   unsigned long lineOut;
 
   int val[16];
-  int speed = 100;
+  int speed = 90;
   int top;
   int deg;
   int dist;
@@ -395,7 +395,9 @@ void loop(void) {
   }
   Serial.print(ball.top);
   Serial.print(" ");
-  Serial.print(ball.val[ball.top]);
-  Serial.print(" ");
+  for (int i = 0; i <= 15; i++) {
+    Serial.print(ball.val[i]);
+    Serial.print(" ");
+  }
   Serial.println("");
 }

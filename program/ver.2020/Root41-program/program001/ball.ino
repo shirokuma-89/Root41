@@ -12,7 +12,8 @@ void _ball::read(int* b) {
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
-    val[8] = (val[7] + val[9]) / 2;
+    val[8] = (val[6] + val[9]) / 2;
+    val[7] = val[8];
   }
 
   // val[0] *= 0.95;

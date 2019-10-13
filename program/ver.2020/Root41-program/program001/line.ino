@@ -8,37 +8,10 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 8) {
+        if (line.logs[i] == 1 && line.whited <= 12) {
           line.x += line.vector[i][0];
           line.y += line.vector[i][1];
           line.logs[i] = 2;
-        }
-      }
-      if (line.whited == 8) {
-        if (line.logs[0] != 0 || line.logs[19] != 0) {
-          if (line.logs[4] != 0 || line.logs[5] != 0) {
-            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[14] == 0 &&
-                line.logs[15] == 0) {
-              line.autodeg = 225;
-            }
-          } else if (line.logs[14] != 0 || line.logs[15] != 0) {
-            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[4] == 0 &&
-                line.logs[5] == 0) {
-              line.autodeg = 135;
-            }
-          }
-        } else if (line.logs[9] != 0 || line.logs[10] != 0) {
-          if (line.logs[4] != 0 || line.logs[5] != 0) {
-            if (line.logs[0] == 0 && line.logs[19] == 0 && line.logs[14] == 0 &&
-                line.logs[15] == 0) {
-              line.autodeg = 315;
-            }
-          } else if (line.logs[14] != 0 || line.logs[15] != 0) {
-            if (line.logs[9] == 0 && line.logs[10] == 0 && line.logs[4] == 0 &&
-                line.logs[5] == 0) {
-              line.autodeg = 45;
-            }
-          }
         }
       }
       line.deg = atan2(line.x, line.y);
@@ -48,17 +21,17 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (line.autodeg != 1000) {
-        line.deg = line.autodeg;
+      if (first >= 8 && first <= 11) {
+        line.deg = 0;
       }
       if (millis() - line.stopTimer <= 100) {
         line.deg = 1000;
       } else if (millis() - line.stopTimer >= 2000) {
         if (line.touch) {
           if (line.deg <= 180) {
-            line.deg = 145;
+            line.deg = 180;
           } else {
-            line.deg = 215;
+            line.deg = 180;
           }
         }
       }
