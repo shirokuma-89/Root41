@@ -295,7 +295,7 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (millis() - device.buzTimer1 <= 800) {
+    if (millis() - device.buzTimer1 <= 30) {
       device.buz();
     } else {
       device.mute();
@@ -324,8 +324,8 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 12) {
-        if (millis() - device.buzTimer1 <= 800) {
+      while (millis() - motor.moveTimer <= 20) {
+        if (millis() - device.buzTimer1 <= 30) {
           device.buz();
         } else {
           device.mute();
@@ -344,7 +344,7 @@ void loop(void) {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
-        if (millis() - device.buzTimer1 <= 800) {
+        if (millis() - device.buzTimer1 <= 30) {
           device.buz();
         } else {
           device.mute();
