@@ -262,6 +262,7 @@ void loop(void) {
   device.check();
 
   if (device.mode == 0) {  //待機中
+    line._deg = 1000;
     if (millis() - device.buzTimer2 <= 20) {
       device.buz();
     } else {
@@ -323,7 +324,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 12) {
         if (millis() - device.buzTimer1 <= 800) {
           device.buz();
         } else {
