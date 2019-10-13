@@ -101,7 +101,7 @@ void _device::check(void) {
     keeper = true;
   }
   line._millis = millis();
-  gyro.pickUpAns = gyro.pickUp();
+  // gyro.pickUpAns = gyro.pickUp();
 }
 
 void _device::buz(void) {
