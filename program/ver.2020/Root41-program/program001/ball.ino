@@ -122,11 +122,13 @@ void _ball::calc(void) {
     ball.deg = ball.top * 22.5;
   }
 
-  if (line._deg != 1000) {
-    if (abs(line._deg - _deg) >= 270 || abs(line._deg - _deg) <= 90) {
+  if (line._deg != 1000 && millis() - ball.lineOut <= 3000) {
+    if (abs(line._deg - _deg) >= 300 || abs(line._deg - _deg) <= 60) {
       exist = false;
     } else {
       line._deg = 1000;
     }
+  } else {
+    line._deg = 1000;
   }
 }

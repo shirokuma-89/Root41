@@ -4,6 +4,7 @@ ISR(timer5Event) {
 
 void _line::process(void) {
   if (line.flag) {
+    ball.lineOut = millis();
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {

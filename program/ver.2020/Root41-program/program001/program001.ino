@@ -34,6 +34,8 @@ class _ball {
   void read(int* b);
   void calc(void);
 
+  unsigned long lineOut;
+
   int val[16];
   int speed = 100;
   int top;
@@ -292,7 +294,7 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (millis() - device.buzTimer1 <= 20) {
+    if (millis() - device.buzTimer1 <= 800) {
       device.buz();
     } else {
       device.mute();
@@ -322,7 +324,7 @@ void loop(void) {
         }
       }
       while (millis() - motor.moveTimer <= 15) {
-        if (millis() - device.buzTimer1 <= 20) {
+        if (millis() - device.buzTimer1 <= 800) {
           device.buz();
         } else {
           device.mute();
@@ -341,7 +343,7 @@ void loop(void) {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 20) {
-        if (millis() - device.buzTimer1 <=20) {
+        if (millis() - device.buzTimer1 <= 800) {
           device.buz();
         } else {
           device.mute();
