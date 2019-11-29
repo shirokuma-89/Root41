@@ -324,7 +324,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 20) {
+      while (millis() - motor.moveTimer <= 25) {
         if (millis() - device.buzTimer1 <= 30) {
           device.buz();
         } else {

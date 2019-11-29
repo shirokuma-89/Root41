@@ -38,8 +38,8 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       Kd = 0.1;   //微分定数
       Km = 0.5;
     } else {       //パンチカーペット
-      Kp = 0.47;   //比例定数
-      Ki = 0.005;  //積分定数
+      Kp = 0.45;   //比例定数
+      Ki = 0.003;  //積分定数
       Kd = 0.12;   //微分定数
       Km = 0.4;
     }
