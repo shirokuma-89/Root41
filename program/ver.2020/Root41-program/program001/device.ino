@@ -69,6 +69,30 @@ void _device::initialize(void) {
   lcd.command(0x38);
   lcd.command(0x01);
   lcd.command(0x0c);
+
+  for (int i = 0; i <= 359; i++) {s
+    float s;
+    calcVal[0][i] = int(sin(radians(i - 300)) * 100.0);
+    calcVal[1][i] = int(sin(radians(i - 60)) * 100.0);
+    calcVal[2][i] = int(sin(radians(i - 180)) * 100.0);
+
+    if (abs(calcVal[0]) < abs(calcVal[1])) {
+      if (abs(calcVal[1]) < abs(calcVal[2])) {
+        s = 100.0 / (float)abs(calcVal[2]);
+      } else {
+        s = 100.0 / (float)abs(calcVal[1]);
+      }
+    } else {
+      if (abs(calcVal[0]) < abs(calcVal[2])) {
+        s = 100.0 / (float)abs(calcVal[2]);
+      } else {
+        s = 100.0 / (float)abs(calcVal[0]);
+      }
+    }
+    calcVal[0][i] = round((float)calcVal[0][i] * s);
+    calcVal[1][i] = round((float)calcVal[1][i] * s);
+    calcVal[2][i] = round((float)calcVal[2][i] * s);
+  }
 }
 
 void _device::check(void) {

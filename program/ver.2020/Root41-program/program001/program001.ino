@@ -115,6 +115,8 @@ class _motor {
   unsigned long moveTimer = 0;
   int integral = 0;
 
+  int calcVal[3][360];
+
  private:
   int front = 0;
   int _front;
