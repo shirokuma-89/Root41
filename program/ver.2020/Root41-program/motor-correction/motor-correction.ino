@@ -58,9 +58,9 @@ class _motor {
 void setup(void) {
   //この三つの値を調整するべし。必ず1.00以下にするべし。
   // step1,2,3すべてにおいてちょうどいい値をがんばって探すべし。
-  motor.cValue[0] = 1.00;
+  motor.cValue[0] = 0.98;
   motor.cValue[1] = 1.00;
-  motor.cValue[2] = 1.00;
+  motor.cValue[2] = 0.99;
 }
 
 void loop(void) {
