@@ -34,11 +34,13 @@ class _ball {
   void read(int* b);
   void calc(void);
 
+  int job = 0;
   int val[16];
-  int speed = 90;
+  int speed = 75;
   int top;
   int deg;
   int dist;
+  float degx;
 
   bool exist;
   bool hold = false;
@@ -68,32 +70,25 @@ class _line {
 
   float deg = 1000;
 
+  int gapdeg;
   int whited;
   int logs[20];
-  int root1 = 100;
-  int root2 = 100;
-  int height1;
-  int height2;
   int first = 100;
-  int second = 100;
-  int last;
-  int now;
-  int way;
-  int autodeg;
   int mode;
-  int weight = 10;
+  int lockside;
   int sigdeg;
   int _deg;
 
   float vector[20][2];
   float x;
   float y;
-  float offsetX = 1.3;
-  float offsetY = 1;
 
   unsigned long stopTimer;
   unsigned long overTimer;
+  unsigned long lockTimer;
   unsigned long _millis;
+
+  int speed = 100;
 
  private:
   bool _flag;
@@ -147,8 +142,13 @@ class _gyro {
 
 class _tof {
  public:
+  void keeeper(void);
   int read(void);
+  int deg;
   int dist;
+  int speed;
+  float x;
+  float y;
 
  private:
 } tof;
@@ -211,6 +211,17 @@ class _LCD {
  private:
 } LCD;
 
+class _start {
+ public:
+  // void startFeint(int _deg);
+  // void standing(void);
+
+  bool start;
+  unsigned long startTimer;
+
+ private:
+} start;
+
 void setup(void) {
   device.initialize();
   device.buz();
@@ -246,8 +257,8 @@ void setup(void) {
   gyro.read();
 
   for (int i = 0; i <= 19; i++) {
-    line.vector[i][0] = sin(radians(i * 18)) * line.offsetX;
-    line.vector[i][1] = cos(radians(i * 18)) * line.offsetY;
+    line.vector[i][0] = sin(radians(i * 18));
+    line.vector[i][1] = cos(radians(i * 18));
   }
 
   delay(500);
@@ -291,6 +302,12 @@ void loop(void) {
     line.read();
     line.process();
     tof.dist = tof.read();
+    if (ball.job == 1) {
+      tof.keeeper();
+    }
+    if (millis() - line.lockTimer >= 1000) {
+      line.lockside = 0;
+    }
 
     if (millis() - device.buzTimer1 <= 20) {
       device.buz();
@@ -307,9 +324,33 @@ void loop(void) {
       } else {
         motor.drive(line.deg, 100);
       }
+    } else if (ball.job == 1) {
+      LED.degShow(tof.deg, LED.YELLOW);
+      if (tof.deg == 1000) {
+        motor.drive(NULL, NULL, true);
+      } else {
+        motor.drive(tof.deg, tof.speed);
+      }
     } else if (ball.exist) {
       device.mute();
       motor.moveTimer = millis();
+      // if (line.lockside == 2) {
+      //   if (ball.deg <= 180) {
+      //     if (ball.deg <= 90) {
+      //       ball.deg = 0;
+      //     } else {
+      //       ball.deg = 180;
+      //     }
+      //   }
+      // } else if (line.lockside == 1) {
+      //   if (ball.deg >= 180) {
+      //     if (ball.deg >= 270) {
+      //       ball.deg = 0;
+      //     } else {
+      //       ball.deg = 180;
+      //     }
+      //   }
+      // }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
       } else {
@@ -332,7 +373,13 @@ void loop(void) {
         if (line.flag) {
           break;
         }
-        motor.drive(ball.deg, ball.speed);
+        if (ball.deg == 1000) {
+          motor.drive(NULL, NULL, true);
+        } else if (ball.hold) {
+          motor.drive(ball.deg, 100);
+        } else {
+          motor.drive(ball.deg, ball.speed);
+        }
         if (millis() - motor.moveTimer >= 3) {
           digitalWrite(BALL_RESET, HIGH);
         }
@@ -352,7 +399,6 @@ void loop(void) {
           break;
         }
         motor.drive(NULL, NULL);
-        // motor.drive(90, ball.speed);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
@@ -372,10 +418,7 @@ void loop(void) {
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
           lcd.print("INFO:");
-          lcd.print(line.way);
-          lcd.print("  ");
-          lcd.print(line.first);
-          // lcd.print(LCD.unit);
+          lcd.print(tof.deg);
         }
 
         LCD.timer = millis();
@@ -390,11 +433,13 @@ void loop(void) {
     }
     device.buzTimer2 = millis();
   }
-  Serial.print(ball.top);
+  Serial.print(ball.deg);
   Serial.print(" ");
-  for (int i = 0; i <= 15; i++) {
-    Serial.print(ball.val[i]);
-    Serial.print(" ");
-  }
+  Serial.print(line.lockside);
+  Serial.print(" ");
+  Serial.print(line.flag);
+  Serial.print(" ");
+  Serial.print(line.deg);
+  Serial.print(" ");
   Serial.println("");
 }

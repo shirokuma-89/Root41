@@ -77,6 +77,12 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       val[1] = int(sin(radians(_deg - 60)) * 100.0);
       val[2] = int(sin(radians(_deg - 180)) * 100.0);
 
+      if (_deg == 0) {
+        val[0] = 100;
+        val[1] = -100;
+        val[2] = 0;
+      }
+
       if (abs(val[0]) < abs(val[1])) {
         if (abs(val[1]) < abs(val[2])) {
           s = 100.0 / (float)abs(val[2]);

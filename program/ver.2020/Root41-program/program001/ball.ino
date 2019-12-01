@@ -34,6 +34,8 @@ void _ball::calc(void) {
   deg = top * 22.5;
   _deg = deg;
 
+  degx = sin(radians(_deg));
+
   dist = 0;
   for (int i = 0; i < 16; i++) {
     if (val[i] <= 400) {
