@@ -8,7 +8,7 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 12) {
+        if (line.logs[i] == 1 && line.whited <= 15) {
           line.x += line.vector[i][0];
           line.y += line.vector[i][1];
           line.logs[i] = 2;
@@ -21,19 +21,8 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (first >= 8 && first <= 11) {
-        line.deg = 0;
-      }
       if (millis() - line.stopTimer <= 100) {
         line.deg = 1000;
-      } else if (millis() - line.stopTimer >= 2000) {
-        if (line.touch) {
-          if (line.deg <= 180) {
-            line.deg = 180;
-          } else {
-            line.deg = 180;
-          }
-        }
       }
     } else if (line.mode == 1 && !line.touch) {
       line.overTimer = millis();
@@ -46,22 +35,9 @@ void _line::process(void) {
           line.deg -= 180;
         }
       }
-      if (abs(line.last * 18 - line.deg) <= 80 ||
-          abs(line.last * 18 - line.deg >= 280)) {
-        line.mode = 3;
-      } else if (abs(line.last - line.first) >= 7 &&
-                 abs(line.last - line.first) <= 13) {
-        line.mode = 3;
-      } else {
-        line.mode = 2;
-      }
+      line.mode = 2;
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= 100) {
-        line.flag = false;
-        line.mode = 0;
-      }
-    } else if (line.mode == 3) {
-      if (millis() - line.overTimer >= 2000) {
+      if (millis() - line.overTimer >= 500) {
         line.flag = false;
         line.mode = 0;
       }

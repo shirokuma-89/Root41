@@ -73,26 +73,9 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     if (!(_deg == NULL && _power == NULL)) {
       float s;
-      val[0] = int(sin(radians(_deg - 300)) * 100.0);
-      val[1] = int(sin(radians(_deg - 60)) * 100.0);
-      val[2] = int(sin(radians(_deg - 180)) * 100.0);
-
-      if (abs(val[0]) < abs(val[1])) {
-        if (abs(val[1]) < abs(val[2])) {
-          s = 100.0 / (float)abs(val[2]);
-        } else {
-          s = 100.0 / (float)abs(val[1]);
-        }
-      } else {
-        if (abs(val[0]) < abs(val[2])) {
-          s = 100.0 / (float)abs(val[2]);
-        } else {
-          s = 100.0 / (float)abs(val[0]);
-        }
-      }
-      val[0] = round((float)val[0] * s);
-      val[1] = round((float)val[1] * s);
-      val[2] = round((float)val[2] * s);
+      val[0] = calcVal[0][_deg];
+      val[1] = calcVal[1][_deg];
+      val[2] = calcVal[2][_deg];
 
       for (int i = 0; i <= 2; i++) {
         val[i] *= -1;

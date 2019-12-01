@@ -16,7 +16,7 @@ void _ball::read(int* b) {
     val[7] = val[8];
   }
 
-  val[0] *= 0.95;
+  // val[0] *= 0.95;
 
   digitalWrite(BALL_RESET, LOW);
 }
@@ -46,13 +46,13 @@ void _ball::calc(void) {
   if (deg >= 180) {
     deg -= 360;
   }
-  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.1063);
+  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
   deg += 720;
   deg %= 360;
   // }
 
   turn = false;
-  int turnVal = 50;
+  int turnVal = 48;
   if (top == 1) {
     if (val[2] >= val[0]) {
       goto TURN_PROCESS;
@@ -65,22 +65,14 @@ void _ball::calc(void) {
   }
   if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
   TURN_PROCESS:
-    if (val[top] <= 272) {
+    if (val[top] <= 269) {
       turn = true;
       if (deg >= 180) {
         deg -= turnVal;
-        if (val[top] <= 257) {
-          deg -= turnVal * 0.5;
-          speed -= 40;
-        }
-        speed -= 20;
+        speed = 60;
       } else {
         deg += turnVal;
-        if (val[top] <= 257) {
-          deg - +turnVal * 0.5;
-          speed -= 40;
-        }
-        speed -= 20;
+        speed = 60;
       }
     }
   }
@@ -105,8 +97,8 @@ void _ball::calc(void) {
     hold = false;
   }
 
-  if (top <= 1 || top >= 15) {
-    holdTimer = millis() + 100;
+  if (top == 0) {
+    holdTimer = millis() + 50;
   }
 
   // if (ball.top >= 1 && ball.top <= 5) {
@@ -141,6 +133,4 @@ void _ball::calc(void) {
   } else {
     line._deg = 1000;
   }
-
-  speed = 100;
 }
