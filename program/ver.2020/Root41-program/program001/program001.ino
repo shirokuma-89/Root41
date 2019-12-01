@@ -109,6 +109,7 @@ class _motor {
   void drive(int _deg, int _power, bool _stop = false);
 
   int val[3];
+  float cValue[3];
 
   const int move = 60;
 
@@ -395,11 +396,9 @@ void loop(void) {
     }
     device.buzTimer2 = millis();
   }
-  Serial.print(ball.top);
+  Serial.print(line.deg);
   Serial.print(" ");
-  for (int i = 0; i <= 15; i++) {
-    Serial.print(ball.val[i]);
-    Serial.print(" ");
-  }
+  Serial.print(line.mode);
+  Serial.print(" ");
   Serial.println("");
 }

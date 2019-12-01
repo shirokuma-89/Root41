@@ -72,6 +72,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     correctionVal = constrain(correctionVal, -100, 100);
 
     if (!(_deg == NULL && _power == NULL)) {
+      float s;
       val[0] = calcVal[0][_deg];
       val[1] = calcVal[1][_deg];
       val[2] = calcVal[2][_deg];

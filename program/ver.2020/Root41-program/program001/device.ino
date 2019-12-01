@@ -46,6 +46,10 @@ void _device::initialize(void) {
     device.robot = true;
     LED.defaltColor = RGBLED.Color(0, 150, 255);
     LED.subColor = RGBLED.Color(0, 0, 255);
+
+    motor.cValue[0] = 0.98;
+    motor.cValue[1] = 1.00;
+    motor.cValue[2] = 0.99;
   } else {
     device.robot = false;
     LED.defaltColor = RGBLED.Color(255, 100, 0);
@@ -70,28 +74,32 @@ void _device::initialize(void) {
   lcd.command(0x01);
   lcd.command(0x0c);
 
-  for (int i = 0; i <= 359; i++) {s
+  for (int i = 0; i <= 359; i++) {
     float s;
-    calcVal[0][i] = int(sin(radians(i - 300)) * 100.0);
-    calcVal[1][i] = int(sin(radians(i - 60)) * 100.0);
-    calcVal[2][i] = int(sin(radians(i - 180)) * 100.0);
+    motor.calcVal[0][i] = int(sin(radians(i - 300)) * 100.0);
+    motor.calcVal[1][i] = int(sin(radians(i - 60)) * 100.0);
+    motor.calcVal[2][i] = int(sin(radians(i - 180)) * 100.0);
 
-    if (abs(calcVal[0]) < abs(calcVal[1])) {
-      if (abs(calcVal[1]) < abs(calcVal[2])) {
-        s = 100.0 / (float)abs(calcVal[2]);
+    if (abs(motor.calcVal[0][i]) < abs(motor.calcVal[1][i])) {
+      if (abs(motor.calcVal[1][i]) < abs(motor.calcVal[2][i])) {
+        s = 100.0 / (float)abs(motor.calcVal[2][i]);
       } else {
-        s = 100.0 / (float)abs(calcVal[1]);
+        s = 100.0 / (float)abs(motor.calcVal[1][i]);
       }
     } else {
-      if (abs(calcVal[0]) < abs(calcVal[2])) {
-        s = 100.0 / (float)abs(calcVal[2]);
+      if (abs(motor.calcVal[0][i]) < abs(motor.calcVal[2][i])) {
+        s = 100.0 / (float)abs(motor.calcVal[2][i]);
       } else {
-        s = 100.0 / (float)abs(calcVal[0]);
+        s = 100.0 / (float)abs(motor.calcVal[0][i]);
       }
     }
-    calcVal[0][i] = round((float)calcVal[0][i] * s);
-    calcVal[1][i] = round((float)calcVal[1][i] * s);
-    calcVal[2][i] = round((float)calcVal[2][i] * s);
+    motor.calcVal[0][i] = round((float)motor.calcVal[0][i] * s);
+    motor.calcVal[1][i] = round((float)motor.calcVal[1][i] * s);
+    motor.calcVal[2][i] = round((float)motor.calcVal[2][i] * s);
+
+    motor.calcVal[0][i] = round((float)motor.calcVal[0][i] * motor.cValue[0]);
+    motor.calcVal[1][i] = round((float)motor.calcVal[1][i] * motor.cValue[1]);
+    motor.calcVal[2][i] = round((float)motor.calcVal[2][i] * motor.cValue[2]);
   }
 }
 
