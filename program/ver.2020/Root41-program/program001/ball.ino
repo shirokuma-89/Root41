@@ -52,7 +52,7 @@ void _ball::calc(void) {
   // }
 
   turn = false;
-  int turnVal = 48;
+  int turnVal = 52;
   if (top == 1) {
     if (val[2] >= val[0]) {
       goto TURN_PROCESS;
@@ -65,27 +65,27 @@ void _ball::calc(void) {
   }
   if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
   TURN_PROCESS:
-    if (val[top] <= 269) {
+    if (val[top] <= 270) {
       turn = true;
       if (deg >= 180) {
         deg -= turnVal;
-        speed = 60;
+        speed = 55;
       } else {
         deg += turnVal;
-        speed = 60;
+        speed = 55;
       }
     }
   }
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 257) {
+    if (val[top] <= 254) {
       emg = true;
-      speed -= 30;
+      speed -= 20;
       if (top >= 8) {
-        deg -= 50;
+        deg -= 35;
       } else {
-        deg += 50;
+        deg += 35;
       }
     }
   }
