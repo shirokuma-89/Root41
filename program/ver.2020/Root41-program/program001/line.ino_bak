@@ -1,0 +1,145 @@
+ISR(timer5Event) {
+  line.read();
+}
+
+void _line::process(void) {
+  if (line.flag) {
+    ball.lineOut = millis();
+    if (line.mode == 1 && line.touch) {
+      if (!line.firstTime) {
+        line.Gmillis = millis();
+        line.firstTime = true;
+      }
+      line._x = 0;
+      line._y = 0;
+      //通常
+      for (int i = 0; i <= 19; i++) {
+        if (line.val[i] && !line.val[(i + 1) % 20]) {
+          line._x += line.vector[i][0];
+          line._y += line.vector[i][1];
+        }
+
+        if (line.logs[i] == 1 && line.whited <= 17) {
+          line.x += line.vector[i][0];
+          line.y += line.vector[i][1];
+          line.logs[i] = 2;
+        }
+      }
+
+      line.rDeg = atan2(line.x, line.y);
+      line.rDeg = degrees(line.rDeg);
+      if (line.rDeg < 180) {
+        line.rDeg += 180;
+      } else {
+        line.rDeg -= 180;
+      }
+
+      line.deg = atan2(line._x, line._y);
+      line.deg = degrees(line.deg);
+      line.nDeg = line.deg;
+      if (line.deg < 180) {
+        line.nDeg += 180;
+      } else {
+        line.nDeg -= 180;
+      }
+
+      line.rError = abs(line.rDeg - line.deg);
+      if (line.rError >= 180) {
+        line.rError = 360 - line.rError;
+      }
+
+      line.nError = abs(line.rDeg - line.nDeg);
+      if (line.nError >= 180) {
+        line.nError = 360 - line.nError;
+      }
+      if (line.whited >= 17) {
+        if (line.rError <= 50) {
+          line.col = 1;
+        } else if (line.nError <= 50) {
+          line.deg = line.nDeg;
+          line.col = 2;
+        } else {
+          line.deg = line.rDeg;
+          line.col = 3;
+        }
+      } else {
+        line.deg = line.rDeg;
+      }
+      line.backupDeg = line.deg;
+
+      if (millis() - line.stopTimer <= 100) {
+        line.deg = 1000;
+      }
+    } else if (line.mode == 1 && !line.touch) {
+      line.overTimer = millis();
+      if (line.deg == 1000) {
+        line.deg = line.backupDeg;
+      }
+      line.mode = 2;
+    } else if (line.mode == 2) {
+      if (millis() - line.overTimer >= 200) {
+        line.flag = false;
+        line.mode = 0;
+      }
+    }
+    line._deg = (round(line.deg) + 180) % 360;
+  } else {
+    gyro.offset = 0;
+    line.flag = false;
+    line.deg = 1000;
+    line.autodeg = 1000;
+    line.first = 100;
+    line.last = 100;
+    line.x = 0;
+    line.firstTime = false;
+    line.y = 0;
+    line.mode = 0;
+    line.whited = 0;
+    for (int i = 0; i <= 19; i++) {
+      line.logs[i] = 0;
+    }
+    line.stopTimer = 0;
+    line.overTimer = 0;
+    line.firstDeg = 1000;
+  }
+}
+
+_line::_line(void) {
+  for (int i = 0; i <= 19; i++) {
+    val[i] = false;
+  }
+}
+
+void _line::read(void) {
+  touch = false;
+  for (int i = 0; i <= 19; i++) {
+    if (!digitalRead(LINE[i])) {
+      if (logs[i] != 1) {
+        now = i;
+      }
+      if (logs[i] == 0) {
+        whited++;
+        logs[i] = 1;
+      }
+      if (!flag) {
+        sigdeg = gyro.deg;
+        first = i;
+        motor.integral = 0;
+        gyro.offset = -(line.sigdeg);
+        stopTimer = millis();
+      }
+      if (!val[i]) {
+        last = i;
+      }
+      val[i] = true;
+      flag = true;
+      touch = true;
+      if (line.mode != 2) {
+        mode = 1;
+      }
+
+    } else {
+      val[i] = false;
+    }
+  }
+}
