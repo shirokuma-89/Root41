@@ -51,6 +51,9 @@ void _device::initialize(void) {
     motor.cValue[1] = 1.00;
     motor.cValue[2] = 0.99;
   } else {
+    motor.cValue[0] = 1.00;
+    motor.cValue[1] = 0.93;
+    motor.cValue[2] = 0.84;
     device.robot = false;
     LED.defaltColor = RGBLED.Color(255, 100, 0);
     LED.subColor = RGBLED.Color(255, 0, 0);

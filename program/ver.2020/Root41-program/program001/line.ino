@@ -8,7 +8,7 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 15) {
+        if (line.logs[i] == 1 && line.whited <= 11) {
           line.x += line.vector[i][0];
           line.y += line.vector[i][1];
           line.logs[i] = 2;
@@ -21,7 +21,7 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (millis() - line.stopTimer <= 100) {
+      if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
       }
     } else if (line.mode == 1 && !line.touch) {
@@ -35,9 +35,32 @@ void _line::process(void) {
           line.deg -= 180;
         }
       }
-      line.mode = 2;
+      if (abs(line.now - line.first) <= 11 && abs(line.now - line.first) >= 7) {
+        line.mode = 3;
+      } else {
+        line.mode = 2;
+      }
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= 300) {
+      if (millis() - line.overTimer >= 200) {
+        if (first >= 2 && first <= 7) {
+          line.lock = 2;
+          line.lockTimer = millis();
+        } else if (first >= 12 && first <= 18) {
+          line.lock = 1;
+          line.lockTimer = millis();
+        }
+        line.flag = false;
+        line.mode = 0;
+      }
+    } else if (line.mode == 3) {
+      if (millis() - line.overTimer >= 800) {
+        if (first >= 2 && first <= 7) {
+          line.lock = 2;
+          line.lockTimer = millis();
+        } else if (first >= 12 && first <= 18) {
+          line.lock = 1;
+          line.lockTimer = millis();
+        }
         line.flag = false;
         line.mode = 0;
       }
@@ -72,7 +95,7 @@ void _line::read(void) {
   touch = false;
   for (int i = 0; i <= 19; i++) {
     if (!digitalRead(LINE[i])) {
-      if (logs[i] != 1) {
+      if (logs[i] == 0) {
         now = i;
       }
       if (logs[i] == 0) {

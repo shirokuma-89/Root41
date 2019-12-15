@@ -85,6 +85,24 @@ void _LED::degShow(int d, unsigned long _color = 'hogehoge') {
   }
 }
 
+void _LED::lineShow() {
+  for (int i = 0; i <= 19; i++) {
+    if (i != 0 && i != 5 && i != 10 && i != 15) {
+      if (line.logs[i] != 0) {
+        if (i <= 4) {
+          RGBLED.setPixelColor(i - 1, 255, 0, 255);
+        } else if (i <= 9) {
+          RGBLED.setPixelColor(i - 2, 255, 0, 255);
+        } else if (i <= 14) {
+          RGBLED.setPixelColor(i - 3, 255, 0, 255);
+        } else {
+          RGBLED.setPixelColor(i - 4, 255, 0, 255);
+        }
+      }
+    }
+  }
+}
+
 void _LED::changeAll(int red, int green, int blue) {
   if (!LED.white) {
     for (int i = 0; i <= 15; i++) {
