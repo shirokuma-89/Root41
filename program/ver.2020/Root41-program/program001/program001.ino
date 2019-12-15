@@ -67,9 +67,11 @@ class _line {
   bool flag;
   bool val[20];
   bool touch;
+  bool firstTime = false;
 
   float deg = 1000;
 
+  int col;
   int whited;
   int logs[20];
   int root1 = 100;
@@ -86,16 +88,25 @@ class _line {
   int weight = 10;
   int sigdeg;
   int _deg;
+  float rDeg;
+  float nDeg;
+  int rError;
+  int nError;
 
   float vector[20][2];
+  float firstDeg;
   float x;
   float y;
+  float _x;
+  float _y;
+  float backupDeg;
   float offsetX = 1.3;
   float offsetY = 1;
 
   unsigned long stopTimer;
   unsigned long overTimer;
   unsigned long _millis;
+  unsigned long Gmillis;
 
  private:
   bool _flag;
@@ -327,7 +338,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 25) {
+      while (millis() - motor.moveTimer <= 15) {
         if (millis() - device.buzTimer1 <= 30) {
           device.buz();
         } else {
@@ -346,7 +357,7 @@ void loop(void) {
     } else {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 20) {
+      while (millis() - motor.moveTimer <= 10) {
         if (millis() - device.buzTimer1 <= 30) {
           device.buz();
         } else {
@@ -396,9 +407,11 @@ void loop(void) {
     }
     device.buzTimer2 = millis();
   }
-  Serial.print(line.deg);
+  Serial.print(line.rDeg);
   Serial.print(" ");
-  Serial.print(line.mode);
+  Serial.print(line.rError);
+  Serial.print(" ");
+  Serial.print(line.nError);
   Serial.print(" ");
   Serial.println("");
 }
