@@ -69,6 +69,8 @@ class _line {
   bool touch;
 
   float deg = 1000;
+  float Sdeg = 1000;
+  float Ldeg = 1000;
 
   int whited;
   int logs[20];
@@ -82,19 +84,26 @@ class _line {
   int now;
   int way;
   int autodeg;
+  int lock;
   int mode;
   int weight = 10;
   int sigdeg;
+  int Sgap;
+  int Lgap;
   int _deg;
 
   float vector[20][2];
   float x;
   float y;
+  float Nx;
+  float Ny;
+  float gap;
   float offsetX = 1.3;
   float offsetY = 1;
 
   unsigned long stopTimer;
   unsigned long overTimer;
+  unsigned long lockTimer;
   unsigned long _millis;
 
  private:
@@ -183,6 +192,7 @@ class _LED {
   void changeAll(int red, int green, int blue);
   void changeAll(unsigned long _color);
   void degShow(int d, unsigned long _color = 'hogehoge');
+  void lineShow(void);
 
   bool white = false;
 
@@ -307,7 +317,8 @@ void loop(void) {
     if (line.flag) {
       device.buz();
       motor.moveTimer = millis();
-      LED.degShow(line.deg, LED.PURPLE);
+      // LED.degShow(line.deg, LED.PURPLE);
+      LED.lineShow();
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
       } else {
@@ -316,10 +327,28 @@ void loop(void) {
     } else if (ball.exist) {
       device.mute();
       motor.moveTimer = millis();
+      if (line.lock == 1 && ball.deg >= 180) {
+        if (ball.deg <= 270) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      } else if (line.lock == 2 && ball.deg <= 180) {
+        if (ball.deg >= 90) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      }
+      if (millis() - line.lockTimer >= 1500) {
+        line.lock = 0;
+      }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
       } else {
-        if (ball.emg) {
+        if (line.lock != 0) {
+          LED.changeAll(LED.PURPLE);
+        } else if (ball.emg) {
           LED.degShow(ball.deg, LED.YELLOW);
         } else if (ball.turn) {
           LED.degShow(ball.deg, LED.GREEN);
@@ -338,7 +367,11 @@ void loop(void) {
         if (line.flag) {
           break;
         }
-        motor.drive(ball.deg, ball.speed);
+        if (ball.deg == 1000) {
+          motor.drive(NULL, NULL, true);
+        } else {
+          motor.drive(ball.deg, ball.speed);
+        }
         if (millis() - motor.moveTimer >= 3) {
           digitalWrite(BALL_RESET, HIGH);
         }
@@ -358,7 +391,6 @@ void loop(void) {
           break;
         }
         motor.drive(NULL, NULL);
-        // motor.drive(90, ball.speed);
         if (millis() - motor.moveTimer >= 5) {
           digitalWrite(BALL_RESET, HIGH);
         }
@@ -400,5 +432,8 @@ void loop(void) {
   Serial.print(" ");
   Serial.print(line.mode);
   Serial.print(" ");
+  Serial.print(line.first);
+  Serial.print(" ");
+  Serial.print(line.whited);
   Serial.println("");
 }
