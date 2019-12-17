@@ -336,7 +336,6 @@ void loop(void) {
         motor.drive(line.deg, 100);
       }
     } else if (ball.exist) {
-      device.mute();
       motor.moveTimer = millis();
       if (line.lock == 1 && ball.deg >= 180) {
         if (ball.deg <= 270) {
@@ -356,7 +355,9 @@ void loop(void) {
       }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
+        device.buz();
       } else {
+        device.mute();
         if (line.lock != 0) {
           LED.changeAll(LED.PURPLE);
         } else if (ball.emg) {

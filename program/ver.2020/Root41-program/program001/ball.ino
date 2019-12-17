@@ -46,13 +46,13 @@ void _ball::calc(void) {
   if (deg >= 180) {
     deg -= 360;
   }
-  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.106);
+  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.11);
   deg += 720;
   deg %= 360;
   // }
 
   turn = false;
-  int turnVal = 52;
+  int turnVal = 58;
   if (top == 1) {
     if (val[2] >= val[0]) {
       goto TURN_PROCESS;
@@ -79,7 +79,7 @@ void _ball::calc(void) {
 
   emg = false;
   if (top > 6 && top < 10) {
-    if (val[top] <= 254) {
+    if (val[top] <= 256) {
       emg = true;
       speed -= 20;
       if (top >= 8) {
