@@ -4,11 +4,9 @@ void _ball::read(int* b) {
     *(b + i) = analogRead(BALL[i]);
   }
 
-  if (device.robot) {
-    val[6] = (val[5] * 2 + val[8]) / 3;
-    val[7] = (val[8] * 2 + val[5]) / 3;
-    val[14] = (val[13] + val[15]) / 2;
-    val[7] *= 1.2;
+  if (device.robot) {  // error:378
+    val[8] = (val[6] + val[9]) / 2;
+    val[7] = val[8];
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
@@ -132,5 +130,84 @@ void _ball::calc(void) {
   //   }
   // } else {
   //   line._deg = 1000;
+  // }
+}
+
+void _ball::keeper(void) {
+  speed = 100;
+
+  top = 0;
+  for (int i = 0; i <= 15; i++) {
+    if (val[i] <= val[top]) {
+      top = i;
+    }
+  }
+
+  if (val[top] > 560) {
+    exist = false;
+  } else {
+    exist = true;
+  }
+  if (top <= 5 || top >= 11) {
+    if (top <= 8) {
+      if (tof.dist >= 200) {
+        deg = 113;
+      } else if (tof.dist <= 250) {
+        deg = 68;
+      } else {
+        deg = 90;
+      }
+    } else {
+      if (tof.dist >= 200) {
+        deg = 248;
+      } else if (tof.dist <= 250) {
+        deg = 293;
+      } else {
+        deg = 270;
+      }
+    }
+  } else {
+    exist = false;
+  }
+
+  if (top == 0) {
+    exist = false;
+  }
+  // if (tof.dist >= 550) {
+  //   deg = 180;
+  //   speed = 50;
+  // } else if (tof.dist >= 350) {
+  //   deg = 180;
+  //   speed = 30;
+  // } else if (tof.dist <= 200) {
+  //   deg = 0;
+  //   speed = 30;
+  // } else {
+  //   top = 0;
+  //   val[6] = 1000;
+  //   for (int i = 0; i <= 15; i++) {
+  //     if (val[i] <= val[top]) {
+  //       top = i;
+  //     }
+  //   }
+
+  //   if (top <= 1 || top >= 15) {
+  //     exist = false;
+  //   } else if (top >= 8) {
+  //     deg = 270;
+  //   } else {
+  //     deg = 90;
+  //   }
+  // }
+
+  // exist = true;
+  // if (val[top] <= 630) {
+  //   exCount = 0;
+  // } else {
+  //   exCount++;
+  // }
+
+  // if (exCount >= 3) {
+  //   exist = false;
   // }
 }

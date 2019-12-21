@@ -32,7 +32,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    if (true) {   //タイルカーペット
+    if (false) {   //タイルカーペット
       Kp = 0.55;  //比例定数
       Ki = 0.02;  //積分定数
       Kd = 0.1;   //微分定数
