@@ -186,7 +186,13 @@ void _ball::keeper(void) {
       }
     }
   } else {
-    exist = false;
+    if (top >= 8) {
+      deg = 120;
+    } else {
+      deg = 240;
+    }
+    speed = 30;
+    // exist = false;
   }
 
   if (top <= 3 || top >= 13) {
@@ -205,12 +211,12 @@ void _ball::keeper(void) {
   turn = false;
   emg = false;
 
-  if (top <= 2 || top >= 14) {
+  if (top <= 2 || top >= 14 && tof.dist <= 550) {
   } else {
     device.keeperTimer1 = millis();
   }
 
-  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
+  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
     device.keeperTimer1 = millis() - 2100;
   }
 }
