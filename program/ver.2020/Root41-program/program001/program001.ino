@@ -351,7 +351,7 @@ void loop(void) {
           ball.deg = 0;
         }
       }
-      if (millis() - line.lockTimer >= 1500) {
+      if (millis() - line.lockTimer >= 600) {
         line.lock = 0;
       }
       if (ball.hold) {
