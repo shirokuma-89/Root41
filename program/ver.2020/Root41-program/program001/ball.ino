@@ -170,7 +170,7 @@ void _ball::keeper(void) {
     exist = false;
   }
 
-  if (top == 0) {
+  /*if (top == 0) {
     // exist = false;
     if (millis() - lineTimer >= 3000 || lineTimer == 0) {
       if (val[top] <= 250) {
@@ -181,7 +181,8 @@ void _ball::keeper(void) {
         }
       }
     }
-  } else if (tof.dist >= 500) {
+  } else */
+  if (tof.dist >= 500) {
     deg = 180;
     exist = true;
   }
