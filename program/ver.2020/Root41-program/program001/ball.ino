@@ -143,7 +143,7 @@ void _ball::keeper(void) {
     }
   }
 
-  if (val[top] > 560) {
+  if (val[top] > 600) {
     exist = false;
   } else {
     exist = true;
@@ -181,42 +181,12 @@ void _ball::keeper(void) {
         }
       }
     }
+  } else if (tof.dist >= 500) {
+    deg = 180;
+    exist = true;
   }
-  // if (tof.dist >= 550) {
-  //   deg = 180;
-  //   speed = 50;
-  // } else if (tof.dist >= 350) {
-  //   deg = 180;
-  //   speed = 30;
-  // } else if (tof.dist <= 200) {
-  //   deg = 0;
-  //   speed = 30;
-  // } else {
-  //   top = 0;
-  //   val[6] = 1000;
-  //   for (int i = 0; i <= 15; i++) {
-  //     if (val[i] <= val[top]) {
-  //       top = i;
-  //     }
-  //   }
 
-  //   if (top <= 1 || top >= 15) {
-  //     exist = false;
-  //   } else if (top >= 8) {
-  //     deg = 270;
-  //   } else {
-  //     deg = 90;
-  //   }
-  // }
-
-  // exist = true;
-  // if (val[top] <= 630) {
-  //   exCount = 0;
-  // } else {
-  //   exCount++;
-  // }
-
-  // if (exCount >= 3) {
+  // if (top == 0) {
   //   exist = false;
   // }
 }
