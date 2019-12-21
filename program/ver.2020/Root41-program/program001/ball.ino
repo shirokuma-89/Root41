@@ -4,9 +4,11 @@ void _ball::read(int* b) {
     *(b + i) = analogRead(BALL[i]);
   }
 
-  if (device.robot) {  // error:378
-    val[8] = (val[6] + val[9]) / 2;
-    val[7] = val[8];
+  if (device.robot) {
+    val[6] = (val[5] * 2 + val[8]) / 3;
+    val[7] = (val[8] * 2 + val[5]) / 3;
+    val[14] = (val[13] + val[15]) / 2;
+    val[7] *= 1.2;
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
