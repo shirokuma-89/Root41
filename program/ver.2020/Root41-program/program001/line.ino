@@ -56,12 +56,15 @@ void _line::process(void) {
     } else if (line.mode == 2) {
       if (millis() - line.overTimer >= line.whited * 30) {
         if (line.whited <= 10) {
-          if (first >= 2 && first <= 7) {
-            line.lock = 2;
-            line.lockTimer = millis();
-          } else if (first >= 12 && first <= 18) {
-            line.lock = 1;
-            line.lockTimer = millis();
+          if (abs(line.deg - ball.top * 22.5) >= 40 ||
+              abs(line.deg - ball.top * 22.5) <= 320) {
+            if (first >= 2 && first <= 7) {
+              line.lock = 2;
+              line.lockTimer = millis();
+            } else if (first >= 12 && first <= 18) {
+              line.lock = 1;
+              line.lockTimer = millis();
+            }
           }
           line.flag = false;
           line.mode = 0;
