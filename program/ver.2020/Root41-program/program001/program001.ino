@@ -33,6 +33,7 @@ class _ball {
  public:
   void read(int* b);
   void calc(void);
+  void keeper(void);
 
   unsigned long lineOut;
 
@@ -298,6 +299,7 @@ void loop(void) {
     motor.drive(NULL, NULL, true);
 
     if (millis() - LCD.timer >= 200) {
+      tof.dist = tof.read();
       lcd.clear();
       lcd.print("WAITING...");
 
@@ -306,6 +308,7 @@ void loop(void) {
       lcd.print(gyro.deg);
       lcd.write(B11011111);
       lcd.setCursor(9, 1);
+      lcd.print(tof.dist);
       lcd.print("mm");
 
       LCD.timer = millis();
@@ -315,6 +318,111 @@ void loop(void) {
   } else if (device.mode == 1) {
     ball.read(ball.val);
     ball.calc();
+    line.read();
+    line.process();
+    tof.dist = tof.read();
+
+    if (millis() - device.buzTimer1 <= 30) {
+      device.buz();
+    } else {
+      device.mute();
+    }
+    //駆動
+    if (line.flag) {
+      device.buz();
+      motor.moveTimer = millis();
+      // LED.degShow(line.deg, LED.PURPLE);
+      LED.lineShow();
+      if (line.deg == 1000) {
+        motor.drive(NULL, NULL, true);
+      } else {
+        motor.drive(line.deg, 100);
+      }
+    } else if (ball.exist) {
+      motor.moveTimer = millis();
+      if (ball.hold) {
+        LED.changeAll(LED.subColor);
+        device.buz();
+      } else {
+        device.mute();
+        if (ball.emg) {
+          LED.degShow(ball.deg, LED.YELLOW);
+        } else if (ball.turn) {
+          LED.degShow(ball.deg, LED.GREEN);
+        } else {
+          LED.degShow(ball.deg);
+        }
+      }
+      while (millis() - motor.moveTimer <= 15) {
+        if (millis() - device.buzTimer1 <= 30 || ball.hold) {
+          device.buz();
+        } else {
+          device.mute();
+        }
+        line.read();
+        line.process();
+        if (line.flag) {
+          break;
+        }
+        if (ball.deg == 1000) {
+          motor.drive(NULL, NULL, true);
+        } else {
+          motor.drive(ball.deg, ball.speed);
+        }
+        if (millis() - motor.moveTimer >= 3) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    } else {
+      LED.changeAll(LED.PURPLE);
+      motor.moveTimer = millis();
+      while (millis() - motor.moveTimer <= 10) {
+        if (millis() - device.buzTimer1 <= 30) {
+          device.buz();
+        } else {
+          device.mute();
+        }
+        line.read();
+        line.process();
+        if (line.flag) {
+          break;
+        }
+        motor.drive(NULL, NULL);
+        if (millis() - motor.moveTimer >= 5) {
+          digitalWrite(BALL_RESET, HIGH);
+        }
+      }
+    }
+
+    // LCD
+    if (device.process == LOW) {
+      if (millis() - LCD.timer >= 200) {
+        lcd.clear();
+        lcd.print("RUNNING! KEEPER");
+
+        lcd.setCursor(0, 1);
+        if (LCD.unit != "NULL") {
+          lcd.print("INFO:");
+          lcd.print(line.way);
+          lcd.print("  ");
+          lcd.print(line.first);
+          // lcd.print(LCD.unit);
+        }
+
+        LCD.timer = millis();
+        LCD.output = 1;
+      }
+    } else {
+      if (LCD.output != 1) {
+        lcd.clear();
+        lcd.print("RUNNING!");
+        LCD.output = 1;
+      }
+    }
+    device.buzTimer2 = millis();
+  } else if (device.mode == 2) {
+    ball.read(ball.val);
+    ball.keeper();
     line.read();
     line.process();
     tof.dist = tof.read();
@@ -369,7 +477,7 @@ void loop(void) {
         }
       }
       while (millis() - motor.moveTimer <= 15) {
-        if (millis() - device.buzTimer1 <= 30) {
+        if (millis() - device.buzTimer1 <= 30 || ball.hold) {
           device.buz();
         } else {
           device.mute();
