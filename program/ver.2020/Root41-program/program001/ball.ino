@@ -171,7 +171,16 @@ void _ball::keeper(void) {
   }
 
   if (top == 0) {
-    exist = false;
+    // exist = false;
+    if (millis() - lineTimer >= 3000 || lineTimer == 0) {
+      if (val[top] <= 250) {
+        if (!line.flag) {
+          line.deg = 0;
+        } else {
+          lineTimer = millis();
+        }
+      }
+    }
   }
   // if (tof.dist >= 550) {
   //   deg = 180;
