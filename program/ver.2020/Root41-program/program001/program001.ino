@@ -36,6 +36,7 @@ class _ball {
   void keeper(void);
 
   unsigned long lineOut;
+  unsigned long lineTimer;
 
   int val[16];
   int speed = 90;
@@ -548,11 +549,11 @@ void loop(void) {
     }
     device.buzTimer2 = millis();
   }
-  Serial.print(line.rDeg);
+  Serial.print(line.lock);
   Serial.print(" ");
-  Serial.print(line.rError);
+  Serial.print(line.lockTimer);
   Serial.print(" ");
-  Serial.print(line.nError);
+  Serial.print(ball.deg);
   Serial.print(" ");
   Serial.print(line.first);
   Serial.print(" ");
