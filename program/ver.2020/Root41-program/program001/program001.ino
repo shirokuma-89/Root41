@@ -362,7 +362,9 @@ void loop(void) {
         device.buz();
       } else {
         device.mute();
-        if (ball.emg) {
+        if (line.lock != 0) {
+          LED.degShow(ball.deg, LED.PURPLE);
+        } else if (ball.emg) {
           LED.degShow(ball.deg, LED.YELLOW);
         } else if (ball.turn) {
           LED.degShow(ball.deg, LED.GREEN);

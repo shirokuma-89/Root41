@@ -8,8 +8,8 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 11) {
-          line.x += line.vector[i][0];
+        if (line.logs[i] == 1 && line.whited <= 10) {
+          line.x += line.vector[i][0] * 1.5;
           line.y += line.vector[i][1];
           line.logs[i] = 2;
         }
@@ -20,6 +20,15 @@ void _line::process(void) {
         line.deg += 180;
       } else {
         line.deg -= 180;
+      }
+      if (device.mode == 2) {
+        if (line.deg >= 35 && line.deg <= 325) {
+          if (line.deg <= 145 || line.deg >= 215) {
+            if (abs(line.deg - ball.top * 22.5) <= 30) {
+              line.deg = ball.top * 22.5;
+            }
+          }
+        }
       }
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
