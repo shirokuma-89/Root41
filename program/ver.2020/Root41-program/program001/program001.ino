@@ -340,6 +340,22 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
+      if (line.lock == 1 && ball.deg >= 180) {
+        if (ball.deg <= 270) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      } else if (line.lock == 2 && ball.deg <= 180) {
+        if (ball.deg >= 90) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      }
+      if (millis() - line.lockTimer >= 600) {
+        line.lock = 0;
+      }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.buz();
@@ -445,22 +461,6 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      if (line.lock == 1 && ball.deg >= 180) {
-        if (ball.deg <= 270) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      } else if (line.lock == 2 && ball.deg <= 180) {
-        if (ball.deg >= 90) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      }
-      if (millis() - line.lockTimer >= 600) {
-        line.lock = 0;
-      }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.buz();
