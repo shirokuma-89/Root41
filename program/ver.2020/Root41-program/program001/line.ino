@@ -23,6 +23,14 @@ void _line::process(void) {
       }
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
+      } else if (millis() - line.stopTimer >= 2000) {
+        line.deg = atan2(0, line.y);
+        line.deg = degrees(line.deg);
+        if (line.deg < 180) {
+          line.deg += 180;
+        } else {
+          line.deg -= 180;
+        }
       }
     } else if (line.mode == 1 && !line.touch) {
       line.overTimer = millis();
@@ -35,34 +43,23 @@ void _line::process(void) {
           line.deg -= 180;
         }
       }
-      if (abs(line.now - line.first) <= 11 && abs(line.now - line.first) >= 7) {
-        line.mode = 3;
-      } else {
-        line.mode = 2;
-      }
+      line.mode = 2;
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= 200) {
-        if (first >= 2 && first <= 7) {
-          line.lock = 2;
-          line.lockTimer = millis();
-        } else if (first >= 12 && first <= 18) {
-          line.lock = 1;
-          line.lockTimer = millis();
+      if (millis() - line.overTimer >= line.whited * 30) {
+        if (line.whited <= 10) {
+          if (first >= 2 && first <= 7) {
+            line.lock = 2;
+            line.lockTimer = millis();
+          } else if (first >= 12 && first <= 18) {
+            line.lock = 1;
+            line.lockTimer = millis();
+          }
+          line.flag = false;
+          line.mode = 0;
+        } else {
+          line.flag = false;
+          line.mode = 0;
         }
-        line.flag = false;
-        line.mode = 0;
-      }
-    } else if (line.mode == 3) {
-      if (millis() - line.overTimer >= 800) {
-        if (first >= 2 && first <= 7) {
-          line.lock = 2;
-          line.lockTimer = millis();
-        } else if (first >= 12 && first <= 18) {
-          line.lock = 1;
-          line.lockTimer = millis();
-        }
-        line.flag = false;
-        line.mode = 0;
       }
     }
     line._deg = (round(line.deg) + 180) % 360;
