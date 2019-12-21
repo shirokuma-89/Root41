@@ -185,8 +185,4 @@ void _ball::keeper(void) {
     deg = 180;
     exist = true;
   }
-
-  // if (top == 0) {
-  //   exist = false;
-  // }
 }
