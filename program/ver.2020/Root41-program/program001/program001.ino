@@ -576,12 +576,12 @@ void loop(void) {
   }
 
   if (device.keeper && device.mode != 0) {
-    if (millis() - device.keeperTimer1 >= 500 && device.mode == 2) {
+    if (millis() - device.keeperTimer1 >= 750 && device.mode == 2) {
       device.mode = 1;
       device.keeperTimer2 = millis();
     }
 
-    if (millis() - device.keeperTimer2 >= 2500) {
+    if (millis() - device.keeperTimer2 >= 2000) {
       device.mode = 2;
     }
   }
