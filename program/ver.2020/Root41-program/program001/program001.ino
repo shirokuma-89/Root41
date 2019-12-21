@@ -189,12 +189,15 @@ class _device {
 
   bool robot;
   bool keeper;
+  bool count = false;
 
   int process = LOW;
   int mode = 0;
 
   unsigned long buzTimer1 = 0;
   unsigned long buzTimer2 = 0;
+  unsigned long keeperTimer1 = 0;
+  unsigned long keeperTimer2 = 0;
 
  private:
 } device;
@@ -288,6 +291,7 @@ void loop(void) {
   device.check();
 
   if (device.mode == 0) {  //待機中
+    device.keeperTimer1 = millis();
     line._deg = 1000;
     if (millis() - device.buzTimer2 <= 20) {
       device.buz();
@@ -359,6 +363,7 @@ void loop(void) {
       }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
+        device.keeperTimer2 = millis();
         device.buz();
       } else {
         device.mute();
@@ -415,7 +420,7 @@ void loop(void) {
     if (device.process == LOW) {
       if (millis() - LCD.timer >= 200) {
         lcd.clear();
-        lcd.print("RUNNING! KEEPER");
+        lcd.print("RUNNING!ATTACKER");
 
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
@@ -437,6 +442,10 @@ void loop(void) {
       }
     }
     device.buzTimer2 = millis();
+
+    // if (ball.top == 0) {
+    //   device.keeperTimer2 = millis();
+    // }
   } else if (device.mode == 2) {
     ball.read(ball.val);
     ball.keeper();
@@ -462,6 +471,22 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
+      if (line.lock == 1 && ball.deg >= 180) {
+        if (ball.deg <= 270) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      } else if (line.lock == 2 && ball.deg <= 180) {
+        if (ball.deg >= 90) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      }
+      if (millis() - line.lockTimer >= 100) {
+        line.lock = 0;
+      }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.buz();
@@ -477,7 +502,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 10) {
         if (millis() - device.buzTimer1 <= 30 || ball.hold) {
           device.buz();
         } else {
@@ -549,14 +574,15 @@ void loop(void) {
     }
     device.buzTimer2 = millis();
   }
-  Serial.print(line.lock);
-  Serial.print(" ");
-  Serial.print(line.lockTimer);
-  Serial.print(" ");
-  Serial.print(ball.deg);
-  Serial.print(" ");
-  Serial.print(line.first);
-  Serial.print(" ");
-  Serial.print(line.whited);
-  Serial.println("");
+
+  if (device.keeper && device.mode != 0) {
+    if (millis() - device.keeperTimer1 >= 1000 && device.mode == 2) {
+      device.mode = 1;
+      device.keeperTimer2 = millis();
+    }
+
+    if (millis() - device.keeperTimer2 >= 2500) {
+      device.mode = 2;
+    }
+  }
 }

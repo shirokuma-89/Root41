@@ -32,7 +32,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    if (false) {   //タイルカーペット
+    if (false) {  //タイルカーペット
       Kp = 0.55;  //比例定数
       Ki = 0.02;  //積分定数
       Kd = 0.1;   //微分定数
@@ -149,6 +149,29 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 }
 
 void _motor::directDrive(int* p) {
+  if (*(p + 1) == 0) {
+    PORTH |= _BV(4) | _BV(5);
+
+    digitalWrite(9, HIGH);
+  } else if (*(p + 1) < 0) {
+    PORTH |= _BV(4);
+    PORTH &= ~(_BV(5));
+
+    if (*(p + 1) >= 100) {
+      digitalWrite(9, HIGH);
+    } else {
+      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
+    }
+  } else if (*(p + 1) > 0) {
+    PORTH &= ~(_BV(4));
+    PORTH |= _BV(5);
+
+    if (*(p + 1) <= -100) {
+      digitalWrite(9, HIGH);
+    } else {
+      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
+    }
+  }
   if (*p == 0) {
     PORTB |= _BV(4) | _BV(5);
 
@@ -195,30 +218,6 @@ void _motor::directDrive(int* p) {
       digitalWrite(6, HIGH);
     } else {
       analogWrite(6, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
-    }
-  }
-
-  if (*(p + 1) == 0) {
-    PORTH |= _BV(4) | _BV(5);
-
-    digitalWrite(9, HIGH);
-  } else if (*(p + 1) < 0) {
-    PORTH |= _BV(4);
-    PORTH &= ~(_BV(5));
-
-    if (*(p + 1) >= 100) {
-      digitalWrite(9, HIGH);
-    } else {
-      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
-    }
-  } else if (*(p + 1) > 0) {
-    PORTH &= ~(_BV(4));
-    PORTH |= _BV(5);
-
-    if (*(p + 1) <= -100) {
-      digitalWrite(9, HIGH);
-    } else {
-      analogWrite(9, constrain(abs(round((float)*(p + 1) * 2.55)), 0, 255));
     }
   }
 }
