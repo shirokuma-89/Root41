@@ -171,6 +171,7 @@ void _ball::keeper(void) {
   }
   if (top <= 7 || top >= 9) {
     if (x >= 0) {
+      right = 1;
       if (tof.dist >= 200) {
         deg = 113;
       } else if (tof.dist <= 250) {
@@ -179,6 +180,7 @@ void _ball::keeper(void) {
         deg = 90;
       }
     } else {
+      right = -1;
       if (tof.dist >= 200) {
         deg = 248;
       } else if (tof.dist <= 250) {
@@ -203,6 +205,7 @@ void _ball::keeper(void) {
 
   if (top == 0 && abs(val[1] - val[15]) <= 40) {
     exist = false;
+    right = 0;
   }
 
   if (tof.dist >= 500) {
@@ -220,5 +223,9 @@ void _ball::keeper(void) {
 
   if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
     device.keeperTimer1 = millis() - 2100;
+  }
+
+  if (millis() - keeperOut <= 2000 && _right == right) {
+    exist = false;
   }
 }

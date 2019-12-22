@@ -49,6 +49,11 @@ class _ball {
   bool turn;
   bool emg;
 
+  int right;
+  int _right;
+
+  unsigned long keeperOut;
+
  private:
   int _top;
   int _deg;
@@ -58,6 +63,7 @@ class _ball {
   float y;
 
   unsigned long holdTimer;
+
 } ball;
 
 class _line {
@@ -462,6 +468,7 @@ void loop(void) {
     }
     //駆動
     if (line.flag) {
+      ball.keeperOut = millis();
       device.buz();
       motor.moveTimer = millis();
       // LED.degShow(line.deg, LED.PURPLE);
