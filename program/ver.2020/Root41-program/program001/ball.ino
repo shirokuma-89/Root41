@@ -149,7 +149,7 @@ void _ball::keeper(void) {
   x = 0;
   y = 0;
   for (int i = 1; i <= 15; i++) {
-    if (!(i > 4 && i < 12)) {
+    if (!(i > 6 && i < 10)) {
       // if (top == i) {
       //   x += sin(radians(i * 22.5)) * val[i];
       // }
@@ -164,12 +164,12 @@ void _ball::keeper(void) {
     }
   }
 
-  if (val[top] > 600) {
+  if (val[top] > 580) {
     exist = false;
   } else {
     exist = true;
   }
-  if (top <= 6 || top >= 10) {
+  if (top <= 7 || top >= 9) {
     if (x >= 0) {
       if (tof.dist >= 200) {
         deg = 113;
@@ -188,13 +188,13 @@ void _ball::keeper(void) {
       }
     }
   } else {
-    if (top >= 8) {
-      deg = 120;
-    } else {
-      deg = 240;
-    }
-    speed = 30;
-    // exist = false;
+    // if (top >= 8) {
+    //   deg = 120;
+    // } else {
+    //   deg = 240;
+    // }
+    // speed = 30;
+    exist = false;
   }
 
   if (top <= 3 || top >= 13) {
@@ -205,7 +205,7 @@ void _ball::keeper(void) {
     exist = false;
   }
 
-  if (tof.dist >= 550) {
+  if (tof.dist >= 500) {
     deg = 180;
     exist = true;
   }
