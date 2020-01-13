@@ -89,6 +89,7 @@ class _line {
   int logs[20];
   int root1 = 100;
   int root2 = 100;
+  int direction;
   int height1;
   int height2;
   int first = 100;
@@ -138,6 +139,7 @@ class _motor {
 
   void directDrive(int* p);
   void drive(int _deg, int _power, bool _stop = false);
+  void speed(void);
 
   int val[3];
   float cValue[3];

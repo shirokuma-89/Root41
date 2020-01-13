@@ -229,3 +229,21 @@ void _motor::directDrive(int* p) {
     }
   }
 }
+
+void _motor::speed() {
+  ball.speed = 80;
+  if (line.flag) {
+    if (line.overTimer >= 200) {
+      ball.speed = map(200, 600, 100, 40);
+    }
+  } else if (ball.exist) {
+    if (ball.turn) {
+      ball.speed = 55;
+    }
+    if (ball.emg) {
+      ball.speed -= 20;
+    }
+  } else {
+  }
+  ball.speed *= 1;  //電池残量補正
+}

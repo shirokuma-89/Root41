@@ -17,8 +17,6 @@ void _ball::read(int* b) {
     val[7] = (val[6] + val[8]) / 2;
   }
 
-  // val[0] *= 0.95;
-
   digitalWrite(BALL_RESET, LOW);
 }
 
