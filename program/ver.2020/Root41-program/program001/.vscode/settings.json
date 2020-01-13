@@ -3,5 +3,6 @@
     "*.ino": "cpp",
     "*.pde": "cpp",
     "cmath": "cpp"
-  }
+  },
+  "files.autoGuessEncoding": true
 }
