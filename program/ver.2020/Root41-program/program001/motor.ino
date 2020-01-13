@@ -32,17 +32,12 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     gyro.deg = gyro.read();
 
     //姿勢制御
-    if (false) {  //タイルカーペット
-      Kp = 0.55;  //比例定数
-      Ki = 0.02;  //積分定数
-      Kd = 0.1;   //微分定数
-      Km = 0.5;
-    } else {       //パンチカーペット
-      Kp = 0.45;   //比例定数
-      Ki = 0.003;  //積分定数
-      Kd = 0.12;   //微分定数
-      Km = 0.4;
-    }
+    Kp = 0.55;  //比例定数
+    Ki = 0.02;  //積分定数
+    Kd = 0.1;   //微分定数
+    Km = 0.5;
+
+    _power *= carpet._motorPower[carpet.tile];
 
     int correctionMinimum;  //角度補正の最小絶対値
     front = gyro.deg;
@@ -105,7 +100,7 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
       }
 
       for (int i = 0; i <= 2; i++) {
-        error = 25;
+        error = 180;  // 25
         if (gyro.deg >= error && gyro.deg <= 360 - error) {
           LED.changeAll(LED.BLUE);
           // goto ERROR;
@@ -173,12 +168,16 @@ void _motor::directDrive(int* p) {
     }
   }
   if (*p == 0) {
-    PORTB |= _BV(4) | _BV(5);
+    // PORTB |= _BV(4) | _BV(5);
+    digitalWrite(10, HIGH);
+    digitalWrite(11, HIGH);
 
     digitalWrite(12, HIGH);
   } else if (*p < 0) {
-    PORTB |= _BV(4);
-    PORTB &= ~(_BV(5));
+    // PORTB |= _BV(4);
+    // PORTB &= ~(_BV(5));
+    digitalWrite(10, HIGH);
+    digitalWrite(11, LOW);
 
     if (*p >= 100) {
       digitalWrite(12, HIGH);
@@ -186,8 +185,10 @@ void _motor::directDrive(int* p) {
       analogWrite(12, constrain(abs(round((float)*p * 2.55)), 0, 255));
     }
   } else if (*p > 0) {
-    PORTB &= ~(_BV(4));
-    PORTB |= _BV(5);
+    // PORTB &= ~(_BV(4));
+    // PORTB |= _BV(5);
+    digitalWrite(10, LOW);
+    digitalWrite(11, HIGH);
 
     if (*p <= -100) {
       digitalWrite(12, HIGH);
@@ -197,13 +198,18 @@ void _motor::directDrive(int* p) {
   }
 
   if (*(p + 2) == 0) {
-    PORTG |= _BV(5);
-    PORTE |= _BV(3);
+    // PORTG |= _BV(5);
+    // PORTE |= _BV(3);
+
+    digitalWrite(4, HIGH);
+    digitalWrite(5, HIGH);
 
     digitalWrite(6, HIGH);
   } else if (*(p + 2) < 0) {
-    PORTG |= _BV(5);
-    PORTE &= ~(_BV(3));
+    // PORTG |= _BV(5);
+    // PORTE &= ~(_BV(3));
+    digitalWrite(4, HIGH);
+    digitalWrite(5, LOW);
 
     if (*(p + 2) >= 100) {
       digitalWrite(6, HIGH);
@@ -211,8 +217,10 @@ void _motor::directDrive(int* p) {
       analogWrite(6, constrain(abs(round((float)*(p + 2) * 2.55)), 0, 255));
     }
   } else if (*(p + 2) > 0) {
-    PORTG &= ~(_BV(5));
-    PORTE |= _BV(3);
+    // PORTG &= ~(_BV(5));
+    // PORTE |= _BV(3);
+    digitalWrite(4, LOW);
+    digitalWrite(5, HIGH);
 
     if (*(p + 2) <= -100) {
       digitalWrite(6, HIGH);

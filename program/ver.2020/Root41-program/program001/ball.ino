@@ -14,10 +14,7 @@ void _ball::read(int* b) {
     // val[15] *= 0.95;
     // val[1] *= 0.95;
   } else {
-    val[12] = (val[11] * 2 + val[14]) / 3;
-    val[13] = (val[11] + val[14] * 2) / 3;
-    val[8] = (val[6] + val[9]) / 2 - 15;
-    val[7] = val[8];
+    val[7] = (val[6] + val[8]) / 2;
   }
 
   // val[0] *= 0.95;
@@ -140,7 +137,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
-  speed = 70;
+  speed = 100;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
@@ -153,28 +150,31 @@ void _ball::keeper(void) {
   x = 0;
   y = 0;
   for (int i = 1; i <= 15; i++) {
-    if (!(i > 4 && i < 12)) {
+    if (!(i > 6 && i < 11)) {
       // if (top == i) {
       //   x += sin(radians(i * 22.5)) * val[i];
       // }
-      if (i <= 8) {
-        x -= val[i];
-      } else {
-        x += val[i];
-      }
+      // if (i <= 8) {
+      //   x -= val[i];
+      // } else {
+      //   x += val[i];
+      // }
       // if (val[i] >= 400) {
       //   x += sin(radians(i * 22.5)) * 100;
       // }
+      x -= val[2] + val[3];
+      x += val[14] + val[13];
     }
   }
 
-  if (val[top] > 600) {
-    exist = false;
-  } else {
-    exist = true;
-  }
-  if (top <= 6 || top >= 10) {
+  // if (val[top] > 580) {
+  //   exist = false;
+  // } else {
+  exist = true;
+  // }
+  if (top <= 7 || top >= 9) {
     if (x >= 0) {
+      right = 1;
       if (tof.dist >= 200) {
         deg = 113;
       } else if (tof.dist <= 250) {
@@ -183,6 +183,7 @@ void _ball::keeper(void) {
         deg = 90;
       }
     } else {
+      right = -1;
       if (tof.dist >= 200) {
         deg = 248;
       } else if (tof.dist <= 250) {
@@ -192,12 +193,12 @@ void _ball::keeper(void) {
       }
     }
   } else {
-    if (top >= 8) {
-      deg = 120;
-    } else {
-      deg = 240;
-    }
-    speed = 30;
+    // if (top >= 8) {
+    //   deg = 120;
+    // } else {
+    //   deg = 240;
+    // }
+    // speed = 30;
     // exist = false;
   }
 
@@ -205,11 +206,16 @@ void _ball::keeper(void) {
     speed = 40;
   }
 
-  if (top == 0 && abs(val[1] - val[15]) <= 40) {
+  if (top == 0 || x <= 30 /* && abs(val[1] - val[15]) <= 60*/) {
+    exist = false;
+    right = 0;
+  }
+
+  if (millis() - keeperOut <= 1000 && _right == right) {
     exist = false;
   }
 
-  if (tof.dist >= 550) {
+  if (tof.dist >= 500) {
     deg = 180;
     exist = true;
   }
