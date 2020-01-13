@@ -39,7 +39,7 @@ class _ball {
   unsigned long lineTimer;
 
   int val[16];
-  int speed = 90;
+  int speed = 80;
   int top;
   int deg;
   int dist;
@@ -209,6 +209,7 @@ class _LED {
   void changeAll(unsigned long _color);
   void degShow(int d, unsigned long _color = 'hogehoge');
   void lineShow(void);
+  void topShow(void);
 
   bool white = false;
 
@@ -361,6 +362,9 @@ void loop(void) {
       if (millis() - line.lockTimer >= 600) {
         line.lock = 0;
       }
+      // if (true) {
+      //   LED.topShow();
+      // } else
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.keeperTimer2 = millis();

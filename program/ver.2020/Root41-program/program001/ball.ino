@@ -7,8 +7,12 @@ void _ball::read(int* b) {
   if (device.robot) {
     val[6] = (val[5] * 2 + val[8]) / 3;
     val[7] = (val[8] * 2 + val[5]) / 3;
-    val[14] = (val[13] + val[15]) / 2;
-    val[7] *= 1.2;
+    val[9] = (val[8] + val[10]) / 2;
+    val[7] *= 0.61;
+    val[0] *= 0.95;
+    val[5] *= 0.95;
+    // val[15] *= 0.95;
+    // val[1] *= 0.95;
   } else {
     val[12] = (val[11] * 2 + val[14]) / 3;
     val[13] = (val[11] + val[14] * 2) / 3;
@@ -65,7 +69,7 @@ void _ball::calc(void) {
   }
   if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
   TURN_PROCESS:
-    if (val[top] <= 270) {
+    if (val[top] <= 250) {
       turn = true;
       if (deg >= 180) {
         deg -= turnVal;
@@ -78,14 +82,14 @@ void _ball::calc(void) {
   }
 
   emg = false;
-  if (top > 6 && top < 10) {
-    if (val[top] <= 256) {
+  if (top > 5 && top < 10) {
+    if (val[top] < 256) {
       emg = true;
       speed -= 20;
       if (top >= 8) {
-        deg -= 35;
+        deg -= 42;
       } else {
-        deg += 35;
+        deg += 42;
       }
     }
   }
