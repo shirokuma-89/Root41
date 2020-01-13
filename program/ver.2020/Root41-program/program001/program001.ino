@@ -80,6 +80,7 @@ class _line {
   int logs[20];
   int root1 = 100;
   int root2 = 100;
+  int direction;
   int height1;
   int height2;
   int first = 100;
@@ -129,6 +130,7 @@ class _motor {
 
   void directDrive(int* p);
   void drive(int _deg, int _power, bool _stop = false);
+  void speed(void);
 
   int val[3];
   float cValue[3];
@@ -465,6 +467,8 @@ void loop(void) {
       device.mute();
     }
     //駆動
+    motor.speed();
+
     if (line.flag) {
       device.buz();
       motor.moveTimer = millis();
@@ -473,7 +477,7 @@ void loop(void) {
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
       } else {
-        motor.drive(line.deg, 100);
+        motor.drive(line.deg, ball.speed);
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
