@@ -26,7 +26,7 @@ void _line::process(void) {
       if (device.mode == 2) {
         if (line.deg >= 35 && line.deg <= 325) {
           if (line.deg <= 145 || line.deg >= 215) {
-            if (abs(line.deg - ball.top * 22.5) <= 30) {
+            if (abs(line.deg - ball.top * 22.5) <= 50) {
               line.deg = ball.top * 22.5;
             }
           }
