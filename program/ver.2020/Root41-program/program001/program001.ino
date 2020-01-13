@@ -44,6 +44,7 @@ class _ball {
   int top;
   int deg;
   int dist;
+  int cm;
 
   bool exist;
   bool hold = false;
@@ -351,14 +352,8 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (millis() - device.buzTimer1 <= 30) {
-      device.buz();
-    } else {
-      device.mute();
-    }
     //駆動
     if (line.flag) {
-      device.buz();
       motor.moveTimer = millis();
       // LED.degShow(line.deg, LED.PURPLE);
       LED.lineShow();
@@ -404,7 +399,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 10) {
+      while (millis() - motor.moveTimer <= 12) {
         line.read();
         // line.process();
         if (line.flag) {
@@ -423,11 +418,6 @@ void loop(void) {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
       while (millis() - motor.moveTimer <= 10) {
-        if (millis() - device.buzTimer1 <= 30) {
-          device.buz();
-        } else {
-          device.mute();
-        }
         line.read();
         line.process();
         if (line.flag) {

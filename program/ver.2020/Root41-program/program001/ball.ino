@@ -14,7 +14,9 @@ void _ball::read(int* b) {
     // val[15] *= 0.95;
     // val[1] *= 0.95;
   } else {
-    val[7] = (val[6] + val[8]) / 2;
+    val[7] = (val[6] + val[9] + val[6]) / 3.2;
+    val[8] = (val[6] + val[9] + val[9]) / 3.2;
+    // val[8] *= 100;
   }
 
   digitalWrite(BALL_RESET, LOW);
@@ -32,58 +34,27 @@ void _ball::calc(void) {
   deg = top * 22.5;
   _deg = deg;
 
-  dist = 0;
-  for (int i = 0; i < 16; i++) {
-    if (val[i] <= 400) {
-      dist++;
-    }
-  }
-  dist = constrain(dist, 3, 5);
-
-  // if (top > 1 && top < 15) {
-  if (deg >= 180) {
-    deg -= 360;
-  }
-  deg = round((float)deg * (float)sqrt(abs(deg)) * (float)0.11);
-  deg += 720;
-  deg %= 360;
-  // }
-
   turn = false;
-  int turnVal = 58;
-  if (top == 1) {
-    if (val[2] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
-  if (top == 15) {
-    if (val[14] >= val[0]) {
-      goto TURN_PROCESS;
-    }
-  }
+  int turnVal = 50;
   if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
-  TURN_PROCESS:
     if (val[top] <= 250) {
       turn = true;
       if (deg >= 180) {
         deg -= turnVal;
-        speed = 55;
       } else {
         deg += turnVal;
-        speed = 55;
       }
     }
   }
 
   emg = false;
-  if (top > 5 && top < 10) {
-    if (val[top] < 256) {
+  if (top > 2 && top < 14) {
+    if (val[top] < 200) {
       emg = true;
-      speed -= 20;
       if (top >= 8) {
-        deg -= 42;
+        deg -= 35;
       } else {
-        deg += 42;
+        deg += 35;
       }
     }
   }
@@ -98,12 +69,6 @@ void _ball::calc(void) {
   if (top == 0) {
     holdTimer = millis() + 50;
   }
-
-  // if (ball.top >= 1 && ball.top <= 5) {
-  //   ball.speed -= 20;
-  // } else if (ball.top <= 15 && ball.top >= 11) {
-  //   ball.speed -= 20;
-  // }
 
   LCD.data = ball.top;
   LCD.unit = "deg";
@@ -155,7 +120,7 @@ void _ball::keeper(void) {
 
   x -= val[1] + val[2] + val[3] + val[4];
   x += (val[15] + val[14] + val[13] + val[12]) * 0.95;
-  
+
   // x -= _val[1] + _val[2] + _val[3] + _val[4];
   // x += (_val[15] + _val[14] + _val[13] + _val[12]) * 0.95;
   if (x >= 0) {
