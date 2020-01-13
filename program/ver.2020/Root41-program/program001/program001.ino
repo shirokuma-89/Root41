@@ -353,6 +353,7 @@ void loop(void) {
     tof.dist = tof.read();
 
     //駆動
+    motor.speed();
     if (line.flag) {
       motor.moveTimer = millis();
       // LED.degShow(line.deg, LED.PURPLE);
@@ -360,7 +361,7 @@ void loop(void) {
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
       } else {
-        motor.drive(line.deg, 100);
+        motor.drive(line.deg, ball.speed);
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
@@ -477,7 +478,7 @@ void loop(void) {
       motor.drive(NULL, NULL);
     }
   }
-
+  Serial.println(ball.speed);
   // if (device.keeper && device.mode != 0) {
   //   if (millis() - device.keeperTimer1 >= 1500 && device.mode == 2) {
   //     device.mode = 1;

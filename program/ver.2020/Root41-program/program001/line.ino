@@ -36,6 +36,15 @@ void _line::process(void) {
       } else {
         line.direction = 4;
       }
+      if (ball.val[ball.dist] >= 150) {
+        if (ball.top <= 3 || ball.top >= 12) {
+          if (line.direction == 2) {
+            line.deg -= 20;
+          } else if (line.direction == 4) {
+            line.deg += 20;
+          }
+        }
+      }
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
       } else if (millis() - line.stopTimer >= 2000) {
@@ -61,7 +70,8 @@ void _line::process(void) {
       line.mode = 2;
     } else if (line.mode == 2) {
       if (millis() - line.overTimer >=
-          line.whited * carpet._lineWhitedT[carpet.tile]) {  //カーペットクラスを参照
+          line.whited *
+              carpet._lineWhitedT[carpet.tile]) {  //カーペットクラスを参照
         if (line.whited <= 10) {
           if (abs(line.deg - ball.top * 22.5) >= 40 ||
               abs(line.deg - ball.top * 22.5) <= 320) {
