@@ -9,7 +9,8 @@ void _line::process(void) {
       ball._right = ball.right;
       //通常
       for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 && line.whited <= 10) {
+        if (line.logs[i] == 1 &&
+            line.whited <= carpet._lineWhited[carpet.tile]) {
           line.x += line.vector[i][0] * 1.5;
           line.y += line.vector[i][1];
           line.logs[i] = 2;
@@ -55,7 +56,8 @@ void _line::process(void) {
       }
       line.mode = 2;
     } else if (line.mode == 2) {
-      if (millis() - line.overTimer >= line.whited * 15) {
+      if (millis() - line.overTimer >=
+          line.whited * carpet._lineWhitedT[carpet.tile]) {  //カーペットクラスを参照
         if (line.whited <= 10) {
           if (abs(line.deg - ball.top * 22.5) >= 40 ||
               abs(line.deg - ball.top * 22.5) <= 320) {

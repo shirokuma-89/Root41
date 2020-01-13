@@ -10,10 +10,7 @@ void _ball::read(int* b) {
     val[14] = (val[13] + val[15]) / 2;
     val[7] *= 1.2;
   } else {
-    val[12] = (val[11] * 2 + val[14]) / 3;
-    val[13] = (val[11] + val[14] * 2) / 3;
-    val[8] = (val[6] + val[9]) / 2 - 15;
-    val[7] = val[8];
+    val[7] = (val[6] + val[8]) / 2;
   }
 
   // val[0] *= 0.95;
@@ -136,7 +133,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
-  speed = 70;
+  speed = 100;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
@@ -149,26 +146,28 @@ void _ball::keeper(void) {
   x = 0;
   y = 0;
   for (int i = 1; i <= 15; i++) {
-    if (!(i > 6 && i < 10)) {
+    if (!(i > 6 && i < 11)) {
       // if (top == i) {
       //   x += sin(radians(i * 22.5)) * val[i];
       // }
-      if (i <= 8) {
-        x -= val[i];
-      } else {
-        x += val[i];
-      }
+      // if (i <= 8) {
+      //   x -= val[i];
+      // } else {
+      //   x += val[i];
+      // }
       // if (val[i] >= 400) {
       //   x += sin(radians(i * 22.5)) * 100;
       // }
+      x -= val[2] + val[3];
+      x += val[14] + val[13];
     }
   }
 
-  if (val[top] > 580) {
-    exist = false;
-  } else {
-    exist = true;
-  }
+  // if (val[top] > 580) {
+  //   exist = false;
+  // } else {
+  exist = true;
+  // }
   if (top <= 7 || top >= 9) {
     if (x >= 0) {
       right = 1;
@@ -196,16 +195,20 @@ void _ball::keeper(void) {
     //   deg = 240;
     // }
     // speed = 30;
-    exist = false;
+    // exist = false;
   }
 
   if (top <= 3 || top >= 13) {
     speed = 40;
   }
 
-  if (top == 0 && abs(val[1] - val[15]) <= 40) {
+  if (top == 0 || x <= 30 /* && abs(val[1] - val[15]) <= 60*/) {
     exist = false;
     right = 0;
+  }
+
+  if (millis() - keeperOut <= 1000 && _right == right) {
+    exist = false;
   }
 
   if (tof.dist >= 500) {
@@ -223,9 +226,5 @@ void _ball::keeper(void) {
 
   if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
     device.keeperTimer1 = millis() - 2100;
-  }
-
-  if (millis() - keeperOut <= 2000 && _right == right) {
-    exist = false;
   }
 }

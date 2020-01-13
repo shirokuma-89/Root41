@@ -248,6 +248,18 @@ class _LCD {
  private:
 } LCD;
 
+class _carpet {
+ public:
+  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
+  
+  int _lineWhited[2] = {15, 10};
+  int _lineWhitedT[2] = {19, 28};//タイマーのやつ
+  
+  float _motorPower[2] = {0.7, 1.0};
+
+ private:
+} carpet;
+
 void setup(void) {
   device.initialize();
   device.buz();
@@ -290,7 +302,7 @@ void setup(void) {
   delay(500);
 
   gyro.read();
-  startTimer5(50);
+  startTimer5(5);
 }
 
 void loop(void) {
@@ -390,7 +402,7 @@ void loop(void) {
           device.mute();
         }
         line.read();
-        line.process();
+        // line.process();
         if (line.flag) {
           break;
         }
@@ -518,7 +530,7 @@ void loop(void) {
           device.mute();
         }
         line.read();
-        line.process();
+        // line.process();
         if (line.flag) {
           break;
         }
@@ -585,12 +597,12 @@ void loop(void) {
   }
 
   if (device.keeper && device.mode != 0) {
-    if (millis() - device.keeperTimer1 >= 800 && device.mode == 2) {
+    if (millis() - device.keeperTimer1 >= 1500 && device.mode == 2) {
       device.mode = 1;
       device.keeperTimer2 = millis();
     }
 
-    if (millis() - device.keeperTimer2 >= 2000) {
+    if (millis() - device.keeperTimer2 >= 1500) {
       device.mode = 2;
     }
   }
