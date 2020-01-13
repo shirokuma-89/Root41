@@ -101,6 +101,37 @@ void _LED::lineShow() {
       }
     }
   }
+  for (int i = 0; i <= 19; i++) {
+    if (i == line.first) {
+      if (line.logs[i] != 0) {
+        if (i <= 4) {
+          RGBLED.setPixelColor(i - 1, 0, 255, 0);
+        } else if (i <= 9) {
+          RGBLED.setPixelColor(i - 2, 0, 255, 0);
+        } else if (i <= 14) {
+          RGBLED.setPixelColor(i - 3, 0, 255, 0);
+        } else {
+          RGBLED.setPixelColor(i - 4, 0, 255, 0);
+        }
+        if (i == 0) {
+          RGBLED.setPixelColor(i, 0, 255, 0);
+        }
+      }
+    }
+  }
+  if (device.mode == 2) {
+    if (line.deg >= 35 && line.deg <= 325) {
+      if (line.deg <= 145 || line.deg >= 215) {
+        if (abs(line.deg - ball.top * 22.5) <= 50) {
+          LED.degShow(ball.top * 22.5, LED.RED);
+        }
+      }
+    }
+  }
+}
+
+void _LED::topShow() {
+  RGBLED.setPixelColor(ball.top, 255, 0, 0);
 }
 
 void _LED::changeAll(int red, int green, int blue) {
