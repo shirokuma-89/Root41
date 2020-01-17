@@ -5,14 +5,8 @@ void _ball::read(int* b) {
   }
 
   if (device.robot) {
-    val[6] = (val[5] * 2 + val[8]) / 3;
-    val[7] = (val[8] * 2 + val[5]) / 3;
-    val[9] = (val[8] + val[10]) / 2;
-    val[7] *= 0.61;
-    val[0] *= 0.95;
-    val[5] *= 0.95;
-    // val[15] *= 0.95;
-    // val[1] *= 0.95;
+    val[15] *= 0.88;
+    val[13] *= 0.88;
   } else {
     val[7] = (val[6] + val[9] + val[6]) / 3.2;
     val[8] = (val[6] + val[9] + val[9]) / 3.2;
