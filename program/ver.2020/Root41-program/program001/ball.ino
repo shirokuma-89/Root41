@@ -5,8 +5,8 @@ void _ball::read(int* b) {
   }
 
   if (device.robot) {
-    val[15] *= 0.88;
-    val[13] *= 0.88;
+    val[15] *= 0.95;
+    val[13] *= 0.95;
   } else {
     val[7] = (val[6] + val[9] + val[6]) / 3.2;
     val[8] = (val[6] + val[9] + val[9]) / 3.2;
@@ -30,7 +30,7 @@ void _ball::calc(void) {
 
   turn = false;
   int turnVal = 50;
-  if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
+  if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
     if (val[top] <= 250) {
       turn = true;
       if (deg >= 180) {
@@ -42,17 +42,18 @@ void _ball::calc(void) {
   }
 
   emg = false;
-  if (top > 2 && top < 14) {
-    if (val[top] < 200) {
+  if (top > 2 && top < 14 && millis() - holdTimer >= 200) {
+    if (val[top] < 210) {
       emg = true;
       if (top >= 8) {
-        deg -= 35;
+        deg -= 45;
       } else {
-        deg += 35;
+        deg += 45;
       }
     }
   }
-  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
+
+  if ((top <= 3 || top >= 13) && digitalRead(BALL_HOLD) && val[top] <= 260) {
     deg = 0;
     hold = true;
     holdTimer = millis();
@@ -81,15 +82,15 @@ void _ball::calc(void) {
     ball.deg = ball.top * 22.5;
   }
 
-  // if (line._deg != 1000 && millis() - ball.lineOut <= 2000) {
-  //   if (abs(line._deg - _deg) >= 300 || abs(line._deg - _deg) <= 60) {
-  //     exist = false;
-  //   } else {
-  //     line._deg = 1000;
-  //   }
-  // } else {
-  //   line._deg = 1000;
-  // }
+  if (line._deg != 1000 && millis() - ball.lineOut <= 2000) {
+    if (abs(line._deg - _deg) >= 300 || abs(line._deg - _deg) <= 60) {
+      exist = false;
+    } else {
+      line._deg = 1000;
+    }
+  } else {
+    line._deg = 1000;
+  }
 }
 
 void _ball::keeper(void) {
@@ -113,7 +114,11 @@ void _ball::keeper(void) {
   speed = 120;
 
   x -= val[1] + val[2] + val[3] + val[4];
-  x += (val[15] + val[14] + val[13] + val[12]) * 0.95;
+  if (device.robot) {
+    x += (val[15] + val[14] + val[13] + val[12]) * 1.3;
+  } else {
+    x += (val[15] + val[14] + val[13] + val[12]) * 0.95;
+  }
 
   // x -= _val[1] + _val[2] + _val[3] + _val[4];
   // x += (_val[15] + _val[14] + _val[13] + _val[12]) * 0.95;
@@ -130,14 +135,14 @@ void _ball::keeper(void) {
     right = 0;
   }
 
-  // if (millis() - keeperOut <= 1000 && _right == right) {
-  //   exist = false;
-  // }
+  if (millis() - keeperOut <= 1000 && _right == right) {
+    exist = false;
+  }
 
-  // if (tof.dist >= 500) {
-  //   deg = 180;
-  //   exist = true;
-  // }
+  if (tof.dist >= 500) {
+    deg = 180;
+    exist = true;
+  }
 
   turn = false;
   emg = false;
@@ -150,6 +155,7 @@ void _ball::keeper(void) {
   // if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
   //   device.keeperTimer1 = millis() - 2100;
   // }
+
   for (int i = 0; i <= 15; i++) {
     _val[i] = val[i];
   }

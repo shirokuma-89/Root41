@@ -231,17 +231,17 @@ void _motor::directDrive(int* p) {
 }
 
 void _motor::speed() {
-  ball.speed = 80;
+  ball.speed = 100;
   if (line.flag) {
     if (millis() - line.overTimer >= 400) {
       ball.speed = 60;
     }
   } else if (ball.exist) {
     if (ball.turn) {
-      ball.speed = 55;
+      ball.speed = 65;
     }
     if (ball.emg) {
-      ball.speed -= 20;
+      ball.speed -= 35;
     }
   } else {
   }

@@ -64,7 +64,7 @@ class _ball {
   float x;
   float y;
 
-  float LPF = 0.5;
+  float LPF = 0.3;
 
   unsigned long holdTimer;
 
@@ -257,7 +257,7 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 10};
   int _lineWhitedT[2] = {19, 28};  //タイマーのやつ
@@ -400,7 +400,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 12) {
+      while (millis() - motor.moveTimer <= 15) {
         line.read();
         // line.process();
         if (line.flag) {
