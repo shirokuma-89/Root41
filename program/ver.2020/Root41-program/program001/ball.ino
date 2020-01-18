@@ -134,7 +134,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
-  speed = 70;
+  speed = 85;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
