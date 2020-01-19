@@ -55,6 +55,18 @@ void _LED::degShow(int d, unsigned long _color = 'hogehoge') {
     }
   }
 
+  if (_color == 'hogehoge') {
+    _color = LED.subColor;
+  }
+
+  int _d;
+
+  if (dist == true) {
+    _d = ball.dist;
+  } else {
+    _d = 2;
+  }
+
   if (LED.white) {
     RGBLED.setPixelColor(light, 255, 255, 255);
     RGBLED.setPixelColor((light + 1) % 16, 255, 255, 255);
@@ -64,21 +76,16 @@ void _LED::degShow(int d, unsigned long _color = 'hogehoge') {
     RGBLED.setPixelColor((light + 13) % 16, 255, 255, 255);
   } else {
     if (d != 1000) {
-      if (_color == 'hogehoge') {
-        RGBLED.setPixelColor(light, LED.subColor);
-        RGBLED.setPixelColor((light + 1) % 16, LED.subColor);
-        RGBLED.setPixelColor((light + 2) % 16, LED.subColor);
-        RGBLED.setPixelColor((light + 15) % 16, LED.subColor);
-        RGBLED.setPixelColor((light + 14) % 16, LED.subColor);
-        RGBLED.setPixelColor((light + 13) % 16, LED.subColor);
-      } else {
-        RGBLED.setPixelColor(light, _color);
-        RGBLED.setPixelColor((light + 1) % 16, _color);
-        RGBLED.setPixelColor((light + 2) % 16, _color);
-        RGBLED.setPixelColor((light + 15) % 16, _color);
-        RGBLED.setPixelColor((light + 14) % 16, _color);
-        RGBLED.setPixelColor((light + 13) % 16, _color);
+      RGBLED.setPixelColor(light, _color);
+      RGBLED.setPixelColor((light + 1) % 16, _color);
+      RGBLED.setPixelColor((light + 15) % 16, _color);
+      RGBLED.setPixelColor((light + 14) % 16, _color);
+
+      for (int i = 1; i <= _d; i++) {
+        RGBLED.setPixelColor((light + 1 + i) % 16, _color);
+        RGBLED.setPixelColor((light + 14 - i) % 16, _color);
       }
+
     } else {
       changeAll(255, 255, 255);
     }

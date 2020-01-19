@@ -43,6 +43,7 @@ class _ball {
   int speed = 80;
   int top;
   int deg;
+  int Ldeg;
   int dist;
   int cm;
 
@@ -53,6 +54,8 @@ class _ball {
 
   int right;
   int _right;
+
+  float degLPF = 0.5;
 
   unsigned long keeperOut;
 
@@ -224,6 +227,7 @@ class _LED {
   void topShow(void);
 
   bool white = false;
+  bool dist = false;
 
   int bright = 150;
 
@@ -314,6 +318,7 @@ void setup(void) {
 
 void loop(void) {
   device.check();
+  LED.dist = false;
 
   if (device.mode == 0) {  //待機中
     device.keeperTimer1 = millis();
@@ -381,9 +386,6 @@ void loop(void) {
       if (millis() - line.lockTimer >= 600) {
         line.lock = 0;
       }
-      // if (true) {
-      //   LED.topShow();
-      // } else
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.keeperTimer2 = millis();
@@ -394,10 +396,10 @@ void loop(void) {
           LED.degShow(ball.deg, LED.PURPLE);
         } else if (ball.emg) {
           LED.degShow(ball.deg, LED.YELLOW);
-        } else if (ball.turn) {
-          LED.degShow(ball.deg, LED.GREEN);
         } else {
-          LED.degShow(ball.deg);
+          LED.dist = true;
+          ball.Ldeg += (1 - ball.degLPF) * (ball.Ldeg - ball.deg);
+          LED.degShow(ball.Ldeg);
         }
       }
       while (millis() - motor.moveTimer <= 15) {
@@ -514,6 +516,7 @@ void loop(void) {
         } else if (ball.turn) {
           LED.degShow(ball.deg, LED.GREEN);
         } else {
+          LED.dist = true;
           LED.degShow(ball.deg);
         }
       }

@@ -65,6 +65,10 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     correctionVal = _front;
     correctionVal = constrain(correctionVal, -100, 100);
+    
+    if(ball.turn){
+      correctionVal *= 0.7;
+    }
 
     if (!(_deg == NULL && _power == NULL)) {
       float s;
@@ -237,12 +241,12 @@ void _motor::speed() {
       ball.speed = 60;
     }
   } else if (ball.exist) {
-    if (ball.turn) {
-      ball.speed = 65;
-    }
-    if (ball.emg) {
-      ball.speed -= 35;
-    }
+    // if (ball.turn) {
+    //   ball.speed = 65;
+    // }
+    // if (ball.emg) {
+    //   ball.speed -= 35;
+    // }
   } else {
   }
   ball.speed *= 1;  //電池残量補正

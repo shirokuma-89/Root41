@@ -8,8 +8,9 @@ void _ball::read(int* b) {
     val[15] *= 0.95;
     val[13] *= 0.95;
   } else {
-    val[7] = (val[6] + val[9] + val[6]) / 3.2;
-    val[8] = (val[6] + val[9] + val[9]) / 3.2;
+    val[7] = (val[6] + val[9] + val[6]) / 3.3;
+    val[8] = (val[6] + val[9] + val[9]) / 3.3;
+    val[9] /= 1.1;
     // val[8] *= 100;
   }
 
@@ -29,29 +30,63 @@ void _ball::calc(void) {
   _deg = deg;
 
   turn = false;
-  int turnVal = 50;
   if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
-    if (val[top] <= 250) {
-      turn = true;
-      if (deg >= 180) {
-        deg -= turnVal;
-      } else {
-        deg += turnVal;
+    if ((val[top] <= 180) || (val[top] <= 220 && top > 6 && top < 10)) {
+      if (top > 4 && top < 12) {
+        if (deg >= 180) {
+          deg -= 80;
+        } else {
+          deg += 80;
+        }
+        dist = 4;
       }
+    } else if ((val[top] <= 230) || (val[top] <= 250 && top > 6 && top < 10)) {
+      if (top > 3 && top < 13) {
+        if (deg >= 180) {
+          deg -= 60;
+        } else {
+          deg += 60;
+        }
+        dist = 3;
+      }
+    } else if (val[top] <= 250) {
+      if (top > 1 && top < 15) {
+        if (deg >= 180) {
+          deg -= 40;
+        } else {
+          deg += 40;
+        }
+        dist = 2;
+      }
+    } else if (val[top] <= 270) {
+      if (top > 1 && top < 15) {
+        if (deg >= 180) {
+          deg -= 20;
+        } else {
+          deg += 20;
+        }
+        dist = 1;
+      }
+    } else {
+      dist = 0;
+    }
+
+    if (dist != 0 && (top < 3 || top < 13)) {
+      turn = true;
     }
   }
 
-  emg = false;
-  if (top > 2 && top < 14 && millis() - holdTimer >= 200) {
-    if (val[top] < 210) {
-      emg = true;
-      if (top >= 8) {
-        deg -= 45;
-      } else {
-        deg += 45;
-      }
-    }
-  }
+  // emg = false;
+  // if (top > 5 && top < 11 && millis() - holdTimer >= 200) {
+  //   if (val[top] < 210) {
+  //     emg = true;
+  //     if (top >= 8) {
+  //       deg -= 45;
+  //     } else {
+  //       deg += 45;
+  //     }
+  //   }
+  // }
 
   if ((top <= 3 || top >= 13) && digitalRead(BALL_HOLD) && val[top] <= 260) {
     deg = 0;
@@ -94,7 +129,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
- speed = 85;
+  speed = 85;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
