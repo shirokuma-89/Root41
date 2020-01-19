@@ -94,7 +94,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
-  speed = 100;
+ speed = 85;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
@@ -102,44 +102,68 @@ void _ball::keeper(void) {
       top = i;
     }
   }
+  Serial.println(top);
 
   x = 0;
   y = 0;
-
-  exist = true;
-
-  deg = top * 22.5;
-  deg = constrain(deg, -100, 100);
-
-  speed = 120;
-
-  x -= val[1] + val[2] + val[3] + val[4];
-  if (device.robot) {
-    x += (val[15] + val[14] + val[13] + val[12]) * 1.3;
-  } else {
-    x += (val[15] + val[14] + val[13] + val[12]) * 0.95;
+  for (int i = 1; i <= 15; i++) {
+    if (!(i > 4 && i < 12)) {
+      // if (top == i) {
+      //   x += sin(radians(i * 22.5)) * val[i];
+      // }
+      if (i <= 8) {
+        x -= val[i];
+      } else {
+        x += val[i];
+      }
+      // if (val[i] >= 400) {
+      //   x += sin(radians(i * 22.5)) * 100;
+      // }
+    }
   }
 
-  // x -= _val[1] + _val[2] + _val[3] + _val[4];
-  // x += (_val[15] + _val[14] + _val[13] + _val[12]) * 0.95;
-  if (x >= 0) {
-    deg = 90;
-    right = 1;
-  } else {
-    deg = 270;
-    right = -1;
-  }
-
-  if (top == 0 && abs(x) <= 100) {
+  if (val[top] > 600) {
     exist = false;
-    right = 0;
+  } else {
+    exist = true;
+  }
+  if (top <= 6 || top >= 10) {
+    if (x >= 0) {
+      if (tof.dist >= 200) {
+        deg = 113;
+      } else if (tof.dist <= 250) {
+        deg = 68;
+      } else {
+        deg = 90;
+      }
+    } else {
+      if (tof.dist >= 200) {
+        deg = 248;
+      } else if (tof.dist <= 250) {
+        deg = 293;
+      } else {
+        deg = 270;
+      }
+    }
+  } else {
+    if (top >= 8) {
+      deg = 120;
+    } else {
+      deg = 240;
+    }
+    speed = 30;
+    // exist = false;
   }
 
-  if (millis() - keeperOut <= 1000 && _right == right) {
+  if (top <= 3 || top >= 13) {
+    speed = 40;
+  }
+
+  if (top == 0 && abs(val[1] - val[15]) <= 40) {
     exist = false;
   }
 
-  if (tof.dist >= 500) {
+  if (tof.dist >= 550) {
     deg = 180;
     exist = true;
   }
@@ -147,16 +171,12 @@ void _ball::keeper(void) {
   turn = false;
   emg = false;
 
-  // if (top <= 2 || top >= 14 && tof.dist <= 550) {
-  // } else {
-  //   device.keeperTimer1 = millis();
-  // }
+  if (top <= 2 || top >= 14 && tof.dist <= 550) {
+  } else {
+    device.keeperTimer1 = millis();
+  }
 
-  // if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
-  //   device.keeperTimer1 = millis() - 2100;
-  // }
-
-  for (int i = 0; i <= 15; i++) {
-    _val[i] = val[i];
+  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
+    device.keeperTimer1 = millis() - 2100;
   }
 }
