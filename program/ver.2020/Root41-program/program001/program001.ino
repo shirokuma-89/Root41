@@ -55,7 +55,7 @@ class _ball {
   int right;
   int _right;
 
-  float degLPF = 0.5;
+  float degLPF = 0.2;
 
   unsigned long keeperOut;
 
@@ -261,12 +261,12 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 10};
   int _lineWhitedT[2] = {19, 28};  //タイマーのやつ
 
-  float _motorPower[2] = {0.7, 1.0};
+  float _motorPower[2] = {1.0, 1.0};
 
  private:
 } carpet;
