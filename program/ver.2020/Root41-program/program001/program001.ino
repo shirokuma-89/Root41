@@ -46,6 +46,7 @@ class _ball {
   int Ldeg;
   int dist;
   int cm;
+  int tdeg;
 
   bool exist;
   bool hold = false;
@@ -67,7 +68,7 @@ class _ball {
   float x;
   float y;
 
-  float LPF = 0.3;
+  float LPF = 0.24;
 
   unsigned long holdTimer;
 

@@ -30,17 +30,17 @@ void _ball::calc(void) {
   _deg = deg;
 
   turn = false;
-  if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
-    if ((val[top] <= 140) || (val[top] <= 210 && top > 6 && top < 10)) {
+  if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
+    if ((val[top] <= 140) || min(val[6], min(val[7], min(val[8], min(val[9], val[10])))) <= 220) {
       if (top > 1 && top < 15) {
         if (deg >= 180) {
-          deg -= 90;
+          deg -= 80;
         } else {
-          deg += 90;
+          deg += 80;
         }
         dist = 4;
       }
-    } else if ((val[top] <= 160) || (val[top] <= 230 && top > 6 && top < 10)) {
+    } else if ((val[top] <= 170) || min(val[6], min(val[7], min(val[8], min(val[9], val[10])))) <= 240) {
       if (top > 1 && top < 15) {
         if (deg >= 180) {
           deg -= 70;
@@ -49,21 +49,21 @@ void _ball::calc(void) {
         }
         dist = 4;
       }
-    } else if ((val[top] <= 210) || (val[top] <= 240 && top > 6 && top < 10)) {
-      if (top > 2 && top < 14) {
+    } else if ((val[top] <= 210)) {
+      if (top > 1 && top < 15) {
         if (deg >= 180) {
-          deg -= 60;
+          deg -= 50;
         } else {
-          deg += 60;
+          deg += 50;
         }
         dist = 3;
       }
     } else if (val[top] <= 230) {
-      if (top > 2 && top < 14) {
+      if (top > 1 && top < 15) {
         if (deg >= 180) {
-          deg -= 45;
+          deg -= 40;
         } else {
-          deg += 45;
+          deg += 40;
         }
         dist = 2;
       }
@@ -80,7 +80,7 @@ void _ball::calc(void) {
       dist = 0;
     }
 
-    if (dist > 1 && (top < 5 || top < 11)) {
+    if (dist > 1 && (top < 5 || top > 11)) {
       turn = true;
     }
   }
