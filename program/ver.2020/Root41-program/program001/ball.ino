@@ -31,57 +31,52 @@ void _ball::calc(void) {
 
   turn = false;
   if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
-    if ((val[top] <= 140) || min(val[6], min(val[7], min(val[8], min(val[9], val[10])))) <= 220) {
-      if (top > 1 && top < 15) {
-        if (deg >= 180) {
-          deg -= 80;
-        } else {
-          deg += 80;
-        }
-        dist = 4;
+    if ((val[top] <= 150) || min(val[7], min(val[8], val[9])) <= 230 ||
+        min(val[6], val[10]) <= 240) {
+      if (deg >= 180) {
+        deg -= 80;
+      } else {
+        deg += 80;
       }
-    } else if ((val[top] <= 170) || min(val[6], min(val[7], min(val[8], min(val[9], val[10])))) <= 240) {
-      if (top > 1 && top < 15) {
-        if (deg >= 180) {
-          deg -= 70;
-        } else {
-          deg += 70;
-        }
-        dist = 4;
+      dist = 4;
+    } else if ((val[top] <= 180) || min(val[7], min(val[8], val[9])) <= 240 ||
+               min(val[6], val[10]) <= 250) {
+      if (deg >= 180) {
+        deg -= 60;
+      } else {
+        deg += 60;
       }
-    } else if ((val[top] <= 210)) {
-      if (top > 1 && top < 15) {
-        if (deg >= 180) {
-          deg -= 50;
-        } else {
-          deg += 50;
-        }
-        dist = 3;
+      dist = 4;
+    } else if ((val[top] <= 220)) {
+      if (deg >= 180) {
+        deg -= 50;
+      } else {
+        deg += 50;
       }
-    } else if (val[top] <= 230) {
-      if (top > 1 && top < 15) {
-        if (deg >= 180) {
-          deg -= 40;
-        } else {
-          deg += 40;
-        }
-        dist = 2;
+      dist = 3;
+    } else if (val[top] <= 260) {
+      if (deg >= 180) {
+        deg -= 40;
+      } else {
+        deg += 40;
       }
-    } else if (val[top] <= 270) {
-      if (top > 0 && top < 16) {
-        if (deg >= 180) {
-          deg -= 30;
-        } else {
-          deg += 30;
-        }
-        dist = 1;
+      dist = 2;
+    } else if (val[top] <= 280) {
+      if (deg >= 180) {
+        deg -= 20;
+      } else {
+        deg += 20;
       }
+      dist = 1;
     } else {
       dist = 0;
     }
 
-    if (dist > 1 && (top < 5 || top > 11)) {
+    if (dist > 1 && (top < 6 || top > 10)) {
       turn = true;
+      degLPF = 0.25;
+    } else {
+      degLPF = 0.7;
     }
   }
 

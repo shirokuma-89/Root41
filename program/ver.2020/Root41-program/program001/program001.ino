@@ -322,6 +322,7 @@ void loop(void) {
   LED.dist = false;
 
   if (device.mode == 0) {  //待機中
+    ball.read(ball.val);
     device.keeperTimer1 = millis();
     line._deg = 1000;
     if (millis() - device.buzTimer2 <= 20) {
@@ -399,11 +400,10 @@ void loop(void) {
           LED.degShow(ball.deg, LED.YELLOW);
         } else {
           LED.dist = true;
-          ball.Ldeg += (1 - ball.degLPF) * (ball.Ldeg - ball.deg);
-          LED.degShow(ball.Ldeg);
+          LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 20) {
         line.read();
         // line.process();
         if (line.flag) {
@@ -421,7 +421,7 @@ void loop(void) {
     } else {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 10) {
+      while (millis() - motor.moveTimer <= 30) {
         line.read();
         line.process();
         if (line.flag) {
