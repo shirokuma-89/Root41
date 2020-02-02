@@ -114,6 +114,9 @@ class _line {
   float nDeg;
   int rError;
   int nError;
+  float firstX;
+  float firstY;
+  float firstCalc;
 
   float vector[20][2];
   float firstDeg;
@@ -262,10 +265,10 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
 
-  int _lineWhited[2] = {15, 10};
-  int _lineWhitedT[2] = {19, 28};  //タイマーのやつ
+  int _lineWhited[2] = {15, 17};
+  int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
 
   float _motorPower[2] = {1.0, 1.0};
 
@@ -372,28 +375,26 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      if (line.lock == 1 && ball.deg >= 180) {
-        if (ball.deg <= 270) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      } else if (line.lock == 2 && ball.deg <= 180) {
-        if (ball.deg >= 90) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      }
-      if (millis() - line.lockTimer >= 600) {
+      // if (line.lock == 1 && ball.deg >= 180) {
+      //   if (ball.deg <= 270) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // } else if (line.lock == 2 && ball.deg <= 180) {
+      //   if (ball.deg >= 90) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // }
+      if (millis() - line.lockTimer >= 0) {  // 600
         line.lock = 0;
       }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.keeperTimer2 = millis();
-        device.buz();
       } else {
-        device.mute();
         if (line.lock != 0) {
           LED.degShow(ball.deg, LED.PURPLE);
         } else if (ball.emg) {
@@ -480,7 +481,6 @@ void loop(void) {
     if (line.flag) {
       device.buz();
       motor.moveTimer = millis();
-      // LED.degShow(line.deg, LED.PURPLE);
       LED.lineShow();
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
@@ -489,19 +489,19 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      if (line.lock == 1 && ball.deg >= 180) {
-        if (ball.deg <= 270) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      } else if (line.lock == 2 && ball.deg <= 180) {
-        if (ball.deg >= 90) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      }
+      // if (line.lock == 1 && ball.deg >= 180) {
+      //   if (ball.deg <= 270) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // } else if (line.lock == 2 && ball.deg <= 180) {
+      //   if (ball.deg >= 90) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // }
       if (millis() - line.lockTimer >= 100) {
         line.lock = 0;
       }

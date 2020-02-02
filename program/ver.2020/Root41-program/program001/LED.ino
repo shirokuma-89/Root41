@@ -96,7 +96,9 @@ void _LED::lineShow() {
   for (int i = 0; i <= 19; i++) {
     if (i != 0 && i != 5 && i != 10 && i != 15) {
       if (line.logs[i] != 0) {
-        if (i <= 4) {
+        if (i <= 2) {
+          RGBLED.setPixelColor(i, 255, 0, 255);
+        } else if (i <= 4) {
           RGBLED.setPixelColor(i - 1, 255, 0, 255);
         } else if (i <= 9) {
           RGBLED.setPixelColor(i - 2, 255, 0, 255);
@@ -111,7 +113,9 @@ void _LED::lineShow() {
   for (int i = 0; i <= 19; i++) {
     if (i == line.first) {
       if (line.logs[i] != 0) {
-        if (i <= 4) {
+        if (i <= 2) {
+          RGBLED.setPixelColor(i, 255, 0, 255);
+        } else if (i <= 4) {
           RGBLED.setPixelColor(i - 1, 0, 255, 0);
         } else if (i <= 9) {
           RGBLED.setPixelColor(i - 2, 0, 255, 0);
