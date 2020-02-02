@@ -11,11 +11,12 @@ void _line::process(void) {
       for (int i = 0; i <= 19; i++) {
         if (line.logs[i] == 1 &&
             line.whited <= carpet._lineWhited[carpet.tile]) {
-          line.x += line.vector[i][0] * 1.5;
-          line.y += line.vector[i][1];
           if (line.first == i) {
-            line.x *= 3;
-            line.y *= 3;
+            line.x += line.vector[i][0] * 2;
+            line.y += line.vector[i][1] * 2;
+          } else {
+            line.x += line.vector[i][0] * 0.6;//1.5
+            line.y += line.vector[i][1];
           }
           line.logs[i] = 2;
         }

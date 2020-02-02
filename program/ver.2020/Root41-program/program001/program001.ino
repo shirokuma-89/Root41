@@ -43,8 +43,10 @@ class _ball {
   int speed = 80;
   int top;
   int deg;
+  int Ldeg;
   int dist;
   int cm;
+  int tdeg;
 
   bool exist;
   bool hold = false;
@@ -53,6 +55,8 @@ class _ball {
 
   int right;
   int _right;
+
+  float degLPF = 0.2;
 
   unsigned long keeperOut;
 
@@ -64,7 +68,7 @@ class _ball {
   float x;
   float y;
 
-  float LPF = 0.3;
+  float LPF = 0.24;
 
   unsigned long holdTimer;
 
@@ -110,6 +114,9 @@ class _line {
   float nDeg;
   int rError;
   int nError;
+  float firstX;
+  float firstY;
+  float firstCalc;
 
   float vector[20][2];
   float firstDeg;
@@ -224,6 +231,7 @@ class _LED {
   void topShow(void);
 
   bool white = false;
+  bool dist = false;
 
   int bright = 150;
 
@@ -259,10 +267,10 @@ class _carpet {
  public:
   int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
 
-  int _lineWhited[2] = {15, 10};
-  int _lineWhitedT[2] = {19, 28};  //タイマーのやつ
+  int _lineWhited[2] = {15, 17};
+  int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
 
-  float _motorPower[2] = {0.7, 1.0};
+  float _motorPower[2] = {1.0, 1.0};
 
  private:
 } carpet;
@@ -314,8 +322,10 @@ void setup(void) {
 
 void loop(void) {
   device.check();
+  LED.dist = false;
 
   if (device.mode == 0) {  //待機中
+    ball.read(ball.val);
     device.keeperTimer1 = millis();
     line._deg = 1000;
     if (millis() - device.buzTimer2 <= 20) {
@@ -365,42 +375,36 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      if (line.lock == 1 && ball.deg >= 180) {
-        if (ball.deg <= 270) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      } else if (line.lock == 2 && ball.deg <= 180) {
-        if (ball.deg >= 90) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      }
-      if (millis() - line.lockTimer >= 600) {
+      // if (line.lock == 1 && ball.deg >= 180) {
+      //   if (ball.deg <= 270) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // } else if (line.lock == 2 && ball.deg <= 180) {
+      //   if (ball.deg >= 90) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // }
+      if (millis() - line.lockTimer >= 0) {  // 600
         line.lock = 0;
       }
-      // if (true) {
-      //   LED.topShow();
-      // } else
       if (ball.hold) {
         LED.changeAll(LED.subColor);
         device.keeperTimer2 = millis();
-        device.buz();
       } else {
-        device.mute();
         if (line.lock != 0) {
           LED.degShow(ball.deg, LED.PURPLE);
         } else if (ball.emg) {
           LED.degShow(ball.deg, LED.YELLOW);
-        } else if (ball.turn) {
-          LED.degShow(ball.deg, LED.GREEN);
         } else {
+          LED.dist = true;
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 15) {
+      while (millis() - motor.moveTimer <= 20) {
         line.read();
         // line.process();
         if (line.flag) {
@@ -418,7 +422,7 @@ void loop(void) {
     } else {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 10) {
+      while (millis() - motor.moveTimer <= 30) {
         line.read();
         line.process();
         if (line.flag) {
@@ -477,7 +481,6 @@ void loop(void) {
     if (line.flag) {
       device.buz();
       motor.moveTimer = millis();
-      // LED.degShow(line.deg, LED.PURPLE);
       LED.lineShow();
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
@@ -486,19 +489,19 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      if (line.lock == 1 && ball.deg >= 180) {
-        if (ball.deg <= 270) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      } else if (line.lock == 2 && ball.deg <= 180) {
-        if (ball.deg >= 90) {
-          ball.deg = 180;
-        } else {
-          ball.deg = 0;
-        }
-      }
+      // if (line.lock == 1 && ball.deg >= 180) {
+      //   if (ball.deg <= 270) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // } else if (line.lock == 2 && ball.deg <= 180) {
+      //   if (ball.deg >= 90) {
+      //     ball.deg = 180;
+      //   } else {
+      //     ball.deg = 0;
+      //   }
+      // }
       if (millis() - line.lockTimer >= 100) {
         line.lock = 0;
       }
@@ -514,6 +517,7 @@ void loop(void) {
         } else if (ball.turn) {
           LED.degShow(ball.deg, LED.GREEN);
         } else {
+          LED.dist = true;
           LED.degShow(ball.deg);
         }
       }
