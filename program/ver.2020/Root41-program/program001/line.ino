@@ -12,8 +12,8 @@ void _line::process(void) {
         if (line.logs[i] == 1 &&
             line.whited <= carpet._lineWhited[carpet.tile]) {
           if (line.first == i) {
-            line.x += line.vector[i][0] * 2;
-            line.y += line.vector[i][1] * 2;
+            line.x += line.vector[i][0] * 3;
+            line.y += line.vector[i][1] * 3;
           } else {
             line.x += line.vector[i][0] * 0.6;//1.5
             line.y += line.vector[i][1];
