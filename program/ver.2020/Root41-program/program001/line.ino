@@ -8,17 +8,14 @@ void _line::process(void) {
     if (line.mode == 1 && line.touch) {
       ball._right = ball.right;
       //通常
-      for (int i = 0; i <= 19; i++) {
-        if (line.logs[i] == 1 &&
-            line.whited <= carpet._lineWhited[carpet.tile]) {
-          if (line.first == i) {
-            line.x += line.vector[i][0] * 2;
-            line.y += line.vector[i][1] * 2;
-          } else {
-            line.x += line.vector[i][0] * 0.6;//1.5
+      if (!line.rootsave) {
+        for (int i = 0; i <= 19; i++) {
+          if (line.logs[i] == 1 &&
+              line.whited <= carpet._lineWhited[carpet.tile]) {
+            line.x += line.vector[i][0] * 1.5;
             line.y += line.vector[i][1];
+            line.logs[i] = 2;
           }
-          line.logs[i] = 2;
         }
       }
       line.deg = atan2(line.x, line.y);
@@ -28,27 +25,30 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (line.deg <= 45 || line.deg <= 315) {
-        line.direction = 1;
-      } else if (line.deg <= 135) {
-        line.direction = 2;
-      } else if (line.direction <= 225) {
-        line.direction = 3;
-      } else {
-        line.direction = 4;
-      }
-      if (ball.val[ball.dist] >= 150) {
-        if (ball.top <= 3 || ball.top >= 12) {
-          if (line.direction == 2) {
-            line.deg -= 20;
-          } else if (line.direction == 4) {
-            line.deg += 20;
+      if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
+          line.root2[1] <= 9) {
+        if (line.deg <= 90 || line.deg >= 270) {
+          if (line.deg <= 180) {
+            line.deg = 180 - line.deg;
+          } else {
+            line.deg = 180 + (360 - line.deg);
           }
+          line.rootsave = true;
+        }
+      } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
+                 line.root2[1] >= 10 && line.root1[1] <= 9) {
+        if (line.deg <= 90 || line.deg >= 270) {
+          if (line.deg <= 180) {
+            line.deg = 180 - line.deg;
+          } else {
+            line.deg = 180 + (360 - line.deg);
+          }
+          line.rootsave = true;
         }
       }
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
-      } else if (millis() - line.stopTimer >= 2000) {
+      } else if (millis() - line.stopTimer >= 6000) {
         line.deg = atan2(0, line.y);
         line.deg = degrees(line.deg);
         if (line.deg < 180) {
@@ -100,6 +100,13 @@ void _line::process(void) {
     line.autodeg = 1000;
     line.direction = 0;
     line.first = 100;
+    line.root1[0] = 100;
+    line.root1[1] = 100;
+    line.root1[2] = 100;
+    line.root2[0] = 100;
+    line.root2[1] = 100;
+    line.root2[2] = 100;
+    line.rootsave = false;
     line.last = 100;
     line.x = 0;
     line.y = 0;
@@ -124,18 +131,35 @@ void _line::read(void) {
   for (int i = 0; i <= 19; i++) {
     if (!digitalRead(LINE[i])) {
       if (logs[i] == 0) {
-        now = i;
-      }
-      if (logs[i] == 0) {
         whited++;
+        now = i;
         logs[i] = 1;
-      }
-      if (!flag) {
-        sigdeg = gyro.deg;
-        first = i;
-        motor.integral = 0;
-        gyro.offset = -(line.sigdeg);
-        stopTimer = millis();
+        if (!flag) {
+          sigdeg = gyro.deg;
+          first = i;
+          root1[1] = i;
+          motor.integral = 0;
+          gyro.offset = -(line.sigdeg);
+          stopTimer = millis();
+        }
+        if (root2[1] == 100) {
+          if (abs(first - i) >= 5 && abs(first - i) <= 15) {
+            if (first <= 9 && i >= 10) {
+              root2[1] = i;
+            } else if (first >= 10 && i <= 9) {
+              root2[1] = i;
+            }
+          }
+        } else {
+          if (abs(root2[1] - i) == 1 || abs(root2[1] - i) == 19) {
+            root2[2] = i;
+            root2[0] = root2[1] - root2[2];
+          }
+        }
+        if (abs(root1[1] - i) == 1 || abs(root1[1] - i) == 19) {
+          root1[2] = i;
+          root1[0] = root1[1] - root1[2];
+        }
       }
       if (!val[i]) {
         last = i;

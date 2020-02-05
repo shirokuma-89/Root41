@@ -92,8 +92,9 @@ class _line {
   int col;
   int whited;
   int logs[20];
-  int root1 = 100;
-  int root2 = 100;
+  int root1[3] = {100, 100, 100};
+  int root2[3] = {100, 100, 100};
+  bool rootsave;
   int direction;
   int height1;
   int height2;
