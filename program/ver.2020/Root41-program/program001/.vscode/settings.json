@@ -2,7 +2,9 @@
   "files.associations": {
     "*.ino": "cpp",
     "*.pde": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "limits": "cpp",
+    "type_traits": "cpp"
   },
   "files.autoGuessEncoding": true
 }

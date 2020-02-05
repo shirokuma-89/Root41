@@ -31,6 +31,12 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     //角度取得
     gyro.deg = gyro.read();
 
+    // if (ball.tdeg == 1) {
+    //   gyro.deg += 10;
+    // } else if (ball.tdeg == -1) {
+    //   gyro.deg -= 10;
+    // }
+
     //姿勢制御
     Kp = 0.55;  //比例定数
     Ki = 0.02;  //積分定数
@@ -41,6 +47,8 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     int correctionMinimum;  //角度補正の最小絶対値
     front = gyro.deg;
+    front += 360;
+    front %= 360;
     front = front > 180 ? front - 360 : front;
     correctionMinimum = front * Km;
     if (abs(front) <= 20)
@@ -65,6 +73,10 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
 
     correctionVal = _front;
     correctionVal = constrain(correctionVal, -100, 100);
+
+    if (ball.turn) {
+      correctionVal *= 0.9;
+    }
 
     if (!(_deg == NULL && _power == NULL)) {
       float s;
@@ -231,18 +243,25 @@ void _motor::directDrive(int* p) {
 }
 
 void _motor::speed() {
-  ball.speed = 80;
+  ball.speed = 100;
   if (line.flag) {
     if (millis() - line.overTimer >= 400) {
       ball.speed = 60;
     }
   } else if (ball.exist) {
     if (ball.turn) {
-      ball.speed = 55;
+      // ball.speed = 70;
+      if (ball.dist > 1 && (ball.top < 5 || ball.top > 11)) {
+        ball.speed = 90;
+      }
     }
-    if (ball.emg) {
-      ball.speed -= 20;
+
+    if (abs(180 - ball.deg) <= 40) {
+      ball.speed = 80;
     }
+    // if (ball.emg) {
+    //   ball.speed -= 35;
+    // }
   } else {
   }
   ball.speed *= 1;  //電池残量補正

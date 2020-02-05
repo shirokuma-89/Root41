@@ -6,11 +6,19 @@
                 "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
                 "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\**",
                 "C:\\Users\\Takaki\\Documents\\code\\Arduino\\**",
-                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\**"
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\**",
+                "C:\\Application\\arduino-1.9.0-beta-windows\\arduino-PR-beta1.9-BUILD-116\\hardware\\arduino\\avr\\**",
+                "C:\\Application\\arduino-1.9.0-beta-windows\\arduino-PR-beta1.9-BUILD-116\\tools\\**",
+                "C:\\Application\\arduino-1.8.6-windows\\arduino-1.8.6\\hardware\\arduino\\avr\\**",
+                "C:\\Application\\arduino-1.8.6-windows\\arduino-1.8.6\\tools\\**",
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\**"
             ],
             "forcedInclude": [
                 "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.21\\cores\\arduino\\Arduino.h",
-                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\cores\\arduino\\Arduino.h"
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\cores\\arduino\\Arduino.h",
+                "C:\\Application\\arduino-1.9.0-beta-windows\\arduino-PR-beta1.9-BUILD-116\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
+                "C:\\Application\\arduino-1.8.6-windows\\arduino-1.8.6\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
+                "C:\\Users\\Takaki\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\cores\\arduino\\Arduino.h"
             ],
             "intelliSenseMode": "msvc-x64",
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",

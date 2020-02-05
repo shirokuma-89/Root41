@@ -5,17 +5,12 @@ void _ball::read(int* b) {
   }
 
   if (device.robot) {
-    val[6] = (val[5] * 2 + val[8]) / 3;
-    val[7] = (val[8] * 2 + val[5]) / 3;
-    val[9] = (val[8] + val[10]) / 2;
-    val[7] *= 0.61;
-    val[0] *= 0.95;
-    val[5] *= 0.95;
-    // val[15] *= 0.95;
-    // val[1] *= 0.95;
+    val[15] *= 0.95;
+    val[13] *= 0.95;
   } else {
-    val[7] = (val[6] + val[9] + val[6]) / 3.2;
-    val[8] = (val[6] + val[9] + val[9]) / 3.2;
+    val[7] = (val[6] + val[9] + val[6]) / 3.3;
+    val[8] = (val[6] + val[9] + val[9]) / 3.3;
+    val[9] /= 1.1;
     // val[8] *= 100;
   }
 
@@ -35,30 +30,69 @@ void _ball::calc(void) {
   _deg = deg;
 
   turn = false;
-  int turnVal = 50;
-  if (top > 0 && top < 16 && millis() - holdTimer >= 200) {
-    if (val[top] <= 250) {
-      turn = true;
+  if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
+    if ((val[top] <= 150) || min(val[7], min(val[8], val[9])) <= 220 ||
+        min(val[6], val[10]) <= 230) {
       if (deg >= 180) {
-        deg -= turnVal;
+        deg -= 80;
       } else {
-        deg += turnVal;
+        deg += 80;
       }
+      dist = 4;
+    } else if ((val[top] <= 170) || min(val[7], min(val[8], val[9])) <= 240 ||
+               min(val[6], val[10]) <= 260) {
+      if (deg >= 180) {
+        deg -= 60;
+      } else {
+        deg += 60;
+      }
+      dist = 4;
+    } else if ((val[top] <= 230)) {
+      if (deg >= 180) {
+        deg -= 50;
+      } else {
+        deg += 50;
+      }
+      dist = 3;
+    } else if (val[top] <= 260) {
+      if (deg >= 180) {
+        deg -= 40;
+      } else {
+        deg += 40;
+      }
+      dist = 2;
+    } else if (val[top] <= 330) {
+      if (deg >= 180) {
+        deg -= 25;
+      } else {
+        deg += 25;
+      }
+      dist = 1;
+    } else {
+      dist = 0;
+    }
+
+    if (dist > 1 && (top < 6 || top > 10)) {
+      turn = true;
+      degLPF = 0.25;
+    } else {
+      degLPF = 0.7;
     }
   }
 
-  emg = false;
-  if (top > 2 && top < 14) {
-    if (val[top] < 200) {
-      emg = true;
-      if (top >= 8) {
-        deg -= 35;
-      } else {
-        deg += 35;
-      }
-    }
-  }
-  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD)) {
+  // emg = false;
+  // if (top > 5 && top < 11 && millis() - holdTimer >= 200) {
+  //   if (val[top] < 210) {
+  //     emg = true;
+  //     if (top >= 8) {
+  //       deg -= 45;
+  //     } else {
+  //       deg += 45;
+  //     }
+  //   }
+  // }
+
+  if ((top <= 3 || top >= 13) && digitalRead(BALL_HOLD) && val[top] <= 260) {
     deg = 0;
     hold = true;
     holdTimer = millis();
@@ -99,7 +133,7 @@ void _ball::calc(void) {
 }
 
 void _ball::keeper(void) {
-  speed = 100;
+  speed = 85;
 
   top = 0;
   for (int i = 0; i <= 15; i++) {
@@ -107,56 +141,81 @@ void _ball::keeper(void) {
       top = i;
     }
   }
+  Serial.println(top);
 
   x = 0;
   y = 0;
-
-  exist = true;
-
-  deg = top * 22.5;
-  deg = constrain(deg, -100, 100);
-
-  speed = 120;
-
-  x -= val[1] + val[2] + val[3] + val[4];
-  x += (val[15] + val[14] + val[13] + val[12]) * 0.95;
-
-  // x -= _val[1] + _val[2] + _val[3] + _val[4];
-  // x += (_val[15] + _val[14] + _val[13] + _val[12]) * 0.95;
-  if (x >= 0) {
-    deg = 90;
-    right = 1;
-  } else {
-    deg = 270;
-    right = -1;
+  for (int i = 1; i <= 15; i++) {
+    if (!(i > 4 && i < 12)) {
+      // if (top == i) {
+      //   x += sin(radians(i * 22.5)) * val[i];
+      // }
+      if (i <= 8) {
+        x -= val[i];
+      } else {
+        x += val[i];
+      }
+      // if (val[i] >= 400) {
+      //   x += sin(radians(i * 22.5)) * 100;
+      // }
+    }
   }
 
-  if (top == 0 && abs(x) <= 100) {
+  if (val[top] > 600) {
     exist = false;
-    right = 0;
+  } else {
+    exist = true;
+  }
+  if (top <= 6 || top >= 10) {
+    if (x >= 0) {
+      if (tof.dist >= 200) {
+        deg = 113;
+      } else if (tof.dist <= 250) {
+        deg = 68;
+      } else {
+        deg = 90;
+      }
+    } else {
+      if (tof.dist >= 200) {
+        deg = 248;
+      } else if (tof.dist <= 250) {
+        deg = 293;
+      } else {
+        deg = 270;
+      }
+    }
+  } else {
+    if (top >= 8) {
+      deg = 120;
+    } else {
+      deg = 240;
+    }
+    speed = 30;
+    // exist = false;
   }
 
-  // if (millis() - keeperOut <= 1000 && _right == right) {
-  //   exist = false;
-  // }
+  if (top <= 3 || top >= 13) {
+    speed = 40;
+  }
 
-  // if (tof.dist >= 500) {
-  //   deg = 180;
-  //   exist = true;
-  // }
+  if (top == 0 && abs(val[1] - val[15]) <= 40) {
+    exist = false;
+  }
+
+  if (tof.dist >= 550) {
+    deg = 180;
+    exist = true;
+  }
 
   turn = false;
   emg = false;
 
-  // if (top <= 2 || top >= 14 && tof.dist <= 550) {
-  // } else {
-  //   device.keeperTimer1 = millis();
-  // }
+  if (top <= 2 || top >= 14 && tof.dist <= 550) {
+  } else {
+    device.keeperTimer1 = millis();
+  }
 
-  // if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
-  //   device.keeperTimer1 = millis() - 2100;
-  // }
-  for (int i = 0; i <= 15; i++) {
-    _val[i] = val[i];
+  if ((top <= 2 || top >= 14) && digitalRead(BALL_HOLD) && tof.dist <= 550) {
+    device.keeperTimer1 = millis() - 2100;
   }
 }
