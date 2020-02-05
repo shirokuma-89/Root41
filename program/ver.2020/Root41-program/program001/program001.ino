@@ -266,10 +266,10 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 17};
-  int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
+  int _lineWhitedT[2] = {24, 15};  //タイマーのやつ
 
   float _motorPower[2] = {1.0, 1.0};
 
@@ -376,20 +376,20 @@ void loop(void) {
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      // if (line.lock == 1 && ball.deg >= 180) {
-      //   if (ball.deg <= 270) {
-      //     ball.deg = 180;
-      //   } else {
-      //     ball.deg = 0;
-      //   }
-      // } else if (line.lock == 2 && ball.deg <= 180) {
-      //   if (ball.deg >= 90) {
-      //     ball.deg = 180;
-      //   } else {
-      //     ball.deg = 0;
-      //   }
-      // }
-      if (millis() - line.lockTimer >= 0) {  // 600
+      if (line.lock == 1 && ball.deg >= 180) {
+        if (ball.deg <= 270) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      } else if (line.lock == 2 && ball.deg <= 180) {
+        if (ball.deg >= 90) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      }
+      if (millis() - line.lockTimer >= 600) {  // 600
         line.lock = 0;
       }
       if (ball.hold) {
@@ -605,4 +605,6 @@ void loop(void) {
       device.mode = 2;
     }
   }
+  Serial.print(ball.top);
+  Serial.println("");
 }
