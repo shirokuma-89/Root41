@@ -88,8 +88,9 @@ class _line {
   int col;
   int whited;
   int logs[20];
-  int root1 = 100;
-  int root2 = 100;
+  int root1[3] = {100, 100, 100};
+  int root2[3] = {100, 100, 100};
+  bool rootsave;
   int direction;
   int height1;
   int height2;
@@ -478,7 +479,16 @@ void loop(void) {
       motor.drive(NULL, NULL);
     }
   }
-  Serial.println(ball.speed);
+  Serial.print(line.root1[1]);
+  Serial.print(" ");
+  Serial.print(line.root1[2]);
+  Serial.print(" ");
+  Serial.print(line.root2[1]);
+  Serial.print(" ");
+  Serial.print(line.root2[2]);
+  Serial.print(" ");
+  Serial.print(line.deg);
+  Serial.println(" ");
   // if (device.keeper && device.mode != 0) {
   //   if (millis() - device.keeperTimer1 >= 1500 && device.mode == 2) {
   //     device.mode = 1;
