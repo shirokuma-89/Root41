@@ -109,14 +109,16 @@ void _ball::calc(void) {
 
   exist = true;
   if (val[top] <= 600) {
-    exCount = 0;
+    // exCount = 0;
+    exist = true;
   } else {
-    exCount++;
-  }
-
-  if (exCount >= 3) {
+    // exCount++;
     exist = false;
   }
+
+  // if (exCount >= 3) {
+  //   exist = false;
+  // }
   if (ball.val[ball.top] >= 400) {
     ball.deg = ball.top * 22.5;
   }

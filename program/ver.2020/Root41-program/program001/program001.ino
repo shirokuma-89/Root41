@@ -472,6 +472,16 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
+    if (ball.val[ball.top] <= 270) {
+      ball.exist = true;
+    } else {
+      ball.exist = false;
+      if (tof.dist >= 550) {
+        ball.exist = true;
+        ball.deg = 180;
+      }
+    }
+
     //駆動
     motor.speed();
     if (line.flag) {
