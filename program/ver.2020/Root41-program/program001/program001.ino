@@ -266,7 +266,7 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 17};
   int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
@@ -389,7 +389,7 @@ void loop(void) {
           ball.deg = 0;
         }
       }
-      if (millis() - line.lockTimer >= 0) {  // 600
+      if (millis() - line.lockTimer >= 600) {  // 60
         line.lock = 0;
       }
       if (ball.hold) {
@@ -589,10 +589,12 @@ void loop(void) {
   //     device.keeperTimer2 = millis();
   //   }
 
-  //   if (millis() - device.keeperTimer2 >= 2000) {
-  //     device.mode = 2;
-  //   }
-  // }
+    if (millis() - device.keeperTimer2 >= 2000) {
+      device.mode = 2;
+    }
+  }
+  Serial.print(ball.top);
+  Serial.println("");
 }
 
 // ball.read(ball.val);

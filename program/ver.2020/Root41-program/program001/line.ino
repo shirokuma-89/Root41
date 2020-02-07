@@ -12,8 +12,8 @@ void _line::process(void) {
         for (int i = 0; i <= 19; i++) {
           if (line.logs[i] == 1 &&
               line.whited <= carpet._lineWhited[carpet.tile]) {
-            line.x += line.vector[i][0] * 1.5;
-            line.y += line.vector[i][1];
+            line.x += line.vector[i][0];
+            line.y += line.vector[i][1] * 1.3;
             line.logs[i] = 2;
           }
         }
@@ -48,13 +48,17 @@ void _line::process(void) {
       }
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
-      } else if (millis() - line.stopTimer >= 6000) {
-        line.deg = atan2(0, line.y);
-        line.deg = degrees(line.deg);
-        if (line.deg < 180) {
-          line.deg += 180;
+      } else if (millis() - line.stopTimer >= 3000) {
+        if (!line.rootsave) {
+          line.deg = atan2(0, line.y);
+          line.deg = degrees(line.deg);
+          if (line.deg < 180) {
+            line.deg += 180;
+          } else {
+            line.deg -= 180;
+          }
         } else {
-          line.deg -= 180;
+          line.deg = 180;
         }
       }
     } else if (line.mode == 1 && !line.touch) {
@@ -69,20 +73,21 @@ void _line::process(void) {
         }
       }
       line.mode = 2;
+      if (abs(line.deg - line.last * 18) <= 65 ||
+          abs(line.deg - line.last * 18) >= 295) {
+        line.mode = 3;
+      }
     } else if (line.mode == 2) {
       if (millis() - line.overTimer >=
           line.whited *
               carpet._lineWhitedT[carpet.tile]) {  //カーペットクラスを参照
         if (line.whited <= 10) {
-          if (abs(line.deg - ball.top * 22.5) >= 40 ||
-              abs(line.deg - ball.top * 22.5) <= 320) {
-            if (first >= 2 && first <= 7) {
-              line.lock = 2;
-              line.lockTimer = millis();
-            } else if (first >= 12 && first <= 18) {
-              line.lock = 1;
-              line.lockTimer = millis();
-            }
+          if (first >= 2 && first <= 7) {
+            line.lock = 2;
+            line.lockTimer = millis();
+          } else if (first >= 12 && first <= 18) {
+            line.lock = 1;
+            line.lockTimer = millis();
           }
           line.flag = false;
           line.mode = 0;
@@ -90,6 +95,11 @@ void _line::process(void) {
           line.flag = false;
           line.mode = 0;
         }
+      }
+    } else if (line.mode == 3) {
+      if (millis() - line.overTimer >= 2000) {  //カーペットクラスを参照
+        line.flag = false;
+        line.mode = 0;
       }
     }
     line._deg = (round(line.deg) + 180) % 360;
@@ -100,6 +110,7 @@ void _line::process(void) {
     line.autodeg = 1000;
     line.direction = 0;
     line.first = 100;
+    line.now = 100;
     line.root1[0] = 100;
     line.root1[1] = 100;
     line.root1[2] = 100;
