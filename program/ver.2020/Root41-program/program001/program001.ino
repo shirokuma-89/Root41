@@ -503,7 +503,7 @@ void loop(void) {
     if (millis() - ball.keeperTime >= C_keeper ||
         millis() - ball.keeperTime < 1) {
       if (ball.top > 1 && ball.top < 15) {
-        ball.keeperTime = millis() + 2000;
+        ball.keeperTime = millis() + 3000;
       }
     }
 
