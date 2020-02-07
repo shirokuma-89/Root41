@@ -59,6 +59,7 @@ class _ball {
   float degLPF = 0.2;
 
   unsigned long keeperOut;
+  unsigned long keeperTime;
 
  private:
   int _top;
@@ -473,14 +474,41 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (ball.val[ball.top] <= 270) {
+    if (ball.val[ball.top] <= 350) {  // 270
       ball.exist = true;
     } else {
       ball.exist = false;
-      if (tof.dist >= 550) {
+      if (tof.dist >= 500) {
         ball.exist = true;
         ball.deg = 180;
       }
+    }
+
+    static int C_keeper = 3000;
+
+    if (tof.dist <= 650) {
+      ball.exist = true;
+    } else {
+      ball.exist = false;
+      if (ball.deg >= 90 && ball.deg <= 270) {
+        ball.exist = true;
+      } else if (millis() - ball.keeperTime <= C_keeper &&
+                 millis() - ball.keeperTime >= 1) {
+        ball.exist = true;
+      } else if (tof.dist >= 800) {
+        ball.exist = true;
+        ball.deg = 180;
+      }
+    }
+    if (millis() - ball.keeperTime >= C_keeper ||
+        millis() - ball.keeperTime < 1) {
+      if (ball.top > 1 && ball.top < 15) {
+        ball.keeperTime = millis() + 3000;
+      }
+    }
+
+    if (ball.hold) {
+      ball.keeperTime = millis();
     }
 
     //駆動
