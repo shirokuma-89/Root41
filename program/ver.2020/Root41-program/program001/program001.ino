@@ -389,7 +389,7 @@ void loop(void) {
           ball.deg = 0;
         }
       }
-      if (millis() - line.lockTimer >= 600) {  // 600
+      if (millis() - line.lockTimer >= 600) {  // 60
         line.lock = 0;
       }
       if (ball.hold) {
@@ -468,68 +468,66 @@ void loop(void) {
     // }
   } else if (device.mode == 2) {
     ball.read(ball.val);
-    ball.keeper();
+    ball.calc();
     line.read();
     line.process();
     tof.dist = tof.read();
 
-    if (millis() - device.buzTimer1 <= 30) {
-      device.buz();
+    if (ball.val[ball.top] <= 270) {
+      ball.exist = true;
     } else {
-      device.mute();
+      ball.exist = false;
+      if (tof.dist >= 550) {
+        ball.exist = true;
+        ball.deg = 180;
+      }
     }
+
     //駆動
+    motor.speed();
     if (line.flag) {
-      device.buz();
       motor.moveTimer = millis();
+      // LED.degShow(line.deg, LED.PURPLE);
       LED.lineShow();
       if (line.deg == 1000) {
         motor.drive(NULL, NULL, true);
       } else {
-        motor.drive(line.deg, 100);
+        motor.drive(line.deg, ball.speed);
       }
     } else if (ball.exist) {
       motor.moveTimer = millis();
-      // if (line.lock == 1 && ball.deg >= 180) {
-      //   if (ball.deg <= 270) {
-      //     ball.deg = 180;
-      //   } else {
-      //     ball.deg = 0;
-      //   }
-      // } else if (line.lock == 2 && ball.deg <= 180) {
-      //   if (ball.deg >= 90) {
-      //     ball.deg = 180;
-      //   } else {
-      //     ball.deg = 0;
-      //   }
-      // }
-      if (millis() - line.lockTimer >= 100) {
+      if (line.lock == 1 && ball.deg >= 180) {
+        if (ball.deg <= 270) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      } else if (line.lock == 2 && ball.deg <= 180) {
+        if (ball.deg >= 90) {
+          ball.deg = 180;
+        } else {
+          ball.deg = 0;
+        }
+      }
+      if (millis() - line.lockTimer >= 0) {  // 600
         line.lock = 0;
       }
       if (ball.hold) {
         LED.changeAll(LED.subColor);
-        device.buz();
+        device.keeperTimer2 = millis();
       } else {
-        device.mute();
         if (line.lock != 0) {
-          LED.changeAll(LED.PURPLE);
+          LED.degShow(ball.deg, LED.PURPLE);
         } else if (ball.emg) {
           LED.degShow(ball.deg, LED.YELLOW);
-        } else if (ball.turn) {
-          LED.degShow(ball.deg, LED.GREEN);
         } else {
           LED.dist = true;
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 10) {
-        if (millis() - device.buzTimer1 <= 30 || ball.hold) {
-          device.buz();
-        } else {
-          device.mute();
-        }
+      while (millis() - motor.moveTimer <= 20) {
         line.read();
-        line.process();
+        // line.process();
         if (line.flag) {
           break;
         }
@@ -545,12 +543,7 @@ void loop(void) {
     } else {
       LED.changeAll(LED.PURPLE);
       motor.moveTimer = millis();
-      while (millis() - motor.moveTimer <= 10) {
-        if (millis() - device.buzTimer1 <= 30) {
-          device.buz();
-        } else {
-          device.mute();
-        }
+      while (millis() - motor.moveTimer <= 30) {
         line.read();
         line.process();
         if (line.flag) {
@@ -567,11 +560,7 @@ void loop(void) {
     if (device.process == LOW) {
       if (millis() - LCD.timer >= 200) {
         lcd.clear();
-        if (!device.keeper) {
-          lcd.print("RUNNING! OFFENCE");
-        } else {
-          lcd.print("RUNNING! KEEPER");
-        }
+        lcd.print("RUNNING!KEEPER");
 
         lcd.setCursor(0, 1);
         if (LCD.unit != "NULL") {
@@ -592,14 +581,13 @@ void loop(void) {
         LCD.output = 1;
       }
     }
-    device.buzTimer2 = millis();
   }
 
-  if (device.keeper && device.mode != 0) {
-    if (millis() - device.keeperTimer1 >= 1550 && device.mode == 2) {
-      device.mode = 1;
-      device.keeperTimer2 = millis();
-    }
+  // if (device.keeper && device.mode != 0) {
+  //   if (millis() - device.keeperTimer1 >= 1550 && device.mode == 2) {
+  //     device.mode = 1;
+  //     device.keeperTimer2 = millis();
+  //   }
 
     if (millis() - device.keeperTimer2 >= 2000) {
       device.mode = 2;
@@ -608,3 +596,130 @@ void loop(void) {
   Serial.print(ball.top);
   Serial.println("");
 }
+
+// ball.read(ball.val);
+// ball.keeper();
+// line.read();
+// line.process();
+// tof.dist = tof.read();
+
+// if (millis() - device.buzTimer1 <= 30) {
+//   device.buz();
+// } else {
+//   device.mute();
+// }
+// //駆動
+// if (line.flag) {
+//   device.buz();
+//   motor.moveTimer = millis();
+//   LED.lineShow();
+//   if (line.deg == 1000) {
+//     motor.drive(NULL, NULL, true);
+//   } else {
+//     motor.drive(line.deg, 100);
+//   }
+// } else if (ball.exist) {
+//   motor.moveTimer = millis();
+//   // if (line.lock == 1 && ball.deg >= 180) {
+//   //   if (ball.deg <= 270) {
+//   //     ball.deg = 180;
+//   //   } else {
+//   //     ball.deg = 0;
+//   //   }
+//   // } else if (line.lock == 2 && ball.deg <= 180) {
+//   //   if (ball.deg >= 90) {
+//   //     ball.deg = 180;
+//   //   } else {
+//   //     ball.deg = 0;
+//   //   }
+//   // }
+//   if (millis() - line.lockTimer >= 100) {
+//     line.lock = 0;
+//   }
+//   if (ball.hold) {
+//     LED.changeAll(LED.subColor);
+//     device.buz();
+//   } else {
+//     device.mute();
+//     if (line.lock != 0) {
+//       LED.changeAll(LED.PURPLE);
+//     } else if (ball.emg) {
+//       LED.degShow(ball.deg, LED.YELLOW);
+//     } else if (ball.turn) {
+//       LED.degShow(ball.deg, LED.GREEN);
+//     } else {
+//       LED.dist = true;
+//       LED.degShow(ball.deg);
+//     }
+//   }
+//   while (millis() - motor.moveTimer <= 10) {
+//     if (millis() - device.buzTimer1 <= 30 || ball.hold) {
+//       device.buz();
+//     } else {
+//       device.mute();
+//     }
+//     line.read();
+//     line.process();
+//     if (line.flag) {
+//       break;
+//     }
+//     if (ball.deg == 1000) {
+//       motor.drive(NULL, NULL, true);
+//     } else {
+//       motor.drive(ball.deg, ball.speed);
+//     }
+//     if (millis() - motor.moveTimer >= 3) {
+//       digitalWrite(BALL_RESET, HIGH);
+//     }
+//   }
+// } else {
+//   LED.changeAll(LED.PURPLE);
+//   motor.moveTimer = millis();
+//   while (millis() - motor.moveTimer <= 10) {
+//     if (millis() - device.buzTimer1 <= 30) {
+//       device.buz();
+//     } else {
+//       device.mute();
+//     }
+//     line.read();
+//     line.process();
+//     if (line.flag) {
+//       break;
+//     }
+//     motor.drive(NULL, NULL);
+//     if (millis() - motor.moveTimer >= 5) {
+//       digitalWrite(BALL_RESET, HIGH);
+//     }
+//   }
+// }
+
+// // LCD
+// if (device.process == LOW) {
+//   if (millis() - LCD.timer >= 200) {
+//     lcd.clear();
+//     if (!device.keeper) {
+//       lcd.print("RUNNING! OFFENCE");
+//     } else {
+//       lcd.print("RUNNING! KEEPER");
+//     }
+
+//     lcd.setCursor(0, 1);
+//     if (LCD.unit != "NULL") {
+//       lcd.print("INFO:");
+//       lcd.print(line.way);
+//       lcd.print("  ");
+//       lcd.print(line.first);
+//       // lcd.print(LCD.unit);
+//     }
+
+//     LCD.timer = millis();
+//     LCD.output = 1;
+//   }
+// } else {
+//   if (LCD.output != 1) {
+//     lcd.clear();
+//     lcd.print("RUNNING!");
+//     LCD.output = 1;
+//   }
+// }
+// device.buzTimer2 = millis();
