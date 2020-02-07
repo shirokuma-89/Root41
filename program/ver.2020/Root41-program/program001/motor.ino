@@ -262,6 +262,10 @@ void _motor::speed() {
     // if (ball.emg) {
     //   ball.speed -= 35;
     // }
+    
+    if(device.keeper){
+      ball.speed *= 0.6;
+    }
   } else {
   }
   ball.speed *= 1;  //電池残量補正
