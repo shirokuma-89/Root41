@@ -269,7 +269,7 @@ class _carpet {
   int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 17};
-  int _lineWhitedT[2] = {24, 15};  //タイマーのやつ
+  int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
 
   float _motorPower[2] = {1.0, 1.0};
 
