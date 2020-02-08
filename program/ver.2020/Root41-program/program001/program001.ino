@@ -611,9 +611,9 @@ void loop(void) {
     }
   }
 
-  Serial.print(ball.deg);
+  Serial.print(line.deg);
   Serial.print(" ");
-  Serial.print(ball.top);
+  Serial.print(line.rootsave);
   Serial.print(" ");
   Serial.println("");
 }
