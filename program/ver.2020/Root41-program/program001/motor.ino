@@ -252,12 +252,12 @@ void _motor::speed() {
     if (ball.turn) {
       // ball.speed = 70;
       if (ball.dist > 1 && (ball.top < 5 || ball.top > 11)) {
-        ball.speed = 90;
+        ball.speed = 95;
       }
     }
 
     if (abs(180 - ball.deg) <= 40) {
-      ball.speed = 80;
+      ball.speed = 90;
     }
     // if (ball.emg) {
     //   ball.speed -= 35;
@@ -265,7 +265,7 @@ void _motor::speed() {
 
     if (device.keeper) {
       if (!(ball.deg >= 90 && ball.deg <= 270)) {
-        ball.speed *= 0.7;
+        ball.speed *= 0.8;
       } else {
         ball.speed = 100;
       }
