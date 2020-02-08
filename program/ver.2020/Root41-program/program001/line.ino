@@ -25,27 +25,29 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      // if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
-      //     line.root2[1] <= 9) {
-      //   if (line.deg <= 90 || line.deg >= 270) {
-      //     if (line.deg <= 180) {
-      //       line.deg = 180 - line.deg;
-      //     } else {
-      //       line.deg = 180 + (360 - line.deg);
-      //     }
-      //     line.rootsave = true;
-      //   }
-      // } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
-      //            line.root2[1] >= 10 && line.root1[1] <= 9) {
-      //   if (line.deg <= 90 || line.deg >= 270) {
-      //     if (line.deg <= 180) {
-      //       line.deg = 180 - line.deg;
-      //     } else {
-      //       line.deg = 180 + (360 - line.deg);
-      //     }
-      //     line.rootsave = true;
-      //   }
-      // }
+      if (line.whited >= 8) {
+        if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
+            line.root2[1] <= 9) {
+          if (line.deg <= 90 || line.deg >= 270) {
+            if (line.deg <= 180) {
+              line.deg = 180 - line.deg;
+            } else {
+              line.deg = 180 + (360 - line.deg);
+            }
+            line.rootsave = true;
+          }
+        } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
+                   line.root2[1] >= 10 && line.root1[1] <= 9) {
+          if (line.deg <= 90 || line.deg >= 270) {
+            if (line.deg <= 180) {
+              line.deg = 180 - line.deg;
+            } else {
+              line.deg = 180 + (360 - line.deg);
+            }
+            line.rootsave = true;
+          }
+        }
+      }
 
       //時間での変更
       if (millis() - line.stopTimer <= 50) {
@@ -87,9 +89,11 @@ void _line::process(void) {
       }
       line.mode = 2;
       //ですぎ防止
-      if (abs(line.deg - line.last * 18) <= 65 ||
-          abs(line.deg - line.last * 18) >= 295) {
-        line.mode = 3;
+      if (!line.rootsave) {
+        if (abs(line.deg - line.last * 18) <= 65 ||
+            abs(line.deg - line.last * 18) >= 295) {
+          line.mode = 3;
+        }
       }
     } else if (line.mode == 2) {
       if (millis() - line.overTimer >=

@@ -625,16 +625,10 @@ void loop(void) {
       }
     }
   }
-  // if (device.keeper && device.mode != 0) {
-  //   if (millis() - device.keeperTimer1 >= 1550 && device.mode == 2) {
-  //     device.mode = 1;
-  //     device.keeperTimer2 = millis();
-  //   }
 
-  // if (millis() - device.keeperTimer2 >= 2000) {
-  //   device.mode = 2;
-  // }
-  Serial.print(ball.top);
+  Serial.print(line.deg);
+  Serial.print(" ");
+  Serial.print(line.rootsave);
   Serial.print(" ");
   Serial.println("");
 }
