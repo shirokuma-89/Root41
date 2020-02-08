@@ -486,14 +486,29 @@ void loop(void) {
 
     static int C_keeper = 3000;
 
-    if (tof.dist <= 650) {
+    if (tof.dist <= 700) {
       ball.exist = true;
+      if (tof.dist <= 230) {
+        if (ball.top >= 2 && ball.top <= 6) {
+          ball.deg = 80;
+        } else if (ball.top >= 10 && ball.top <= 14) {
+          ball.deg = 280;
+        }
+      }
     } else {
-      ball.exist = false;
-      if (ball.deg >= 90 && ball.deg <= 270) {
+      /*ball.exist = false;
+      if (ball.deg >= 80 && ball.deg <= 280) {
         ball.exist = true;
-      } else if (millis() - ball.keeperTime <= C_keeper &&
-                 millis() - ball.keeperTime >= 1) {
+      } else */
+      if (sin(radians(ball.deg)) * 10.0 >= 3) {
+        ball.deg = 90;
+      } else if (sin(radians(ball.deg)) * 10.0 <= -3) {
+        ball.deg = 270;
+      } else {
+        ball.exist = false;
+      }
+      if (millis() - ball.keeperTime <= C_keeper &&
+          millis() - ball.keeperTime >= 1) {
         ball.exist = true;
       } else if (tof.dist >= 800) {
         ball.exist = true;
@@ -503,7 +518,7 @@ void loop(void) {
     if (millis() - ball.keeperTime >= C_keeper ||
         millis() - ball.keeperTime < 1) {
       if (ball.top > 1 && ball.top < 15) {
-        ball.keeperTime = millis() + 3000;
+        ball.keeperTime = millis() + 1500;
       }
     }
 
@@ -617,10 +632,9 @@ void loop(void) {
   //     device.keeperTimer2 = millis();
   //   }
 
-    if (millis() - device.keeperTimer2 >= 2000) {
-      device.mode = 2;
-    }
-  }
+  // if (millis() - device.keeperTimer2 >= 2000) {
+  //   device.mode = 2;
+  // }
   Serial.print(ball.top);
   Serial.println("");
 }
