@@ -12,8 +12,8 @@ void _line::process(void) {
         for (int i = 0; i <= 19; i++) {
           if (line.logs[i] == 1 &&
               line.whited <= carpet._lineWhited[carpet.tile]) {
-            line.x += line.vector[i][0];
-            line.y += line.vector[i][1] * 1.3;
+            line.x += line.vector[i][0] * 1.5;
+            line.y += line.vector[i][1];
             line.logs[i] = 2;
           }
         }
@@ -25,30 +25,42 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
-          line.root2[1] <= 9) {
-        if (line.deg <= 90 || line.deg >= 270) {
-          if (line.deg <= 180) {
-            line.deg = 180 - line.deg;
-          } else {
-            line.deg = 180 + (360 - line.deg);
-          }
-          line.rootsave = true;
-        }
-      } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
-                 line.root2[1] >= 10 && line.root1[1] <= 9) {
-        if (line.deg <= 90 || line.deg >= 270) {
-          if (line.deg <= 180) {
-            line.deg = 180 - line.deg;
-          } else {
-            line.deg = 180 + (360 - line.deg);
-          }
-          line.rootsave = true;
-        }
-      }
+      // if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
+      //     line.root2[1] <= 9) {
+      //   if (line.deg <= 90 || line.deg >= 270) {
+      //     if (line.deg <= 180) {
+      //       line.deg = 180 - line.deg;
+      //     } else {
+      //       line.deg = 180 + (360 - line.deg);
+      //     }
+      //     line.rootsave = true;
+      //   }
+      // } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
+      //            line.root2[1] >= 10 && line.root1[1] <= 9) {
+      //   if (line.deg <= 90 || line.deg >= 270) {
+      //     if (line.deg <= 180) {
+      //       line.deg = 180 - line.deg;
+      //     } else {
+      //       line.deg = 180 + (360 - line.deg);
+      //     }
+      //     line.rootsave = true;
+      //   }
+      // }
+
+      //時間での変更
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
-      } else if (millis() - line.stopTimer >= 3000) {
+        //急ブレーキ
+      } else if (millis() - line.stopTimer >= 1000) {
+        if (line.deg <= 20 || line.deg >= 340) {
+          if (line.right > line.left) {
+            line.deg = 300;
+          } else if (line.right < line.left) {
+            line.deg = 60;
+          }
+        }
+        //前に進むときにライントレースしちゃう防止
+      } else if (millis() - line.stopTimer >= 4500) {
         if (!line.rootsave) {
           line.deg = atan2(0, line.y);
           line.deg = degrees(line.deg);
@@ -60,6 +72,7 @@ void _line::process(void) {
         } else {
           line.deg = 180;
         }
+        //ゴールポストにつっかえ脱出
       }
     } else if (line.mode == 1 && !line.touch) {
       line.overTimer = millis();
@@ -73,6 +86,7 @@ void _line::process(void) {
         }
       }
       line.mode = 2;
+      //ですぎ防止
       if (abs(line.deg - line.last * 18) <= 65 ||
           abs(line.deg - line.last * 18) >= 295) {
         line.mode = 3;
@@ -119,6 +133,8 @@ void _line::process(void) {
     line.root2[2] = 100;
     line.rootsave = false;
     line.last = 100;
+    line.right = 0;
+    line.left = 0;
     line.x = 0;
     line.y = 0;
     line.mode = 0;
@@ -143,6 +159,11 @@ void _line::read(void) {
     if (!digitalRead(LINE[i])) {
       if (logs[i] == 0) {
         whited++;
+        if (i <= 9) {
+          right++;
+        } else {
+          left++;
+        }
         now = i;
         logs[i] = 1;
         if (!flag) {
@@ -150,7 +171,13 @@ void _line::read(void) {
           first = i;
           root1[1] = i;
           motor.integral = 0;
-          gyro.offset = -(line.sigdeg);
+          if (line.sigdeg >= 300) {
+            gyro.offset = -((360 + line.sigdeg) / 2);
+          } else if (line.sigdeg <= 60) {
+            gyro.offset = -(line.sigdeg / 2);
+          } else {
+            gyro.offset = -(line.sigdeg);
+          }
           stopTimer = millis();
         }
         if (root2[1] == 100) {
