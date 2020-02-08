@@ -131,9 +131,11 @@ void _device::check(void) {
     LED.white = false;
   } else if (!digitalRead(SW_2)) {
     // asm volatile("  jmp 0");
-    LED.white = false;
-    device.mode = 2;
-    keeper = true;
+    if (!device.robot) {
+      LED.white = false;
+      device.mode = 2;
+      keeper = true;
+    }
   }
   line._millis = millis();
   gyro.pickUpAns = gyro.pickUp();

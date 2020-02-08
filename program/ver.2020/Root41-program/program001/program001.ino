@@ -103,14 +103,14 @@ class _line {
   int second = 100;
   int last;
   int now;
+  int right;
+  int left;
   int way;
   int autodeg;
   int lock;
   int mode;
   int weight = 10;
   int sigdeg;
-  int Sgap;
-  int Lgap;
   int _deg;
   float rDeg;
   float nDeg;
@@ -267,10 +267,10 @@ class _LCD {
 
 class _carpet {
  public:
-  int tile = 0;  // 0がパンチカーペット　　1がタイルカーペット
+  int tile = 1;  // 0がパンチカーペット　　1がタイルカーペット
 
   int _lineWhited[2] = {15, 17};
-  int _lineWhitedT[2] = {19, 15};  //タイマーのやつ
+  int _lineWhitedT[2] = {19, 10};  //タイマーのやつ
 
   float _motorPower[2] = {1.0, 1.0};
 
@@ -611,17 +611,10 @@ void loop(void) {
     }
   }
 
-  // if (device.keeper && device.mode != 0) {
-  //   if (millis() - device.keeperTimer1 >= 1550 && device.mode == 2) {
-  //     device.mode = 1;
-  //     device.keeperTimer2 = millis();
-  //   }
-
-    if (millis() - device.keeperTimer2 >= 2000) {
-      device.mode = 2;
-    }
-  }
+  Serial.print(ball.deg);
+  Serial.print(" ");
   Serial.print(ball.top);
+  Serial.print(" ");
   Serial.println("");
 }
 
