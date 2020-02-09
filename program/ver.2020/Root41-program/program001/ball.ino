@@ -36,16 +36,16 @@ void _ball::calc(void) {
 
   turn = false;
   if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
-    if ((val[top] <= 150) || min(val[7], min(val[8], val[9])) <= 220 ||
-        min(val[6], val[10]) <= 230) {
+    if ((val[top] <= 140) || min(val[7], min(val[8], val[9])) <= 220 ||
+        min(val[6], val[10]) <= 220) {
       if (deg >= 180) {
         deg -= 80;
       } else {
         deg += 80;
       }
       dist = 4;
-    } else if ((val[top] <= 170) || min(val[7], min(val[8], val[9])) <= 240 ||
-               min(val[6], val[10]) <= 260) {
+    } else if ((val[top] <= 160) || min(val[7], min(val[8], val[9])) <= 230 ||
+               min(val[6], val[10]) <= 250) {
       if (deg >= 180) {
         deg -= 60;
       } else {
@@ -68,9 +68,9 @@ void _ball::calc(void) {
       dist = 2;
     } else if (val[top] <= 330) {
       if (deg >= 180) {
-        deg -= 25;
+        deg -= 30;
       } else {
-        deg += 25;
+        deg += 30;
       }
       dist = 1;
     } else {
