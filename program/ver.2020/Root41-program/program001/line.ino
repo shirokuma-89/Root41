@@ -26,7 +26,8 @@ void _line::process(void) {
         line.deg -= 180;
       }
       // if (line.whited >= 6) {
-      //   if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
+      //   if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10
+      //   &&
       //       line.root2[1] <= 9) {
       //     if (line.deg <= 20 || line.deg >= 340) {
       //       if (line.deg <= 180) {
@@ -59,7 +60,7 @@ void _line::process(void) {
       //     }
       //   } else if (line.root2[0] <= -1 && line.root1[0] >= 1 &&
       //              line.root2[1] >= 10 && line.root1[1] <= 9) {
-      //     if (line.deg >= 130 && line.deg >= 230) {
+      //     if (line.deg >= 140 && line.deg <= 220) {
       //       if (line.deg <= 180) {
       //         line.deg = 180 - line.deg;
       //       } else {
@@ -74,27 +75,27 @@ void _line::process(void) {
       if (millis() - line.stopTimer <= 50) {
         line.deg = 1000;
         //急ブレーキ
-      } else if (millis() - line.stopTimer >= 1000) {
-        if (line.deg <= 20 || line.deg >= 340) {
-          if (line.right > line.left) {
-            line.deg = 300;
-          } else if (line.right < line.left) {
-            line.deg = 60;
-          }
-        }
+        // } else if (millis() - line.stopTimer >= 1000) {
+        //   if (line.deg <= 20 || line.deg >= 340) {
+        //     if (line.right > line.left) {
+        //       line.deg = 300;
+        //     } else if (line.right < line.left) {
+        //       line.deg = 60;
+        //     }
+        //   }
         //前に進むときにライントレースしちゃう防止
       } else if (millis() - line.stopTimer >= 4500) {
-        if (!line.rootsave) {
-          line.deg = atan2(0, line.y);
-          line.deg = degrees(line.deg);
-          if (line.deg < 180) {
-            line.deg += 180;
-          } else {
-            line.deg -= 180;
-          }
+        // if (line.rootsave) {
+        line.deg = atan2(0, line.y);
+        line.deg = degrees(line.deg);
+        if (line.deg < 180) {
+          line.deg += 180;
         } else {
-          line.deg = 180;
+          line.deg -= 180;
         }
+        // } else {
+        // line.deg = 180;
+        // }
         //ゴールポストにつっかえ脱出
       }
     } else if (line.mode == 1 && !line.touch) {
