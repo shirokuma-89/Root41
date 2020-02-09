@@ -48,10 +48,9 @@ void _line::process(void) {
       //       line.rootsave = true;
       //     }
       //   }
-      //   if (line.root1[0] <= -1 && line.root2[0] >= 1 && line.root1[1] >= 10
-      //   &&
+      //   if (line.root1[0] <= -1 && line.root2[0] <= 1 && line.root1[1] >= 10 &&
       //       line.root2[1] <= 9) {
-      //     if (line.deg >= 140 && line.deg <= 220) {
+      //     if (line.deg >= 130 && line.deg <= 230) {
       //       if (line.deg <= 180) {
       //         line.deg = 180 - line.deg;
       //       } else {

@@ -46,6 +46,7 @@ class _ball {
   int Ldeg;
   int dist;
   int cm;
+  int left = 0;
   int tdeg;
 
   bool exist;
@@ -319,7 +320,7 @@ void setup(void) {
   delay(500);
 
   gyro.read();
-  startTimer5(5);
+  startTimer5(10);
 }
 
 void loop(void) {
@@ -474,7 +475,7 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (ball.val[ball.top] <= 350) {  // 270
+    if (ball.val[ball.top] <= 470) {  // 270
       ball.exist = true;
     } else {
       ball.exist = false;
@@ -488,7 +489,7 @@ void loop(void) {
 
     if (tof.dist <= 700) {
       ball.exist = true;
-      if (tof.dist <= 230) {
+      if (tof.dist <= 150) {
         if (ball.top >= 2 && ball.top <= 6) {
           ball.deg = 80;
         } else if (ball.top >= 10 && ball.top <= 14) {
@@ -500,9 +501,9 @@ void loop(void) {
       if (ball.deg >= 80 && ball.deg <= 280) {
         ball.exist = true;
       } else */
-      if (sin(radians(ball.deg)) * 10.0 >= 3) {
+      if (sin(radians(ball.deg)) * 10.0 >= 2) {
         ball.deg = 90;
-      } else if (sin(radians(ball.deg)) * 10.0 <= -3) {
+      } else if (sin(radians(ball.deg)) * 10.0 <= -2) {
         ball.deg = 270;
       } else {
         ball.exist = false;
@@ -510,7 +511,7 @@ void loop(void) {
       if (millis() - ball.keeperTime <= C_keeper &&
           millis() - ball.keeperTime >= 1) {
         ball.exist = true;
-      } else if (tof.dist >= 800) {
+      } else if (tof.dist >= 1000) {
         ball.exist = true;
         ball.deg = 180;
       }
@@ -568,7 +569,7 @@ void loop(void) {
           LED.degShow(ball.deg);
         }
       }
-      while (millis() - motor.moveTimer <= 20) {
+      while (millis() - motor.moveTimer <= 35) {
         line.read();
         // line.process();
         if (line.flag) {

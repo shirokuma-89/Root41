@@ -75,6 +75,8 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     correctionVal = constrain(correctionVal, -100, 100);
 
     if (ball.turn) {
+      correctionVal *= 0.65;
+    } else {
       correctionVal *= 0.9;
     }
 
@@ -265,7 +267,7 @@ void _motor::speed() {
 
     if (device.keeper) {
       if (!(ball.deg >= 90 && ball.deg <= 270)) {
-        ball.speed *= 0.8;
+        ball.speed *= 1.0;
       } else {
         ball.speed = 100;
       }
