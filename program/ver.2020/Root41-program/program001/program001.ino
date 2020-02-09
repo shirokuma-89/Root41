@@ -630,6 +630,14 @@ void loop(void) {
   Serial.print(" ");
   Serial.print(line.rootsave);
   Serial.print(" ");
+  for (int i = 0; i <= 2; i++) {
+    Serial.print(line.root1[i]);
+    Serial.print(" ");
+  }
+  for (int i = 0; i <= 2; i++) {
+    Serial.print(line.root2[i]);
+    Serial.print(" ");
+  }
   Serial.println("");
 }
 
