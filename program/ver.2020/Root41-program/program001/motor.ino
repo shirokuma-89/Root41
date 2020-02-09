@@ -265,7 +265,7 @@ void _motor::speed() {
 
     if (device.keeper) {
       if (!(ball.deg >= 90 && ball.deg <= 270)) {
-        ball.speed *= 0.9;
+        ball.speed *= 1.0;
       } else {
         ball.speed = 100;
       }

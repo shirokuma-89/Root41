@@ -25,50 +25,50 @@ void _line::process(void) {
       } else {
         line.deg -= 180;
       }
-      if (line.whited >= 6) {
-        if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
-            line.root2[1] <= 9) {
-          if (line.deg <= 20 || line.deg >= 340) {
-            if (line.deg <= 180) {
-              line.deg = 180 - line.deg;
-            } else {
-              line.deg = 180 + (360 - line.deg);
-            }
-            line.rootsave = true;
-          }
-        } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
-                   line.root2[1] >= 10 && line.root1[1] <= 9) {
-          if (line.deg <= 20 || line.deg >= 340) {
-            if (line.deg <= 180) {
-              line.deg = 180 - line.deg;
-            } else {
-              line.deg = 180 + (360 - line.deg);
-            }
-            line.rootsave = true;
-          }
-        }
-        if (line.root1[0] <= -1 && line.root2[0] <= 1 && line.root1[1] >= 10 &&
-            line.root2[1] <= 9) {
-          if (line.deg >= 130 && line.deg <= 230) {
-            if (line.deg <= 180) {
-              line.deg = 180 - line.deg;
-            } else {
-              line.deg = 180 + (360 - line.deg);
-            }
-            line.rootsave = true;
-          }
-        } else if (line.root2[0] <= -1 && line.root1[0] >= 1 &&
-                   line.root2[1] >= 10 && line.root1[1] <= 9) {
-          if (line.deg >= 130 && line.deg >= 230) {
-            if (line.deg <= 180) {
-              line.deg = 180 - line.deg;
-            } else {
-              line.deg = 180 + (360 - line.deg);
-            }
-            line.rootsave = true;
-          }
-        }
-      }
+      // if (line.whited >= 6) {
+      //   if (line.root1[0] >= 1 && line.root2[0] <= -1 && line.root1[1] >= 10 &&
+      //       line.root2[1] <= 9) {
+      //     if (line.deg <= 20 || line.deg >= 340) {
+      //       if (line.deg <= 180) {
+      //         line.deg = 180 - line.deg;
+      //       } else {
+      //         line.deg = 180 + (360 - line.deg);
+      //       }
+      //       line.rootsave = true;
+      //     }
+      //   } else if (line.root2[0] >= 1 && line.root1[0] <= -1 &&
+      //              line.root2[1] >= 10 && line.root1[1] <= 9) {
+      //     if (line.deg <= 20 || line.deg >= 340) {
+      //       if (line.deg <= 180) {
+      //         line.deg = 180 - line.deg;
+      //       } else {
+      //         line.deg = 180 + (360 - line.deg);
+      //       }
+      //       line.rootsave = true;
+      //     }
+      //   }
+      //   if (line.root1[0] <= -1 && line.root2[0] <= 1 && line.root1[1] >= 10 &&
+      //       line.root2[1] <= 9) {
+      //     if (line.deg >= 130 && line.deg <= 230) {
+      //       if (line.deg <= 180) {
+      //         line.deg = 180 - line.deg;
+      //       } else {
+      //         line.deg = 180 + (360 - line.deg);
+      //       }
+      //       line.rootsave = true;
+      //     }
+      //   } else if (line.root2[0] <= -1 && line.root1[0] >= 1 &&
+      //              line.root2[1] >= 10 && line.root1[1] <= 9) {
+      //     if (line.deg >= 130 && line.deg >= 230) {
+      //       if (line.deg <= 180) {
+      //         line.deg = 180 - line.deg;
+      //       } else {
+      //         line.deg = 180 + (360 - line.deg);
+      //       }
+      //       line.rootsave = true;
+      //     }
+      //   }
+      // }
 
       //時間での変更
       if (millis() - line.stopTimer <= 50) {
