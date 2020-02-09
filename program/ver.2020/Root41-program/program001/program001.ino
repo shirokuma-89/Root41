@@ -46,6 +46,7 @@ class _ball {
   int Ldeg;
   int dist;
   int cm;
+  int left = 0;
   int tdeg;
 
   bool exist;
@@ -319,7 +320,7 @@ void setup(void) {
   delay(500);
 
   gyro.read();
-  startTimer5(5);
+  startTimer5(10);
 }
 
 void loop(void) {
@@ -474,7 +475,7 @@ void loop(void) {
     line.process();
     tof.dist = tof.read();
 
-    if (ball.val[ball.top] <= 420) {  // 270
+    if (ball.val[ball.top] <= 470) {  // 270
       ball.exist = true;
     } else {
       ball.exist = false;

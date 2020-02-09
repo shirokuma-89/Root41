@@ -120,7 +120,7 @@ void _line::process(void) {
       if (millis() - line.overTimer >=
           line.whited *
               carpet._lineWhitedT[carpet.tile]) {  //カーペットクラスを参照
-        if (line.whited <= 10) {
+        if (line.whited <= 12) {
           if (first >= 2 && first <= 7) {
             line.lock = 2;
             line.lockTimer = millis();

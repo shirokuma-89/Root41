@@ -75,6 +75,8 @@ void _motor::drive(int _deg, int _power, bool _stop = false) {
     correctionVal = constrain(correctionVal, -100, 100);
 
     if (ball.turn) {
+      correctionVal *= 0.65;
+    } else {
       correctionVal *= 0.9;
     }
 
