@@ -16,6 +16,9 @@ void _ball::read(int* b) {
     val[7] = (val[6] + val[9] + val[6]) / 3.3;
     val[8] = (val[6] + val[9] + val[9]) / 3.3;
     val[9] /= 1.1;
+    val[0] *= 0.98;
+    val[1] *= 0.93;
+    val[15] *= 0.93;
     // val[8] *= 100;
   }
 
@@ -31,46 +34,52 @@ void _ball::calc(void) {
     }
   }
 
+  if (top >= 3 && top <= 5) {
+    left = -1;
+  } else if (top >= 11 && top <= 13) {
+    left = 1;
+  }
+
   deg = top * 22.5;
   _deg = deg;
 
   turn = false;
   if (top > 1 && top < 15 && millis() - holdTimer >= 200) {
-    if ((val[top] <= 150) || min(val[7], min(val[8], val[9])) <= 220 ||
-        min(val[6], val[10]) <= 230) {
+    if ((val[top] <= 150) || min(val[7], min(val[8], val[9])) <= 230 ||
+        min(val[6], val[10]) <= 240) {
       if (deg >= 180) {
-        deg -= 80;
+        deg -= 85;
       } else {
-        deg += 80;
+        deg += 85;
       }
       dist = 4;
-    } else if ((val[top] <= 170) || min(val[7], min(val[8], val[9])) <= 240 ||
+    } else if ((val[top] <= 165) || min(val[7], min(val[8], val[9])) <= 250 ||
                min(val[6], val[10]) <= 260) {
       if (deg >= 180) {
-        deg -= 60;
+        deg -= 65;
       } else {
-        deg += 60;
+        deg += 65;
       }
       dist = 4;
-    } else if ((val[top] <= 230)) {
+    } else if ((val[top] <= 220)) {
       if (deg >= 180) {
-        deg -= 50;
+        deg -= 55;
       } else {
-        deg += 50;
+        deg += 55;
       }
       dist = 3;
-    } else if (val[top] <= 260) {
+    } else if (val[top] <= 280) {
       if (deg >= 180) {
-        deg -= 40;
+        deg -= 45;
       } else {
-        deg += 40;
+        deg += 45;
       }
       dist = 2;
-    } else if (val[top] <= 330) {
+    } else if (val[top] <= 320) {
       if (deg >= 180) {
-        deg -= 25;
+        deg -= 30;
       } else {
-        deg += 25;
+        deg += 30;
       }
       dist = 1;
     } else {
@@ -98,7 +107,15 @@ void _ball::calc(void) {
   // }
 
   if ((top <= 3 || top >= 13) && digitalRead(BALL_HOLD) && val[top] <= 260) {
-    deg = 0;
+    if (tof.dist >= 600) {
+      if (left == 1) {
+        deg = 30;
+      } else if (left == -1) {
+        deg = 330;
+      } else {
+        deg = 0;
+      }
+    }
     hold = true;
     holdTimer = millis();
   } else {
